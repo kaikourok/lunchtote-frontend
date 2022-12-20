@@ -1,0 +1,87 @@
+.role-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+.role-action {
+  margin-left: 5px;
+}
+
+.no-roles {
+  display: flex;
+  justify-content: center;
+  margin: 50px;
+  color: #888;
+}
+
+.roles {
+  margin: 10px 0;
+}
+
+.role {
+  display: flex;
+  align-items: center;
+  touch-action: none;
+  background: #eee;
+  margin: 5px 0;
+
+  .role-drag-handle {
+    margin: 12px;
+    flex: none;
+    width: 24px;
+    height: 24px;
+    cursor: ns-resize;
+
+    &.invalid {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+  }
+
+  .role-name {
+    flex: auto;
+  }
+
+  .role-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px;
+    padding: 4px;
+    width: 26px;
+    height: 26px;
+    background: #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    color: inherit;
+
+    &.invalid {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+
+    &:last-child {
+      margin-right: 12px;
+    }
+  }
+}
+
+.new-role-modal-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .new-role-modal-text {
+    margin: 4px;
+  }
+
+  .new-role-modal-input-wrapper {
+    margin: 4px;
+  }
+
+  .new-role-modal-input {
+    height: 24px;
+    padding: 4px;
+  }
+}

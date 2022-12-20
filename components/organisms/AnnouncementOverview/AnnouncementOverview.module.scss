@@ -1,0 +1,48 @@
+@import 'styles/variables.scss';
+
+.announcement {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: rgb(243, 243, 243);
+  margin: 5px 0;
+
+  @media screen and (max-width: 500px) {
+    align-items: inherit;
+    flex-direction: column;
+  }
+
+  .announcement-attributes {
+    display: flex;
+    align-items: center;
+
+    .announcement-type {
+      display: flex;
+      justify-content: center;
+      padding: 4px;
+      min-width: 60px;
+      font-weight: bold;
+      color: white;
+      margin-right: 5px;
+    }
+
+    @each $key, $color in $announcementColors {
+      .announcement-type-#{$key} {
+        background-color: $color;
+      }
+    }
+
+    .announcement-timestamp {
+      margin-left: 5px;
+      font-size: 0.9em;
+    }
+  }
+
+  .announcement-overview {
+    margin: 0 5px;
+
+    @media screen and (max-width: 500px) {
+      margin: 5px;
+    }
+  }
+}

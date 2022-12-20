@@ -1,0 +1,78 @@
+.actions {
+  display: flex;
+  margin: 10px 0 20px 0;
+  justify-content: flex-end;
+}
+
+.topics {
+  margin: 20px 0;
+}
+
+.topic {
+  color: #333;
+  background: #f0f0f0;
+  min-height: 70px;
+  display: flex;
+  padding: 10px;
+  align-items: center;
+
+  .topic-overview {
+    flex: 1;
+    margin: 0 5px;
+
+    .topic-title {
+      .topic-link {
+        color: #333;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+    }
+
+    .topic-subinfos {
+      .topic-posts {
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.page-links {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  margin: 10px 0;
+
+  .linker-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .linker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      width: 30px;
+      height: 30px;
+
+      &.current {
+        background: #333;
+        color: #f0f0f0;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.timestamps {
+  margin: 0 5px;
+
+  .timestamp {
+    .timestamp-icon {
+      position: relative;
+      width: calc(1em + 4px);
+      height: calc(1em + 4px);
+      top: -1px;
+      margin-right: 4px;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+@import 'styles/variables.scss';
+
+.confirm-mobal-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  .confirm-modal-button {
+    padding: 10px 10px;
+    width: 33%;
+    margin: 0 10px 10px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    cursor: pointer;
+    font-weight: bold;
+
+    &-cancel {
+      background: #e4e4e4;
+      color: #2e2e2e;
+    }
+
+    &-ok {
+      background: $accentColor;
+      color: #ffffff;
+
+      &.disabled {
+        background: #c5c5c5;
+      }
+    }
+  }
+}

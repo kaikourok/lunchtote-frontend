@@ -1,0 +1,103 @@
+.post {
+  margin: 10px 0;
+  display: flex;
+
+  .post-attributes {
+    flex: none;
+    width: 20%;
+    padding: 10px;
+    margin-right: 2px;
+    background: #ffffff;
+    border-right: 1px solid gray;
+
+    .post-id {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .post-sender {
+      margin-bottom: 5px;
+    }
+
+    .post-timestamp {
+      font-size: 0.9em;
+    }
+  }
+
+  .post-content {
+    flex: 1;
+    padding: 10px;
+    min-height: 150px;
+    background: #ffffff;
+  }
+}
+
+.reactions {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  color: #333;
+
+  .reaction {
+    border: 1px solid transparent;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    box-sizing: content-box;
+    padding: 3px 7px;
+    height: 22px;
+    cursor: pointer;
+    background: #f3f3f3;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    border-radius: 4px;
+
+    &.reacted {
+      background: #eceef1;
+      color: rgb(14, 56, 110);
+      border: rgb(169, 170, 236) solid 1px;
+    }
+
+    .emoji {
+      width: 16px;
+      height: 16px;
+    }
+
+    .reaction-counts {
+      margin-left: 6px;
+      font-size: 0.9em;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      position: relative;
+      top: 1px;
+    }
+  }
+
+  .reaction-add {
+    border-radius: 4px;
+    border: 1px solid transparent;
+    width: 30px;
+    height: 30px;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    background: #f3f3f3;
+    color: rgb(75, 75, 75);
+    display: flex;
+    justify-content: center;
+    border: 1px solid transparent;
+    align-items: center;
+    cursor: pointer;
+
+    .reaction-add-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.emoji-picker-wrapper {
+  margin-top: 8px;
+}

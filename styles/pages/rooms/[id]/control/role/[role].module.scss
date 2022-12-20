@@ -1,0 +1,97 @@
+.toggle-wrapper {
+  padding: 10px 10px 15px 10px;
+  margin: 5px 0;
+
+  &:first-child {
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid rgb(211, 211, 211);
+  }
+
+  .toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+
+    .toggle-label {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .toggle-boxes {
+      display: flex;
+
+      .toggle-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border: 1px solid rgb(209, 209, 209);
+        background: rgb(241, 241, 241);
+        width: 36px;
+        height: 28px;
+
+        &.ok {
+          $color: rgb(39, 131, 27);
+          border-radius: 4px 0 0 4px;
+          color: $color;
+
+          &.checked {
+            border-color: $color;
+            background: $color;
+            color: white;
+          }
+        }
+
+        &.inherit {
+          $color: rgb(59, 59, 59);
+          border-left: none;
+          border-right: none;
+          padding: 12px;
+
+          &.checked {
+            border-color: $color;
+            background: $color;
+            color: white;
+          }
+
+          &.disabled {
+            border-color: rgb(189, 189, 189);
+            color: rgb(141, 141, 141);
+            background: rgb(189, 189, 189);
+          }
+        }
+
+        &.ng {
+          $color: rgb(248, 38, 38);
+          border-radius: 0 4px 4px 0;
+          color: $color;
+
+          &.checked {
+            border-color: $color;
+            background: $color;
+            color: white;
+          }
+        }
+
+        &.disabled {
+          cursor: not-allowed;
+        }
+
+        .toggle-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+}

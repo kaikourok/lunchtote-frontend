@@ -1,0 +1,115 @@
+.editor-wrapper {
+  width: 100%;
+}
+
+.editor {
+  width: 100%;
+  resize: none;
+  height: 200px;
+  outline: none;
+  padding: 6px;
+
+  &.thin {
+    height: 100px;
+  }
+}
+
+.image-select-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.image-selector {
+  border: 1px solid gray;
+  margin: 5px;
+}
+
+.controller-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controller-buttons-left {
+  display: flex;
+  align-items: center;
+}
+
+.controller-buttons-right {
+  display: flex;
+  align-items: center;
+}
+
+.controller-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  margin-right: 2px;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+
+  &:hover {
+    background-color: #0002;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  .controller-button-icon {
+    width: 16px;
+    height: 16px;
+    color: rgb(85, 68, 64);
+  }
+
+  .tooltip {
+    position: absolute;
+    display: none;
+    padding: 3px 6px;
+    font-size: 0.8em;
+    font-weight: bold;
+    white-space: nowrap;
+    top: 24px + 6px;
+    text-align: center;
+    background-color: #3b3b3b;
+    border-radius: 2px;
+    color: white;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: -4px;
+      left: calc(50% - 4px);
+      width: 100%;
+      height: 4px;
+      width: 10px;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      background-color: #3b3b3b;
+    }
+  }
+
+  &:hover {
+    .tooltip {
+      display: block;
+    }
+  }
+}
+
+.controller-separator {
+  height: 16px;
+  width: 1px;
+  background-color: #888;
+  margin: 0 4px;
+}
+
+.insert-image-buttons {
+  display: flex;
+}

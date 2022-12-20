@@ -1,0 +1,31 @@
+@use 'sass:math';
+
+$iconSize: 1.4em;
+$iconSizeMini: 1.1em;
+
+.help {
+  display: inline-flex;
+  cursor: pointer;
+  color: #444;
+  margin: 0 0.25em;
+}
+
+.icon-wrapper {
+  height: $iconSize;
+  width: $iconSize;
+}
+
+.icon-wrapper-mini {
+  height: $iconSizeMini;
+  width: $iconSizeMini;
+}
+
+.icon {
+  height: $iconSize;
+  width: $iconSize;
+}
+
+.icon-mini {
+  height: $iconSizeMini;
+  width: $iconSizeMini;
+}

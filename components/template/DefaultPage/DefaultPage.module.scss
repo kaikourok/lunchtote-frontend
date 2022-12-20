@@ -1,0 +1,18 @@
+@import 'styles/variables.scss';
+
+$pcPadding: 20px;
+$mobilePadding: 0;
+
+.page {
+  margin: 0 auto;
+  max-width: $pcColumnWidth;
+  min-height: 100vh;
+  padding: $pcPadding;
+  padding-top: $pcPadding + $headerHeight;
+  // background: #fcfbfa;
+
+  @media screen and (max-width: 500px) {
+    padding: $mobilePadding;
+    padding-top: $mobilePadding + $headerHeight;
+  }
+}

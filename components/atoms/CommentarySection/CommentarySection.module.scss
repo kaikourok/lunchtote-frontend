@@ -1,0 +1,45 @@
+$closeIconSize: 18px;
+
+.commentary-section {
+  margin: 10px 0;
+  padding: 20px;
+  background: #00000008;
+  position: relative;
+
+  .close-icon-wrapper {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: $closeIconSize;
+    height: $closeIconSize;
+    cursor: pointer;
+    color: #444;
+
+    .close-icon {
+      width: $closeIconSize;
+      height: $closeIconSize;
+    }
+  }
+
+  &.no-margin {
+    margin: 0;
+  }
+
+  &.closeable {
+    padding-right: 30px;
+  }
+
+  &.closed {
+    display: none;
+  }
+}
+
+.content {
+  p:first-child {
+    margin-top: 0;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}

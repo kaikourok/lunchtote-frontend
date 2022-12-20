@@ -1,0 +1,69 @@
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+.no-groups {
+  display: flex;
+  justify-content: center;
+  margin: 50px;
+  color: #888;
+}
+
+.layering-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  touch-action: none;
+  background: #eee;
+  margin: 5px 0;
+  padding: 4px 8px;
+
+  .layering-group-name {
+    flex: 1;
+
+    .layering-group-name-link {
+      padding: 5px;
+      color: inherit;
+    }
+  }
+
+  .layering-group-actions {
+    flex: none;
+    display: flex;
+
+    .layering-group-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4px 4px;
+      padding: 4px;
+      width: 26px;
+      height: 26px;
+      background: #ddd;
+      border-radius: 50%;
+      cursor: pointer;
+      color: inherit;
+    }
+  }
+}
+
+.input-modal-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .input-modal-text {
+    margin: 4px;
+  }
+
+  .input-modal-input-wrapper {
+    margin: 4px;
+  }
+
+  .input-modal-input {
+    height: 24px;
+    padding: 4px;
+  }
+}

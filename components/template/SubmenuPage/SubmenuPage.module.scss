@@ -1,0 +1,77 @@
+@import '@/styles/variables.scss';
+
+$pcPadding: 20px;
+$mobilePadding: 0;
+
+$pcMenuWidth: 200px;
+
+.page {
+  margin: 0 auto;
+  max-width: $pcColumnWidth + $pcMenuWidth;
+  min-height: 100vh;
+}
+
+.columns {
+  display: flex;
+}
+
+.content {
+  margin: 0;
+  flex: auto;
+  background: #fcfbfa;
+  padding: $headerHeight + $pcPadding $pcPadding 0 $pcPadding;
+  min-height: 100vh;
+
+  @media screen and (max-width: 500px) {
+    padding: $headerHeight + $mobilePadding $mobilePadding 0 $mobilePadding;
+  }
+}
+
+.content-body {
+  margin-top: 10px;
+}
+
+.menu {
+  width: 180px;
+  margin-right: 20px;
+  flex: none;
+  position: sticky;
+  top: 70px;
+  margin: $headerHeight 20px 10px 0;
+  height: fit-content;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 11px;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px #c5c5c5;
+    border: solid 3px transparent;
+  }
+}
+
+.link {
+  display: block;
+  text-decoration: none;
+  margin: 8px 0;
+  padding: 8px 16px;
+  font-size: 1em;
+  color: #222;
+  transition: all 0.2s;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:hover {
+    background: #4441;
+    color: #222;
+  }
+}

@@ -1,0 +1,62 @@
+@import 'styles/variables.scss';
+@import 'styles/room-message/variables.scss';
+
+.#{$prefix}__message {
+  margin: 5px 0;
+  border: 1px solid #d1d1d1;
+  background: linear-gradient(rgb(255, 255, 255), rgb(250, 250, 250));
+  border-radius: 2px;
+  padding: 8px;
+
+  &.#{$prefix}__preview {
+    opacity: 0.5;
+  }
+}
+
+.#{$prefix}__message-main {
+  display: flex;
+}
+
+.#{$prefix}__message-aside {
+  color: #707070;
+  font-size: 0.8em;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.#{$prefix}__message-aside-room {
+  margin-right: 5px;
+  color: #707070;
+}
+
+.#{$prefix}__message-aside-date {
+}
+
+.#{$prefix}__message-icon-wrapper {
+  margin: 0 8px 0 0;
+}
+
+.#{$prefix}__message-content-wrapper {
+}
+
+.#{$prefix}__message-sender {
+  font-size: 1.05em;
+
+  .#{$prefix}__message-sender-name {
+    color: #333;
+    font-weight: bold;
+  }
+
+  .#{$prefix}__message-sender-id {
+    margin: 4px;
+    font-size: 0.85em;
+    color: rgb(172, 172, 172);
+  }
+}
+
+.#{$prefix}__message-content {
+  color: #444;
+  font-family: $contentFonts;
+  line-height: 1.4;
+  padding: 2px 4px;
+}

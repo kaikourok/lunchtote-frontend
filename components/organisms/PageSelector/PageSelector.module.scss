@@ -1,0 +1,28 @@
+@use 'sass:math';
+@import '@/styles/variables.scss';
+
+.page-selector {
+  display: grid;
+  margin: 10px 0;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 5px;
+
+  .page-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 4px 8px;
+    border: 1px solid #4e4e4e;
+    background: white;
+    text-decoration: none;
+    color: #4e4e4e;
+    font-weight: bold;
+    font-size: 0.7rem;
+
+    &.page-link-current {
+      border: 1px solid #4e4e4e;
+      background: #4e4e4e;
+      color: white;
+    }
+  }
+}

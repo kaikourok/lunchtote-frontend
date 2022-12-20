@@ -1,0 +1,130 @@
+@use 'sass:math';
+$groupMargin: 10px 0;
+$labelHeight: 40px;
+
+.form {
+  padding: 10px 0;
+}
+
+.option-group {
+  margin: $groupMargin;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.label-wrapper {
+  height: $labelHeight;
+  min-width: 80px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  color: #c9c9c9;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+  font-size: 1rem;
+
+  &.stable {
+    color: #424242;
+  }
+
+  &.enabled {
+    background: #424242;
+    color: #ffffff;
+  }
+
+  &.error {
+    background: #cc0707;
+    color: #ffffff;
+  }
+}
+
+.number-ranges {
+  margin: $groupMargin;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.number-range {
+  padding: 1px;
+  width: math.div(100%, 5);
+
+  .label-wrapper {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.input-line {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+
+  .input-label {
+    margin-right: 20px;
+    font-weight: bold;
+    user-select: none;
+  }
+}
+
+.textfields {
+  margin: $groupMargin;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 8px;
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    grid-gap: 6px;
+  }
+}
+
+.textfield {
+  .textfield-label-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .textfield-input-wrapper {
+    .textfield-input {
+      width: 100%;
+      padding: 4px;
+      background: none;
+      border: none;
+      border-bottom: 1px solid #b1b1b1;
+    }
+  }
+}
+
+.buttons {
+  margin: $groupMargin;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row-reverse;
+
+  .button {
+    width: fit-content;
+    min-width: 120px;
+    padding: 0 20px;
+    border: none;
+    font-weight: bold;
+    transition: all 0.2s;
+    height: $labelHeight;
+    border-radius: 0;
+    outline: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    background: #f0f0f0;
+    color: #424242;
+
+    &:hover {
+      background: #424242;
+      color: #f0f0f0;
+    }
+  }
+}

@@ -1,0 +1,70 @@
+$uiColor: #333;
+
+.icon-controls {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.icon-control-button {
+  margin: 8px 0 0 8px;
+}
+
+.tags {
+  width: auto;
+  margin: 15px 4px 0px 4px;
+  max-width: 500px;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  margin: 8px 10px;
+  height: 30px;
+  touch-action: none;
+
+  .tag-drag-handle {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    color: $uiColor;
+    cursor: ns-resize;
+  }
+
+  .tag-input {
+    flex: 1;
+    height: 100%;
+    margin: 0 8px;
+    padding: 0 6px;
+    font-size: 0.95rem;
+  }
+
+  .tag-remove {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    color: $uiColor;
+    cursor: pointer;
+  }
+}
+
+.tag-add {
+  height: 36px;
+  border: 1px solid #fff;
+  color: #222;
+  font-weight: bold;
+  background: #ddd;
+  display: flex;
+  border-radius: 4px;
+  align-items: center;
+  margin: 4px 0 0 0;
+  user-select: none;
+  cursor: pointer;
+}
+
+.tag-add-icon {
+  width: 24px;
+  height: 24px;
+  margin: 0 13px 0 10px;
+}

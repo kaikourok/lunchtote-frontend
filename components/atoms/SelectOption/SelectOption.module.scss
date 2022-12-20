@@ -1,0 +1,66 @@
+$labelHeight: 40px;
+
+.options-wrapper {
+  margin: 1px;
+  position: relative;
+
+  .option-arrow-wrapper {
+    $triangleLength: 9px;
+
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 10px;
+    right: 10px;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .option-arrow {
+      width: $triangleLength;
+      height: $triangleLength * 0.6;
+      background: #424242;
+      clip-path: polygon(50% 100%, 0 0, 100% 0);
+    }
+  }
+
+  .options {
+    width: 100%;
+    padding: 0 40px 0 20px;
+    border: none;
+    background: #f0f0f0;
+    color: #424242;
+    font-weight: bold;
+    height: $labelHeight;
+    border-radius: 0;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+
+    .option {
+      color: #222;
+      background: white;
+    }
+  }
+
+  &.placeholder {
+    .options {
+      color: #ffffff;
+      color: #c9c9c9;
+    }
+  }
+
+  &.highlight {
+    .options {
+      background: #424242;
+      color: #ffffff;
+    }
+
+    .option-arrow-wrapper {
+      .option-arrow {
+        background: white;
+      }
+    }
+  }
+}

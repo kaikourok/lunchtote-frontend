@@ -1,0 +1,40 @@
+.button {
+  display: inline-flex;
+  background-color: #e9e9e9;
+  align-items: center;
+  transition: all 0.15s;
+  user-select: none;
+  cursor: pointer;
+  padding: 2px 12px 2px 8px;
+  margin: 2px 2px;
+  border-radius: 16px;
+  color: #505050;
+
+  @media screen and (max-width: 500px) {
+    padding: 7px 16px 7px 12px;
+    border-radius: 20px;
+  }
+
+  &:hover {
+    background-color: #c9c9c9;
+  }
+
+  &.added {
+    color: #eff3ef;
+    background-color: #3e9e3e;
+  }
+}
+
+.icon-wrapper {
+  width: 1.1em;
+  height: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2px;
+}
+
+.label {
+  font-size: 0.9em;
+  font-weight: bold;
+}

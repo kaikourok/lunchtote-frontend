@@ -1,0 +1,88 @@
+.images-area {
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #d6d6d6;
+  background: #ffffff;
+  min-height: 360px;
+  display: flex;
+  align-items: flex-start;
+  align-content: flex-start;
+  user-select: none;
+  flex-wrap: wrap;
+}
+
+.image {
+  margin: 4px;
+  position: relative;
+  touch-action: none;
+
+  .remove-control {
+    display: none;
+  }
+
+  &:hover .remove-control {
+    position: absolute;
+    z-index: 1;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid lightgray;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+  }
+
+  .remove-flaged {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    background: #dd443b;
+    clip-path: polygon(100% 0, 0 0, 0 100%);
+
+    .remove-flaged-inner-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.non-uploaded {
+  opacity: 0.6;
+}
+
+.form-area {
+  width: 80%;
+  margin: 0 auto;
+
+  .form {
+    margin: 20px 0;
+    display: flex;
+
+    .form-label {
+      box-sizing: border-box;
+      width: 30%;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-input {
+      box-sizing: border-box;
+      width: 70%;
+    }
+  }
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+.button {
+  margin-left: 10px;
+}

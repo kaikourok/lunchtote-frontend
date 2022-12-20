@@ -1,0 +1,84 @@
+@import 'styles/variables.scss';
+@import 'styles/room-message/variables.scss';
+
+.#{$prefix}__left-column {
+  flex: none;
+  width: 260px;
+  margin: 10px + $headerHeight 10px 10px 10px;
+  height: calc(100vh - 20px - $headerHeight);
+  height: calc(100dvh - 20px - $headerHeight);
+  overflow-y: scroll;
+  border-right: 1px solid $columnBorderColor;
+
+  &::-webkit-scrollbar {
+    width: 11px;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px transparent;
+    border: solid 3px transparent;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px #c5c5c5;
+    border: solid 3px transparent;
+  }
+}
+
+.#{$prefix}__left-menu-link-group {
+  margin: 10px 0;
+}
+
+.#{$prefix}__left-menu-link {
+  display: block;
+  padding: 7px 10px;
+  color: #333;
+  border-radius: 2px;
+  transition: all 0.1s linear;
+  display: flex;
+  font-size: 15px;
+  align-items: center;
+  margin: 2px 0;
+
+  &.#{$prefix}__highlight {
+    font-weight: bold;
+    background-color: rgb(235, 235, 235);
+  }
+
+  &:hover {
+    color: #ddd;
+    background-color: #202020;
+  }
+
+  .#{$prefix}__left-menu-link-icon {
+    color: #bdbdbd;
+    width: 16px;
+    height: 16px;
+  }
+
+  &.#{$prefix}__highlight .#{$prefix}__left-menu-link-icon {
+    color: #333;
+  }
+
+  &:hover.#{$prefix}__highlight .#{$prefix}__left-menu-link-icon {
+    color: #bdbdbd;
+  }
+}
+
+.#{$prefix}__left-menu-link-icon-wrapper {
+  margin-right: 6px;
+}
+
+.#{$prefix}__left-menu-link-text {
+  position: relative;
+  top: 1px;
+}
+
+.#{$prefix}__room-link-deep-node {
+  margin-left: 10px;
+}

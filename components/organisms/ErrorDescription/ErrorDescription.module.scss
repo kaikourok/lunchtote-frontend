@@ -1,0 +1,28 @@
+@import 'styles/variables.scss';
+
+.error {
+  margin: 0 auto;
+  width: fit-content;
+  height: calc(100vh - $headerHeight);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .status-code {
+    font-size: 28px;
+    font-weight: bold;
+    color: #222;
+  }
+
+  .error-code-information {
+    font-size: 14px;
+    font-weight: normal;
+    color: #aaa;
+  }
+
+  .error-code-description {
+    margin-top: 30px;
+    color: #222;
+  }
+}

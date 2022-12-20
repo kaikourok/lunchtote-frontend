@@ -1,0 +1,53 @@
+@use 'sass:math';
+
+.oauth-buttons {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 8px;
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    grid-gap: 6px;
+  }
+}
+
+.oauth-button {
+  padding: 12px 8px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  border: 1px solid #d8d8d8;
+
+  .oauth-button-items-wrapper {
+    display: flex;
+    align-items: center;
+
+    .oauth-icon {
+      $iconSize: 18px;
+      margin: 0 8px;
+      width: $iconSize;
+      height: $iconSize;
+    }
+
+    .oauth-label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #444;
+      position: relative;
+      top: 1px;
+    }
+  }
+}
+
+.reset-password-link-wrapper {
+  margin: 10px 0;
+  display: flex;
+  justify-content: flex-end;
+
+  .reset-password-link {
+    color: #888;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+}

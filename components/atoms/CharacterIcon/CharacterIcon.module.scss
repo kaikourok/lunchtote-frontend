@@ -1,0 +1,18 @@
+@use 'sass:math';
+@import '@/styles/variables.scss';
+
+.character-icon {
+  display: block;
+  backface-visibility: hidden;
+  width: $iconWidth;
+  height: $iconHeight;
+
+  &.mini {
+    width: math.div($iconWidth, 2);
+    height: math.div($iconHeight, 2);
+  }
+}
+
+.noimage {
+  background: #ccc;
+}

@@ -1,0 +1,19 @@
+.notes {
+  margin-top: 4px;
+}
+
+.note {
+  display: flex;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: #888;
+
+  .mark {
+    flex: none;
+    margin-right: 1px;
+  }
+
+  .body {
+    flex: 1;
+  }
+}

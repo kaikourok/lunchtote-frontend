@@ -1,0 +1,13 @@
+.reset-diary-wrapper {
+  margin: 10px;
+  display: flex;
+  justify-content: flex-end;
+
+  .reset-diary {
+    color: #888;
+    font-weight: bold;
+    font-size: 0.9em;
+    user-select: none;
+    cursor: pointer;
+  }
+}

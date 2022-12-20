@@ -1,0 +1,19 @@
+.annotations {
+  margin: 4px 0 0 0;
+  font-size: 0.9em;
+  letter-spacing: -0.1px;
+  color: #888;
+}
+
+.annotation {
+  display: flex;
+
+  .mark {
+    flex: none;
+    margin-right: 2px;
+  }
+
+  .body {
+    flex: auto;
+  }
+}

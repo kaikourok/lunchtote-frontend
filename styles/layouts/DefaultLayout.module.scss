@@ -1,0 +1,12 @@
+@import 'styles/variables.scss';
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background-size: 20px 20px, 100% 100%;
+  background: #fcfcfc;
+}

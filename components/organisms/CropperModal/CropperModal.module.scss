@@ -1,0 +1,186 @@
+@use 'sass:math';
+@import 'styles/variables.scss';
+
+.crop-modal-wrapper {
+  margin: auto;
+  background: #ffffff22;
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  max-height: 675px;
+  box-shadow: 0 0 10px #0002;
+  backdrop-filter: blur(3px);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.crop-frame-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 3;
+
+  .crop-frame {
+    box-sizing: content-box;
+    width: $iconWidth * 2;
+    height: $iconHeight * 2;
+    border: 2px solid #333;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+}
+
+.crop-controls {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  .crop-control {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    width: 100%;
+    max-width: 300px;
+
+    .crop-control-name {
+      flex: none;
+      margin-right: 20px;
+      font-weight: bold;
+      font-size: 1.1em;
+      user-select: none;
+    }
+
+    .crop-control-inputs {
+      flex: 1;
+
+      .crop-control-slide-wrapper {
+        .crop-control-slide {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.crop-modal-buttons {
+  position: absolute;
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 5;
+  pointer-events: none;
+
+  .crop-modal-button {
+    display: flex;
+    pointer-events: initial;
+    padding: 6px 20px;
+    color: white;
+    user-select: none;
+    cursor: pointer;
+    margin-right: 8px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &.cancel-button {
+      background: rgb(92, 92, 92);
+    }
+
+    &.reset-button {
+      background: rgb(231, 90, 90);
+    }
+
+    &.apply-button {
+      background: rgb(60, 110, 216);
+    }
+
+    .crop-modal-button-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
+      position: relative;
+      top: -1px;
+    }
+  }
+}
+
+.crop-covers {
+  z-index: 2;
+
+  .crop-cover {
+    background: #ffffffe8;
+    position: absolute;
+    pointer-events: none;
+
+    &.left-top {
+      left: 0;
+      top: 0;
+      width: calc((100% + $iconWidth * 2) / 2);
+      height: calc((100% - $iconHeight * 2) / 2);
+    }
+
+    &.left-bottom {
+      left: 0;
+      bottom: 0;
+      width: calc((100% - $iconWidth * 2) / 2);
+      height: calc((100% + $iconHeight * 2) / 2);
+    }
+
+    &.right-top {
+      right: 0;
+      top: 0;
+      width: calc((100% - $iconWidth * 2) / 2);
+      height: calc((100% + $iconHeight * 2) / 2);
+    }
+
+    &.right-bottom {
+      right: 0;
+      bottom: 0;
+      width: calc((100% + $iconWidth * 2) / 2);
+      height: calc((100% - $iconHeight * 2) / 2);
+    }
+  }
+}
+
+.crop-image-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .draggable-image {
+    display: block;
+    cursor: grab;
+    outline: none;
+    user-select: none;
+  }
+}
+
+.crop-modal-overlay {
+  position: fixed;
+  z-index: 1000000;
+  background: #0006;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

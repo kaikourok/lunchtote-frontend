@@ -1,0 +1,213 @@
+$mobileMaxWidth: 650px;
+$errorColor: #eb3737;
+
+.form {
+  margin: 0;
+}
+
+.form-section {
+  padding: 20px 10px;
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid #0002;
+
+  &:first-child {
+    border-top: 1px solid #0002;
+  }
+
+  @media screen and (max-width: $mobileMaxWidth) {
+    padding: 0 0 20px 0;
+    flex-direction: column;
+    border-bottom: none;
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  .label-field {
+    box-sizing: border-box;
+    padding: 0 20px 0 0;
+    width: 25%;
+    min-width: 220px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media screen and (max-width: $mobileMaxWidth) {
+      justify-content: space-between;
+      padding: 0 0 6px 0;
+      width: 100%;
+      min-width: 100%;
+    }
+
+    .labels {
+      display: flex;
+      align-items: flex-start;
+
+      .label {
+        font-weight: bold;
+        color: #444;
+        font-size: 1rem;
+      }
+    }
+
+    .required-information {
+      margin-top: 2px;
+      padding: 4px 8px;
+      font-weight: bold;
+      font-size: 0.8em;
+      user-select: none;
+
+      &.required {
+        background-color: #df0d0d;
+        color: white;
+      }
+
+      &.non-required {
+        background-color: #444;
+        color: white;
+      }
+    }
+  }
+
+  .input-field {
+    box-sizing: border-box;
+    padding: 0;
+    width: 100%;
+    flex: 1;
+
+    @media screen and (max-width: $mobileMaxWidth) {
+      padding: 0 5px;
+    }
+  }
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  margin: 8px 0 0 0;
+
+  &:first-child {
+    margin: 0 0 0 0;
+  }
+}
+
+.input-text {
+  padding: 4px 7px;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+
+  &.error {
+    border-color: rgb(233, 0, 0);
+  }
+
+  &.short {
+    width: 50%;
+
+    @media screen and (max-width: $mobileMaxWidth) {
+      width: 100%;
+    }
+  }
+}
+
+.input-textarea {
+  padding: 7px;
+  font-size: 1rem;
+  width: 100%;
+  font-family: inherit;
+  resize: none;
+  min-height: 200px;
+  outline: none;
+
+  &.error {
+    border-color: rgb(233, 0, 0);
+  }
+
+  &.short {
+    width: 50%;
+
+    @media screen and (max-width: $mobileMaxWidth) {
+      width: 100%;
+    }
+  }
+}
+
+.short-count {
+  color: #666;
+  margin-left: 10px;
+  font-weight: bold;
+  font-size: 0.9rem;
+
+  @media screen and (max-width: $mobileMaxWidth) {
+    display: none;
+  }
+
+  &.count-over {
+    color: $errorColor;
+  }
+}
+
+.information {
+  display: flex;
+  justify-content: space-between;
+  margin: 2px 2px 0 2px;
+  font-size: 0.9rem;
+  font-weight: bold;
+
+  .error {
+    flex: 1;
+    color: $errorColor;
+  }
+
+  .count {
+    flex: none;
+    color: #666;
+    margin-left: 10px;
+
+    &.mobile-only {
+      display: none;
+
+      @media screen and (max-width: $mobileMaxWidth) {
+        display: block;
+      }
+    }
+
+    &.count-over {
+      color: $errorColor;
+    }
+  }
+}
+
+.radio-container {
+  .radio-item {
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .radio-button {
+      margin-right: 8px;
+    }
+  }
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+
+  @media screen and (max-width: $mobileMaxWidth) {
+    padding: 0;
+  }
+}
+
+.button {
+  min-width: 120px;
+}

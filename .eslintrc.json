@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "rules": {
+    "@next/next/no-img-element": "off",
+    "jsx-a11y/alt-text": "off",
+    "import/prefer-default-export": "off",
+    "import/no-named-as-default": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "semi": "warn",
+    "import/order": [
+      "warn",
+      {
+        "alphabetize": {
+          "order": "asc"
+        },
+        "newlines-between": "always"
+      }
+    ],
+    "no-var": "warn"
+  }
+}

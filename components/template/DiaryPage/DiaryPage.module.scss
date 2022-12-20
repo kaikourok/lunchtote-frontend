@@ -1,0 +1,60 @@
+.columns {
+  display: flex;
+}
+
+.sub-column {
+  width: min(20%, 200px);
+  margin-right: 10px;
+  flex: none;
+}
+
+.diary-nth-link {
+  display: block;
+  margin: 5px 0;
+  padding: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  color: #444;
+  background-color: #e8e8e8;
+  transition: all 0.16s;
+
+  &:first-child {
+    margin-top: 10px;
+  }
+
+  &:hover {
+    color: #e8e8e8;
+    background-color: #444;
+  }
+}
+
+.main-column {
+  flex: 1;
+}
+
+.character-info {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin: 10px 0;
+}
+
+.character-link {
+  color: inherit;
+  margin-right: 10px;
+
+  .character-name {
+    font-weight: bold;
+    margin-right: 4px;
+  }
+
+  .character-id {
+    color: #888;
+  }
+}
+
+.diary {
+  padding: 10px;
+  background: #e8e8e8;
+}

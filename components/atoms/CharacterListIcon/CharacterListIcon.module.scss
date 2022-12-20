@@ -1,0 +1,20 @@
+@use 'sass:math';
+@import '@/styles/variables.scss';
+
+.character-list-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: $listIconHeight;
+  width: $listIconWidth;
+}
+
+.character-list-icon {
+  height: $listIconHeight;
+  width: ($listIconHeight) * 3 / 4;
+}
+
+.noimage {
+  background: transparent;
+}

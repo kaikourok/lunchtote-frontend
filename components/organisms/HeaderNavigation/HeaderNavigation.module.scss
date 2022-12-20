@@ -1,0 +1,418 @@
+@use 'sass:math';
+@import 'styles/variables.scss';
+
+$headerMainColor: #222;
+$headerSubColor: #eee;
+
+.header {
+  z-index: 100001;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  height: $headerHeight;
+  display: flex;
+  justify-content: space-between;
+  background-color: $headerMainColor;
+}
+
+.header-links {
+  flex: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  .header-link-wrapper {
+    height: 100%;
+    position: relative;
+
+    &:nth-child(1) {
+      @media screen and (max-width: 320px) {
+        display: none;
+      }
+    }
+
+    &:nth-child(2) {
+      @media screen and (max-width: 440px) {
+        display: none;
+      }
+    }
+
+    &:nth-child(3) {
+      @media screen and (max-width: 560px) {
+        display: none;
+      }
+    }
+
+    &:nth-child(4) {
+      @media screen and (max-width: 720px) {
+        display: none;
+      }
+    }
+
+    &:nth-child(5) {
+      @media screen and (max-width: 850px) {
+        display: none;
+      }
+    }
+
+    &:nth-child(6) {
+      @media screen and (max-width: 1000px) {
+        display: none;
+      }
+    }
+
+    .header-link {
+      position: relative;
+      display: block;
+      height: 100%;
+      text-decoration: none;
+      font-size: 1.1rem;
+
+      .header-link-text {
+        height: 100%;
+        width: 100%;
+        padding: 0 25px;
+        min-width: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s;
+        transform-origin: math.div($headerHeight, 2) math.div($headerHeight, 2)
+          math.div(-$headerHeight, 2);
+        background-color: $headerMainColor;
+        color: $headerSubColor;
+
+        &.active {
+          background-color: $accentColor;
+        }
+      }
+
+      .header-link-text-localized {
+        height: 100%;
+        width: 100%;
+        padding: 0 25px;
+        min-width: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform-origin: math.div($headerHeight, 2) math.div($headerHeight, 2)
+          math.div(-$headerHeight, 2);
+        transform: translateY(-$headerHeight) rotateX(90deg);
+        transition: all 0.2s;
+        font-weight: bold;
+        color: $headerMainColor;
+        background-color: $headerSubColor;
+      }
+    }
+
+    &:hover {
+      .header-link-text {
+        transform: rotateX(-90deg);
+      }
+
+      .header-link-text-localized {
+        transform: translateY(-$headerHeight);
+      }
+    }
+
+    .header-link-dropdown {
+      position: absolute;
+      display: none;
+
+      .header-link-dropdown-arrow-wrapper {
+        padding-top: 5px;
+        display: flex;
+        justify-content: center;
+        background-color: transparent;
+        width: 140%;
+        margin-left: -20%;
+
+        &.hidden {
+          display: none;
+        }
+
+        .header-link-dropdown-arrow {
+          background: $headerMainColor;
+          height: 10px;
+          width: 20px;
+          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+      }
+
+      .header-link-dropdown-links {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        padding: 10px 20px;
+        color: $headerSubColor;
+        width: 140%;
+        margin-left: -20%;
+        background-color: $headerMainColor;
+        transition: all 0.1s;
+
+        &:hover {
+          font-weight: bold;
+          color: $headerMainColor;
+          background-color: $headerSubColor;
+        }
+      }
+    }
+
+    &:hover .header-link-dropdown {
+      display: block;
+    }
+  }
+}
+
+.header-spacer {
+  flex: 1;
+}
+
+.header-buttons {
+  flex: none;
+  display: flex;
+  height: 100%;
+  padding-right: 10px;
+
+  .header-button {
+    position: relative;
+    height: $headerHeight;
+    width: $headerHeight;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 5px;
+
+    .header-button-tip {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      top: 11px;
+      right: 8px;
+      width: 14px;
+      height: 14px;
+      background: #ff3737;
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: all 0.3s;
+
+      &.enable {
+        opacity: 1;
+      }
+
+      .header-button-tip-text {
+        user-select: none;
+        color: white;
+        font-weight: bold;
+        font-size: 11px;
+        transform: rotate(-45deg);
+      }
+    }
+
+    &.active {
+      background-color: $accentColor;
+    }
+
+    .header-button-icon {
+      width: 70%;
+      height: 70%;
+      color: $headerSubColor;
+
+      &.small {
+        padding: math.div($headerHeight, 10);
+      }
+    }
+  }
+}
+
+.submenu {
+  position: fixed;
+  z-index: 1000000000;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #ffffffee;
+  backdrop-filter: blur(10px);
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 11px;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px #aaa;
+    border: solid 3px transparent;
+  }
+
+  .submenu-header {
+    display: flex;
+    justify-content: flex-end;
+    height: $headerHeight;
+    position: sticky;
+    top: 0;
+    pointer-events: none;
+
+    .submenu-header-button {
+      height: $headerHeight;
+      width: $headerHeight;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 10px;
+      cursor: pointer;
+      pointer-events: auto;
+
+      .submenu-header-button-icon {
+        width: 80%;
+        height: 80%;
+        color: $closeColor;
+        transition: all 0.15s;
+
+        &:hover {
+          color: white;
+          background-color: $closeColor;
+        }
+      }
+    }
+  }
+
+  &.hidden {
+    display: none;
+  }
+
+  .submenu-links {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 1300px;
+    display: flex;
+    flex-wrap: wrap;
+
+    @media screen and (max-width: 600px) {
+      width: 100%;
+    }
+
+    .submenu-link-wrapper {
+      margin: 20px 0;
+      width: math.div(100%, 4);
+
+      @media screen and (max-width: 1300px) {
+        width: math.div(100%, 3);
+      }
+
+      @media screen and (max-width: 1000px) {
+        width: math.div(100%, 2);
+      }
+
+      @media screen and (max-width: 700px) {
+        margin: 10px 20px;
+        width: 100%;
+      }
+
+      .submenu-link {
+        display: block;
+        padding: 10px;
+        text-decoration: none;
+        transition: all 0.1s;
+
+        .submenu-link-text {
+          font-size: 28px;
+          color: $headerMainColor;
+          transition: color 0.1s;
+
+          @media screen and (max-width: 700px) {
+            display: none;
+          }
+        }
+
+        .submenu-link-subtext {
+          margin-left: 10px;
+          font-size: 16px;
+          color: #888;
+          transition: color 0.1s;
+
+          @media screen and (max-width: 700px) {
+            margin-left: 0;
+            font-weight: bold;
+            font-size: 24px;
+            color: #444;
+            display: inline;
+          }
+        }
+
+        &:hover {
+          background: $headerMainColor;
+          padding-left: 20px;
+
+          .submenu-link-text {
+            color: white;
+          }
+
+          .submenu-link-subtext {
+            color: #bbb;
+          }
+        }
+      }
+
+      .submenu-link-sublinks {
+        .submenu-link-sublink {
+          display: block;
+          padding: 10px 20px;
+          font-size: 18px;
+          color: $headerMainColor;
+          background-color: transparent;
+          text-decoration: none;
+          transition: all 0.15s;
+
+          &:hover {
+            color: white;
+            background: $headerMainColor;
+            padding-left: 30px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.aside-menus {
+  margin: 0 auto 20px auto;
+  width: 90%;
+  max-width: 1300px;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
+
+  .aside-menu {
+    padding: 2px 10px;
+    margin: 2px 0;
+    color: #444;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.1s;
+
+    &:hover {
+      color: #eee;
+      background: #222;
+    }
+
+    &:first-child {
+      border-left: 4px solid #222;
+
+      @media screen and (max-width: 600px) {
+        border-left: none;
+      }
+    }
+  }
+}

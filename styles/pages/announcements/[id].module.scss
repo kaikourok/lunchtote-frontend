@@ -1,0 +1,51 @@
+.announcement-guides {
+  display: flex;
+
+  .announcement-guide-wrapper {
+    width: 50%;
+
+    .announcement-guide {
+      display: flex;
+      align-items: center;
+      background: #f5f5f5;
+      padding: 10px;
+      margin: 5px 0;
+      color: #333;
+      font-weight: bold;
+      transition: all 0.16s;
+
+      &.announcement-guide-prev {
+        margin-right: 2.5px;
+        justify-content: left;
+      }
+
+      &.announcement-guide-next {
+        margin-left: 2.5px;
+        justify-content: right;
+      }
+
+      &:hover {
+        color: #f5f5f5;
+        background: #333;
+      }
+    }
+  }
+}
+
+.announcement-guide-icon {
+  width: 1rem;
+  height: 1rem;
+  margin: 0 5px;
+}
+
+.announcement-edit-link-wrapper {
+  margin: 10px 0;
+  display: flex;
+  justify-content: flex-end;
+
+  .announcement-edit-link {
+    color: #888;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+}

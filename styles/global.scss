@@ -1,0 +1,136 @@
+@import 'styles/variables.scss';
+
+@font-face {
+  font-family: 'BIZ UDPGothic Web';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/BIZUDPGothic-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'BIZ UDPGothic Web';
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/BIZUDPGothic-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Noto Sans JP Web';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/NotoSansJP-Regular.otf');
+}
+
+@font-face {
+  font-family: 'Noto Sans JP Web';
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/NotoSansJP-Bold.otf');
+}
+
+html {
+  overflow-y: scroll;
+  cursor: auto;
+}
+
+body {
+  min-height: 100vh;
+  font-family: $fonts;
+  line-height: 1.5;
+  font-size: 15px;
+
+  @media screen and (max-width: 500px) {
+    font-size: 13px;
+  }
+}
+
+select {
+  border: 1px solid gray;
+  border-radius: 2px;
+  font-family: $fonts;
+  font-size: 14px;
+}
+
+input,
+textarea {
+  border: 1px solid gray;
+  border-radius: 2px;
+  font-family: $fonts;
+  font-size: 14px;
+  word-break: break-all;
+
+  @media screen and (max-width: 500px) {
+    font-size: 13px;
+  }
+}
+
+textarea {
+  line-height: 1.45;
+}
+
+a {
+  text-decoration: none;
+}
+
+.EmojiPickerReact[class] {
+  --epr-emoji-size: 24px;
+  --epr-category-navigation-button-size: 24px;
+  --epr-header-padding: 15px 10px 5px 10px;
+}
+
+.larger {
+  font-size: min(120%, 3rem);
+}
+
+.smaller {
+  font-size: max(90%, 0.3rem);
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.dice {
+  font-weight: bold;
+  color: #2981e6;
+
+  &.d100:before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    position: relative;
+    top: 1px;
+    background: url('/images/message/d100.png');
+    background-size: cover;
+    margin: 0 1px;
+  }
+
+  &.d6:before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    position: relative;
+    top: 1px;
+    background: url('/images/message/d6.png');
+    background-size: cover;
+    margin: 0 1px;
+  }
+}

@@ -1,0 +1,11 @@
+@import 'styles/variables.scss';
+@import 'styles/room-message/variables.scss';
+@import 'styles/room-message/left-column.scss';
+@import 'styles/room-message/main-column.scss';
+@import 'styles/room-message/right-column.scss';
+@import 'styles/room-message/message.scss';
+
+.#{$prefix}__container {
+  display: flex;
+  justify-content: center;
+}

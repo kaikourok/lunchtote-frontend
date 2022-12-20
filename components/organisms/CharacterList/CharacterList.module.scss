@@ -1,0 +1,225 @@
+@import '@/styles/variables.scss';
+
+@keyframes marquee {
+  0% {
+    transform: translate(0);
+  }
+  95% {
+    transform: translate(calc($listIconWidth * -1 - 100%));
+  }
+  100% {
+    transform: translate(calc($listIconWidth * -1 - 100%));
+  }
+}
+
+.view-toggle {
+  margin: 10px 0 12px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.character-list {
+  position: relative;
+  min-height: 1px;
+}
+
+.character-detail-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 3px;
+}
+
+.indexer {
+  position: absolute;
+  text-shadow: 0 0 4px #0008;
+  background-image: #222;
+  background-size: 142px 142px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e8e8e8;
+  width: $listIconWidth;
+  height: $listIconHeight;
+  font-size: 1.2em;
+  box-shadow: 0 0 2px #0008;
+  transition: all 0.3s;
+}
+
+.character {
+  display: flex;
+  transition: all 0.3s;
+  z-index: 0;
+
+  --background-color: #222;
+  --font-color: #f3f3f3;
+
+  &.light-mode {
+    --background-color: #333;
+    --font-color: #f3f3f3;
+  }
+
+  .character-list-view {
+    position: relative;
+    width: $listIconWidth;
+    height: $listIconHeight;
+    flex: none;
+
+    .character-icon-wrapper {
+      position: absolute;
+    }
+
+    .character-list-view-bottom {
+      height: 40px;
+      align-items: center;
+    }
+
+    .character-list-view-name-wrapper {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 20px;
+      width: $listIconWidth;
+      overflow: hidden;
+      transition: all 0.3s;
+
+      .character-list-view-name {
+        position: absolute;
+        width: fit-content;
+        max-width: $listIconWidth;
+        color: var(--font-color);
+        letter-spacing: 0px;
+        font-weight: bold;
+        bottom: 0;
+        right: 0;
+        white-space: nowrap;
+        padding: 0 4px 0 4px;
+        font-size: 1em;
+        transition: all 0.3s;
+        opacity: 0;
+      }
+    }
+
+    .character-list-view-background {
+      transition: all 0.3s;
+      box-shadow: 0 0 2px #0008;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: $listIconWidth;
+      height: $listIconHeight;
+      background-image: linear-gradient(#ffffff, #eeeeee);
+    }
+
+    .character-list-id {
+      position: absolute;
+      top: -2px;
+      left: -4px;
+      box-shadow: 0 0 4px #0008;
+      padding: 0px 8px;
+      background: var(--background-color);
+      color: var(--font-color);
+      font-size: 0.8em;
+      opacity: 1;
+      transition: all 0.3s;
+
+      .first-letter {
+        font-size: smaller;
+      }
+    }
+
+    .character-list-view-background2 {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+
+      width: $listIconWidth;
+      height: 28px;
+      background-color: #222;
+      transition: all 0.3s;
+      opacity: 0;
+    }
+
+    &:hover {
+      .character-list-view-background2 {
+        opacity: 1;
+      }
+    }
+  }
+
+  .character-list-view:hover {
+    .character-list-view-name-wrapper {
+      .character-list-view-name {
+        opacity: 1;
+        animation: marquee 10s infinite linear;
+      }
+    }
+  }
+
+  .character-details {
+    position: relative;
+    flex: 1;
+    background-image: url('/images/character-list/rightbottom-background.png');
+    background-position: right top;
+    background-repeat: repeat-y;
+    margin: 8px;
+    opacity: 0;
+
+    .character-names {
+      .character-name {
+        color: var(--font-color);
+        font-size: 1.1em;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+
+      .character-id {
+        margin-left: 4px;
+        color: #aaa;
+      }
+    }
+
+    .character-summary {
+      margin: 4px 0;
+      color: var(--font-color);
+      letter-spacing: -1em;
+      transition: all 0.3s;
+    }
+  }
+}
+
+.character.selected {
+  background-color: var(--background-color);
+  z-index: 100;
+
+  .character-list-view {
+    .character-list-view-background {
+      opacity: 0;
+    }
+
+    .character-list-id {
+      opacity: 0;
+    }
+
+    .character-list-view-background2 {
+      opacity: 0;
+    }
+
+    .character-list-view-name-wrapper {
+      opacity: 0;
+    }
+  }
+
+  .character-details {
+    opacity: 1;
+  }
+
+  .character-names {
+    .character-name {
+      letter-spacing: 0px;
+    }
+  }
+
+  .character-summary {
+    letter-spacing: 0;
+  }
+}
