@@ -1,0 +1,33 @@
+# 複数の Node.js でテスト, ビルド, lint を行い、動作することを確認します
+name: test_and_build
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          # https://github.com/nodejs/Release#release-schedule
+          - 16.x # メンテナンス (2023/09/11 まで)
+          - 18.x # LTS
+          - 19.x # 現在
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: インストール
+        run: npm install
+
+      - name: ビルド
+        run: npm run build
+
+      - name: lint
+        run: npm run lint
