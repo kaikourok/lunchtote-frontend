@@ -63,3 +63,8 @@ export type RoomRelations = {
   siblings: RoomOverview[];
   children: RoomOverview[];
 };
+
+export type RoomOwnPermissions = {
+  banned: boolean;
+  permissions: RoomPermission;
+};

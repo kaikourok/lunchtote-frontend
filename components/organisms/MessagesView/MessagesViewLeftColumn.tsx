@@ -6,7 +6,11 @@ import classnames from 'classnames';
 import Link from 'next/link';
 import { Fragment, ReactNode } from 'react';
 
-import { fetchConfigEqual, toParsedUrlQueryInput } from './FetchOptionManager';
+import {
+  fetchConfigEqual,
+  toParsedUrlQueryInput,
+  toQueryString,
+} from './FetchOptionManager';
 import {
   MessagesFetchConfig,
   NamedMessagesFetchConfig,
@@ -149,8 +153,6 @@ const RoomLinkGroups = (props: {
   );
 };
 
-const FetchOptionLinks = (props: {}) => {};
-
 const MessagesViewLeftColumn = (props: {
   room: {
     id: number;
@@ -167,7 +169,7 @@ const MessagesViewLeftColumn = (props: {
             <LeftMenuLink
               key={index}
               label={config.name}
-              href={'#'}
+              href={toQueryString(config)}
               icon={mdiAsterisk}
               highlight={fetchConfigEqual(props.currentFetchConfig, config)}
             />

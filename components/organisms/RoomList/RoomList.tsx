@@ -21,7 +21,7 @@ const RoomListItem = (props: RoomListItemProps) => {
         href={
           props.linkTo
             ? props.linkTo(props.id)
-            : { pathname: '/rooms/[id]', query: { id: props.id } }
+            : { pathname: '/rooms/messages', query: { room: props.id } }
         }
       >
         <a className={styles['room-heading']}>

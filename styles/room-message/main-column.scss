@@ -8,9 +8,57 @@
 }
 
 .#{$prefix}__message-editor {
+  margin-bottom: 15px;
+}
+
+.#{$prefix}__message-editor-reply-target {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.#{$prefix}__message-editor-reply-target-texts {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.#{$prefix}__message-editor-reply-target-name {
+  font-weight: bold;
+}
+
+.#{$prefix}__message-editor-reply-target-character-id {
+  color: #888;
+}
+
+.#{$prefix}__message-editor-reply-target-text {
+  margin: 0 5px;
+}
+
+.#{$prefix}__message-editor-cancel-button {
+  flex: none;
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 0.125em 6px;
+  background-color: #eee;
+  user-select: none;
+  cursor: pointer;
+}
+
+.#{$prefix}__message-editor-reply-target-icon-wapper {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin: 0 5px 0 0;
+  display: flex;
+  align-items: center;
+}
+
+.#{$prefix}__message-editor-main {
+  width: 100%;
   display: flex;
   align-items: flex-start;
-  margin: 15px 0;
 }
 
 .#{$prefix}__message-editor-icon-wrapper {
@@ -35,9 +83,32 @@
   margin-right: 2px;
 }
 
+.#{$prefix}__message-editor-secret-select {
+  height: 28px;
+  padding: 4px 6px;
+  margin-right: 2px;
+}
+
 .#{$prefix}__message-editor-permission-select {
   height: 28px;
   padding: 4px 6px;
+}
+
+.#{$prefix}__message-editor-add-reply-target {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  cursor: pointer;
+  margin-left: 2px;
+  border: 1px solid gray;
+  border-radius: 2px;
+}
+
+.#{$prefix}__message-editor-add-reply-target-icon {
+  height: 16px;
+  width: 16px;
 }
 
 .#{$prefix}__main-column-buttons {
@@ -48,13 +119,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 4px 6px;
   border: 1px solid #a1a1a1;
   border-radius: 2px;
   cursor: pointer;
   user-select: none;
   transition: all 0.1s linear;
-  margin: 4px 0;
+  margin-bottom: 4px;
   font-size: 0.9em;
 
   &.#{$prefix}__disabled {

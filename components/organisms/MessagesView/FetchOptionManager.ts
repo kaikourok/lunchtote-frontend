@@ -77,7 +77,7 @@ export const deleteUnnecessaryOptions = (config: MessagesFetchConfig) => {
     config.category != 'character' &&
     config.category != 'character-replied'
   ) {
-    newConfig.character == null;
+    newConfig.character = null;
   }
   if (config.category != 'search') {
     newConfig.search = null;
@@ -86,7 +86,7 @@ export const deleteUnnecessaryOptions = (config: MessagesFetchConfig) => {
     newConfig.list = null;
   }
   if (config.category != 'conversation') {
-    newConfig.referRoot == null;
+    newConfig.referRoot = null;
   }
   if (config.room == null) {
     newConfig.children = null;
