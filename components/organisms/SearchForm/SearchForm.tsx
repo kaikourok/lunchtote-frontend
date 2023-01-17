@@ -15,7 +15,6 @@ import SelectOption from '@/components/atoms/SelectOption/SelectOption';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import HelpButton from '@/components/molecules/Help/Help';
 
-
 /*-------------------------------------------------------------------------------------------------
   SearchForm
 -------------------------------------------------------------------------------------------------*/
@@ -77,7 +76,7 @@ const SearchFormOptions = <T,>(props: SearchFormOptionsProps<T>) => {
     }
   }
 
-  return <SelectOption {...props} />;
+  return <SelectOption {...props} highlight={props.enabled} />;
 };
 
 SearchForm.Options = SearchFormOptions;

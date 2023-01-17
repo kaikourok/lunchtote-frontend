@@ -13,7 +13,6 @@ import MessagesViewLeftColumn from './MessagesViewLeftColumn';
 import MessagesViewMainColumn from './MessagesViewMainColumn';
 import MessagesViewRightColumn from './MessagesViewRightColumn';
 import {
-  MessagesFetchCategory,
   MessagesFetchConfig,
   NamedMessagesFetchConfig,
   RoomMessage,
@@ -39,6 +38,7 @@ type RoomInitialData = {
 type MessageEditRequiredData = {
   character: { name: string };
   icons: CharacterIcon[];
+  lists: ListOverview[];
 };
 
 type RoomMessageResponse = {
@@ -98,47 +98,22 @@ const MessagesView = () => {
     })();
   }, [router.isReady, queryString]);
 
-  const savedFetchConfigs: NamedMessagesFetchConfig[] = [
-    {
-      name: '全体',
-      category: 'all',
-      room: null,
-      list: null,
-      search: null,
-      referRoot: null,
-      character: null,
-      relateFilter: false,
-      children: true,
-    },
-    {
-      name: '返信',
-      category: 'all',
-      room: null,
-      list: null,
-      search: null,
-      referRoot: null,
-      character: null,
-      relateFilter: false,
-      children: true,
-    },
-    {
-      name: 'リスト',
-      category: 'all',
-      room: null,
-      list: null,
-      search: null,
-      referRoot: null,
-      character: null,
-      relateFilter: false,
-      children: true,
-    },
-  ];
+  const {
+    data: savedFetchConfigs,
+    error: fetchConfigsError,
+    mutate: mutateSavedFetchConfigs,
+  } = useSWR<NamedMessagesFetchConfig[]>('/rooms/fetch-configs');
 
-  if (!characterId || !messageEditData || !router.isReady) {
+  if (
+    !characterId ||
+    !messageEditData ||
+    !router.isReady ||
+    !savedFetchConfigs
+  ) {
     return <Loading />;
   }
 
-  if (messageEditDataError) {
+  if (messageEditDataError || fetchConfigsError) {
     return (
       <DefaultPage>
         <PageData title="交流" />
@@ -170,6 +145,8 @@ const MessagesView = () => {
             ? {
                 id: Number(router.query.room),
                 title: roomData.title,
+                banned: roomData.banned,
+                permissions: roomData.permissions,
               }
             : null
         }
@@ -187,7 +164,21 @@ const MessagesView = () => {
           toast.error('未実装です');
         }}
       />
-      <MessagesViewRightColumn currentFetchConfig={currentFetchConfig} />
+      <MessagesViewRightColumn
+        currentFetchConfig={currentFetchConfig}
+        onTargetCharacterChange={(target) => {
+          const newFetchConfig: MessagesFetchConfig = {
+            ...currentFetchConfig,
+            character: target,
+          };
+
+          router.push(router.pathname + toQueryString(newFetchConfig));
+        }}
+        onAddSavedFetchConfig={(config) => {
+          mutateSavedFetchConfigs([...savedFetchConfigs, config], false);
+        }}
+        lists={messageEditData.lists}
+      />
     </div>
   );
 };

@@ -1,10 +1,16 @@
+import {
+  mdiAccountPlus,
+  mdiChevronDoubleRight,
+  mdiMessageOutline,
+} from '@mdi/js';
+import Icon from '@mdi/react';
 import classnames from 'classnames';
 import Link from 'next/link';
-import { Fragment, MouseEvent, ReactNode, useState } from 'react';
+import { Fragment, ReactNode, useState } from 'react';
 import toast from 'react-hot-toast';
 
-import { toParsedUrlQueryInput } from './FetchOptionManager';
-import { MessagesFetchConfig, RoomMessage } from './types';
+import { toParsedUrlQueryInput, toQueryString } from './FetchOptionManager';
+import { MessagesFetchConfig, RoomMessage, RoomOwnPermissions } from './types';
 
 import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
@@ -17,9 +23,22 @@ import { stringifyDate } from 'lib/stringifyDate';
 import { stylizeMessagePreview } from 'lib/stylize';
 import axios from 'plugins/axios';
 
-
-
 type EditorMode = 'UNOPENED' | 'MESSAGE';
+
+type ReplyTarget =
+  | {
+      type: 'MESSAGE';
+      target: RoomMessage;
+      permission: RoomPermission;
+    }
+  | {
+      type: 'DIRECT';
+      target: {
+        id: number;
+        name: string;
+      }[];
+      permission: RoomPermission;
+    };
 
 const PERMISSION_NAMES: {
   [key in RelationPermission]: string;
@@ -35,15 +54,19 @@ const MessageEditor = (props: {
   editorMode: EditorMode;
   message: string;
   name: string;
+  secret: boolean;
   icon: string | null;
   selectableIcons: string[];
   replyPermission: RelationPermission;
+  replyTarget: ReplyTarget | null;
   onReplyPermissionChange: (permission: RelationPermission) => void;
   onEditorModeChange: (mode: EditorMode) => void;
   onMessageChange: (message: string) => void;
   onNameChange: (name: string) => void;
   onIconSelect: (icon: string | null) => void;
+  onSecretChange: (secret: boolean) => void;
   onSend: () => void;
+  onCancelReply: () => void;
 }) => {
   const [isIconSelectModalOpen, setIsIconSelectModalOpen] = useState(false);
 
@@ -51,47 +74,123 @@ const MessageEditor = (props: {
     <>
       {props.editorMode == 'MESSAGE' && (
         <div className={roomClassName('message-editor')}>
-          <div
-            className={roomClassName('message-editor-icon-wrapper')}
-            onClick={() => setIsIconSelectModalOpen(true)}
-          >
-            <CharacterIcon url={props.icon} />
-          </div>
-          <div className={roomClassName('message-editor-inputs-wrapper')}>
-            <div className={roomClassName('message-editor-inputs-top')}>
-              <input
-                type="text"
-                className={roomClassName('message-editor-name-input')}
-                placeholder="名前"
-                value={props.name}
-                onChange={(e) => props.onNameChange(e.target.value)}
-              />
-              <select
-                value={props.replyPermission}
-                onChange={(e) => {
-                  props.onReplyPermissionChange(
-                    e.target.value as RelationPermission
-                  );
-                }}
-                className={roomClassName('message-editor-permission-select')}
+          {props.replyTarget && (
+            <div className={roomClassName('message-editor-reply-target')}>
+              <div
+                className={roomClassName(
+                  'message-editor-reply-target-icon-wapper'
+                )}
               >
-                <option value="ALL">{PERMISSION_NAMES['ALL']}</option>
-                <option value="FOLLOW">{PERMISSION_NAMES['FOLLOW']}</option>
-                <option value="FOLLOWED">{PERMISSION_NAMES['FOLLOWED']}</option>
-                <option value="MUTUAL_FOLLOW">
-                  {PERMISSION_NAMES['MUTUAL_FOLLOW']}
-                </option>
-                <option value="DISALLOW">{PERMISSION_NAMES['DISALLOW']}</option>
-              </select>
+                <Icon path={mdiChevronDoubleRight} />
+              </div>
+              {props.replyTarget.type == 'MESSAGE' && (
+                <div
+                  className={roomClassName('message-editor-reply-target-texts')}
+                >
+                  <span
+                    className={roomClassName(
+                      'message-editor-reply-target-name'
+                    )}
+                  >
+                    {props.replyTarget.target.name}
+                  </span>
+                  <span
+                    className={roomClassName(
+                      'message-editor-reply-target-character-id'
+                    )}
+                  >
+                    {characterIdText(props.replyTarget.target.character)}
+                  </span>
+                  <span
+                    className={roomClassName(
+                      'message-editor-reply-target-text'
+                    )}
+                  >
+                    <span
+                      className={roomClassName(
+                        'message-editor-reply-target-text-inner'
+                      )}
+                    >
+                      {props.replyTarget.target.message}
+                    </span>
+                  </span>
+                </div>
+              )}
+              <div
+                className={roomClassName('message-editor-cancel-button')}
+                onClick={props.onCancelReply}
+              >
+                キャンセル
+              </div>
             </div>
-            <DecorationEditor
-              value={props.message}
-              onSend={props.onSend}
-              onChange={props.onMessageChange}
-              noMessage
-              noHorizonLine
-              thin
-            />
+          )}
+          <div className={roomClassName('message-editor-main')}>
+            <div
+              className={roomClassName('message-editor-icon-wrapper')}
+              onClick={() => setIsIconSelectModalOpen(true)}
+            >
+              <CharacterIcon url={props.icon} />
+            </div>
+            <div className={roomClassName('message-editor-inputs-wrapper')}>
+              <div className={roomClassName('message-editor-inputs-top')}>
+                <input
+                  type="text"
+                  className={roomClassName('message-editor-name-input')}
+                  placeholder="名前"
+                  value={props.name}
+                  onChange={(e) => props.onNameChange(e.target.value)}
+                />
+                <select
+                  value={'' + props.secret}
+                  onChange={(e) => {
+                    props.onSecretChange(e.target.value == 'true');
+                  }}
+                  className={roomClassName('message-editor-secret-select')}
+                >
+                  <option value={'' + false}>通常</option>
+                  <option value={'' + true}>秘話</option>
+                </select>
+                <select
+                  value={props.replyPermission}
+                  onChange={(e) => {
+                    props.onReplyPermissionChange(
+                      e.target.value as RelationPermission
+                    );
+                  }}
+                  className={roomClassName('message-editor-permission-select')}
+                >
+                  <option value="ALL">{PERMISSION_NAMES['ALL']}</option>
+                  <option value="FOLLOW">{PERMISSION_NAMES['FOLLOW']}</option>
+                  <option value="FOLLOWED">
+                    {PERMISSION_NAMES['FOLLOWED']}
+                  </option>
+                  <option value="MUTUAL_FOLLOW">
+                    {PERMISSION_NAMES['MUTUAL_FOLLOW']}
+                  </option>
+                  <option value="DISALLOW">
+                    {PERMISSION_NAMES['DISALLOW']}
+                  </option>
+                </select>
+                <div
+                  className={roomClassName('message-editor-add-reply-target')}
+                >
+                  <Icon
+                    className={roomClassName(
+                      'message-editor-add-reply-target-icon'
+                    )}
+                    path={mdiAccountPlus}
+                  />
+                </div>
+              </div>
+              <DecorationEditor
+                value={props.message}
+                onSend={props.onSend}
+                onChange={props.onMessageChange}
+                noMessage
+                noHorizonLine
+                thin
+              />
+            </div>
           </div>
         </div>
       )}
@@ -135,6 +234,15 @@ const Message = (props: {
   onClickReply?: () => void;
   preview?: boolean;
 }) => {
+  const referRootHref = {
+    pathname: '/rooms/messages',
+    query: toParsedUrlQueryInput({
+      ...props.currentFetchConfig,
+      category: 'conversation',
+      referRoot: props.message.referRoot,
+    }),
+  };
+
   return (
     <div
       id={`ms${props.message.id}`}
@@ -164,6 +272,27 @@ const Message = (props: {
               </span>
             </a>
           </Link>
+          {props.message.refer != null && props.message.referRoot != null && (
+            <Link href={referRootHref}>
+              <a className={roomClassName('message-recipients')}>
+                <div className={roomClassName('message-recipients-icon')}>
+                  <Icon path={mdiChevronDoubleRight} />
+                </div>
+                <>
+                  {props.message.recipients.map((recipient) => {
+                    return (
+                      <span
+                        key={recipient.id}
+                        className={roomClassName('message-recipient')}
+                      >
+                        {recipient.name}({recipient.id})
+                      </span>
+                    );
+                  })}
+                </>
+              </a>
+            </Link>
+          )}
           <div
             className={classnames(roomClassName('message-content'))}
             dangerouslySetInnerHTML={{
@@ -187,20 +316,36 @@ const Message = (props: {
           </a>
         </Link>
         {props.message.postedAt && (
-          <div className={classnames(roomClassName('message-aside-date'))}>
-            {stringifyDate(new Date(props.message.postedAt))}
-          </div>
+          <Link href={referRootHref}>
+            <a className={classnames(roomClassName('message-aside-date'))}>
+              {stringifyDate(new Date(props.message.postedAt))}
+            </a>
+          </Link>
         )}
+        <div
+          className={roomClassName('message-aside-comments')}
+          onClick={props.onClickReply}
+        >
+          <Icon
+            path={mdiMessageOutline}
+            className={roomClassName('message-aside-comments-icon')}
+          />
+          <div className={roomClassName('message-aside-comments-count')}>
+            {props.message.repliedCount}
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 const MessagesViewMainColumn = (props: {
-  room: {
-    id: number;
-    title: string;
-  } | null;
+  room:
+    | ({
+        id: number;
+        title: string;
+      } & RoomOwnPermissions)
+    | null;
   character: {
     id: number;
     name: string;
@@ -215,10 +360,12 @@ const MessagesViewMainColumn = (props: {
 }) => {
   const csrfHeader = useCsrfHeader();
 
+  const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
   const [editorMode, setEditorMode] = useState<EditorMode>('UNOPENED');
   const [icon, setIcon] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
+  const [secret, setSecret] = useState(false);
   const [replyPermission, setReplyPermission] =
     useState<RelationPermission>('ALL');
 
@@ -229,13 +376,15 @@ const MessagesViewMainColumn = (props: {
     (props.messages == undefined ? '読み込み中です' : undefined);
 
   const messageActions: ReactNode[] = [];
-  if (editorMode == 'UNOPENED') {
+  if (props.room != null) {
     messageActions.push(
       <div
         className={classnames(roomClassName('main-column-button'), {
           [roomClassName('disabled')]: false,
         })}
-        onClick={() => setEditorMode('MESSAGE')}
+        onClick={() =>
+          setEditorMode(editorMode == 'UNOPENED' ? 'MESSAGE' : 'UNOPENED')
+        }
       >
         メッセージを送信する
       </div>
@@ -256,32 +405,36 @@ const MessagesViewMainColumn = (props: {
 
   return (
     <div className={roomClassName('main-column')}>
-      {props.room && (
-        <>
-          <MessageEditor
-            editorMode={editorMode}
-            icon={icon}
-            name={name}
-            message={message}
-            selectableIcons={props.character.icons}
-            replyPermission={replyPermission}
-            onSend={async () => {
-              if (!message) {
-                toast.error('メッセージが入力されていません');
-                return;
-              }
+      {(props.room || replyTarget) && (
+        <MessageEditor
+          editorMode={editorMode}
+          icon={icon}
+          name={name}
+          message={message}
+          secret={secret}
+          selectableIcons={props.character.icons}
+          replyPermission={replyPermission}
+          replyTarget={replyTarget}
+          onSecretChange={setSecret}
+          onSend={async () => {
+            if (!message) {
+              toast.error('メッセージが入力されていません');
+              return;
+            }
 
-              if (!props.room || !csrfHeader) return;
+            if (!csrfHeader) return;
+            if (!props.room && !replyTarget) return;
 
+            if (replyTarget != null && replyTarget.type == 'MESSAGE') {
               await toast.promise(
                 axios.post(
-                  `/rooms/${props.room.id}/messages`,
+                  `/rooms/${replyTarget.target.room.id}/messages`,
                   {
-                    room: props.room.id,
+                    room: replyTarget.target.room.id,
                     icon: icon || '',
                     name: name,
                     message: message,
-                    refer: null,
+                    refer: replyTarget.target.id,
                     directReply: null,
                     replyPermission: replyPermission,
                     secret: false,
@@ -296,18 +449,65 @@ const MessagesViewMainColumn = (props: {
                   error: 'メッセージの送信中にエラーが発生しました',
                 }
               );
+            } else if (props.room) {
+              await toast.promise(
+                axios.post(
+                  `/rooms/${props.room.id}/messages`,
+                  {
+                    room: props.room.id,
+                    icon: icon || '',
+                    name: name,
+                    message: message,
+                    refer: null,
+                    directReply:
+                      replyTarget?.type == 'DIRECT'
+                        ? replyTarget.target.map((target) => target.id)
+                        : null,
+                    replyPermission: replyPermission,
+                    secret: false,
+                  },
+                  {
+                    headers: csrfHeader,
+                  }
+                ),
+                {
+                  loading: 'メッセージを送信中です',
+                  success: 'メッセージを送信しました',
+                  error: 'メッセージの送信中にエラーが発生しました',
+                }
+              );
+            } else {
+              return;
+            }
 
-              setMessage('');
-              setEditorMode('UNOPENED');
-              props.onRefreshRequired();
-            }}
-            onIconSelect={setIcon}
-            onNameChange={setName}
-            onEditorModeChange={setEditorMode}
-            onMessageChange={setMessage}
-            onReplyPermissionChange={setReplyPermission}
-          />
-          {editorMode == 'MESSAGE' && (
+            setMessage('');
+            setEditorMode('UNOPENED');
+            props.onRefreshRequired();
+          }}
+          onIconSelect={setIcon}
+          onNameChange={setName}
+          onEditorModeChange={setEditorMode}
+          onMessageChange={setMessage}
+          onReplyPermissionChange={setReplyPermission}
+          onCancelReply={() => setReplyTarget(null)}
+        />
+      )}
+      {!!fetchError && (
+        <CommentarySection noMargin>{fetchError}</CommentarySection>
+      )}
+      {!fetchError && !!props.messages && (
+        <>
+          {!!messageActions.length && (
+            <div className={classnames(roomClassName('main-column-buttons'))}>
+              {messageActions.map((node, index) => {
+                return <Fragment key={index}>{node}</Fragment>;
+              })}
+            </div>
+          )}
+          {props.messages.length == 0 && editorMode == 'UNOPENED' && (
+            <CommentarySection>メッセージがありません。</CommentarySection>
+          )}
+          {props.room && editorMode == 'MESSAGE' && (
             <Message
               message={{
                 id: 0,
@@ -334,23 +534,6 @@ const MessagesViewMainColumn = (props: {
               preview
             />
           )}
-        </>
-      )}
-      {!!fetchError && (
-        <CommentarySection noMargin>{fetchError}</CommentarySection>
-      )}
-      {!fetchError && !!props.messages && (
-        <>
-          {!!messageActions.length && (
-            <div className={classnames(roomClassName('main-column-buttons'))}>
-              {messageActions.map((node, index) => {
-                return <Fragment key={index}>{node}</Fragment>;
-              })}
-            </div>
-          )}
-          {props.messages.length == 0 && (
-            <CommentarySection>メッセージがありません。</CommentarySection>
-          )}
           {0 < props.messages.length && (
             <div className={roomClassName('messages')}>
               {props.messages.map((message) => {
@@ -359,6 +542,50 @@ const MessagesViewMainColumn = (props: {
                     key={message.id}
                     message={message}
                     currentFetchConfig={props.currentFetchConfig}
+                    onClickReply={async () => {
+                      try {
+                        const permissions: RoomOwnPermissions =
+                          props.room && props.room.id == message.room.id
+                            ? {
+                                banned: props.room.banned,
+                                permissions: props.room.permissions,
+                              }
+                            : (
+                                await axios.get<RoomOwnPermissions>(
+                                  `/rooms/${message.room.id}/permissions`
+                                )
+                              ).data;
+
+                        if (
+                          permissions.banned ||
+                          !permissions.permissions.write
+                        ) {
+                          toast.error(
+                            '指定のルームで発言を行う権限がありません'
+                          );
+                          return;
+                        }
+
+                        if (!permissions.permissions.useReply) {
+                          toast.error(
+                            '指定のルームで返信機能を利用する権限がありません'
+                          );
+                          return;
+                        }
+
+                        setReplyTarget({
+                          type: 'MESSAGE',
+                          target: message,
+                          permission: permissions.permissions,
+                        });
+                        setEditorMode('MESSAGE');
+                      } catch (e) {
+                        console.log(e);
+                        toast.error(
+                          '発言権限のチェック中にエラーが発生しました'
+                        );
+                      }
+                    }}
                   />
                 );
               })}

@@ -37,6 +37,7 @@ $labelHeight: 40px;
     -webkit-appearance: none;
     outline: none;
     cursor: pointer;
+    transition: all 0.16s linear;
 
     .option {
       color: #222;
