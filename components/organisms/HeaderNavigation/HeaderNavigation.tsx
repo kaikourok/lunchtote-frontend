@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useDispatch , useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './HeaderNavigation.module.scss';
 
@@ -198,7 +198,6 @@ const HeaderNavigation = () => {
           href: '/rooms/messages',
           links: [
             { text: '交流', href: '/rooms/messages' },
-            { text: 'ルーム一覧', href: '/rooms' },
             { text: 'ルーム検索', href: '/rooms/search' },
             { text: 'ルーム作成', href: '/rooms/create' },
             { text: 'ルーム管理', href: '/rooms/owned' },

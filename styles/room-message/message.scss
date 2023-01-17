@@ -25,11 +25,11 @@
 }
 
 .#{$prefix}__message-aside-room {
-  margin-right: 5px;
   color: #707070;
 }
 
 .#{$prefix}__message-aside-date {
+  margin: 0 5px;
 }
 
 .#{$prefix}__message-icon-wrapper {
@@ -37,6 +37,7 @@
 }
 
 .#{$prefix}__message-content-wrapper {
+  flex: 1;
 }
 
 .#{$prefix}__message-sender {
@@ -54,9 +55,59 @@
   }
 }
 
+.#{$prefix}__message-recipients {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.8em;
+  color: #999999;
+  text-decoration: none;
+  margin-top: -1px;
+}
+
+.#{$prefix}__message-recipients-icon {
+  height: 1em;
+  width: 1em;
+  margin-right: 2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.#{$prefix}__message-recipient {
+  margin-right: 4px;
+  position: relative;
+  top: -1px;
+}
+
 .#{$prefix}__message-content {
   color: #444;
   font-family: $contentFonts;
   line-height: 1.4;
   padding: 2px 4px;
+}
+
+.#{$prefix}__message-aside-comments {
+  display: flex;
+  align-items: baseline;
+  user-select: none;
+  cursor: pointer;
+}
+
+.#{$prefix}__message-aside-date {
+  color: #444;
+}
+
+.#{$prefix}__message-aside-comments-icon {
+  box-sizing: content-box;
+  width: 14px;
+  height: 14px;
+  padding-right: 1px;
+  position: relative;
+  top: 3px;
+}
+
+.#{$prefix}__message-aside-comments-count {
 }

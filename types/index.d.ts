@@ -83,3 +83,8 @@ type RelationPermission =
   | 'FOLLOWED'
   | 'MUTUAL_FOLLOW'
   | 'ALL';
+
+type ListOverview = {
+  id: number;
+  name: string;
+};

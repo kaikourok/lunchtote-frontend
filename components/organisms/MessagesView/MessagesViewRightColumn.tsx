@@ -1,8 +1,8 @@
-import { mdiCheck, mdiSwapHorizontal, mdiSwapHorizontalBold } from '@mdi/js';
+import { mdiCheck, mdiFloppy, mdiMagnify, mdiSwapHorizontal } from '@mdi/js';
 import Icon from '@mdi/react';
 import classnames from 'classnames';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import SelectAsync from 'react-select/async';
 
@@ -11,11 +11,39 @@ import {
   getCategoryName,
   toQueryString,
 } from './FetchOptionManager';
-import { MessagesFetchConfig } from './types';
+import { NamedMessagesFetchConfig, MessagesFetchConfig } from './types';
 
 import SelectOption from '@/components/atoms/SelectOption/SelectOption';
+import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
+import useCsrfHeader from 'hooks/useCsrfHeader';
 import roomClassName from 'lib/roomClassName';
+import axios from 'plugins/axios';
 
+type SelectOption = {
+  value: number;
+  label: string;
+};
+
+const MenuItem = (props: {
+  label: string;
+  icon: string;
+  onClick?: MouseEventHandler<HTMLDivElement>;
+  disabled?: boolean;
+}) => {
+  return (
+    <div
+      className={classnames(roomClassName('right-menu'), {
+        [roomClassName('disabled')]: !!props.disabled,
+      })}
+      onClick={props.onClick}
+    >
+      <div className={roomClassName('right-menu-icon')}>
+        <Icon path={props.icon} />
+      </div>
+      <div className={roomClassName('right-menu-label')}>{props.label}</div>
+    </div>
+  );
+};
 
 const ToggleMenu = (props: {
   label: string;
@@ -24,33 +52,62 @@ const ToggleMenu = (props: {
   stable?: boolean;
 }) => {
   return (
-    <div
+    <MenuItem
+      label={props.label}
+      icon={props.stable ? mdiSwapHorizontal : mdiCheck}
       onClick={() => props.onChange(!props.value)}
-      className={classnames(
-        roomClassName('right-toggle-menu'),
-        {
-          [roomClassName('disabled')]: !props.value,
-        },
-        {
-          [roomClassName('stable')]: !!props.stable,
-        }
-      )}
-    >
-      <div className={roomClassName('right-toggle-menu-icon')}>
-        <Icon path={props.stable ? mdiSwapHorizontal : mdiCheck} />
-      </div>
-      <div className={roomClassName('right-toggle-menu-label')}>
-        {props.label}
-      </div>
-    </div>
+      disabled={!props.value}
+    />
   );
 };
 
 const MessagesViewRightColumn = (props: {
   currentFetchConfig: MessagesFetchConfig;
+  lists: ListOverview[];
+  onTargetCharacterChange: (target: number) => void;
+  onAddSavedFetchConfig: (config: NamedMessagesFetchConfig) => void;
 }) => {
+  const csrfHeader = useCsrfHeader();
+
   const router = useRouter();
   const [search, setSearch] = useState(props.currentFetchConfig.search || '');
+
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+  const [newConfigName, setNewConfigName] = useState('');
+
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<SelectOption | null>(null);
+
+  const fetchCharacterInlineSearchResult = (
+    inputValue: string,
+    callback: (options: SelectOption[]) => any
+  ) => {
+    if (!csrfHeader || !inputValue) {
+      callback([]);
+      return;
+    }
+
+    (async () => {
+      const response = await axios.post<CharacterInlineSearchResult[]>(
+        '/characters/inline-search',
+        {
+          text: inputValue,
+        },
+        {
+          headers: csrfHeader,
+        }
+      );
+
+      callback(
+        response.data.map((result) => {
+          return {
+            value: result.id,
+            label: result.text,
+          };
+        })
+      );
+    })();
+  };
 
   useEffect(() => {
     if (props.currentFetchConfig.search != null) {
@@ -111,19 +168,59 @@ const MessagesViewRightColumn = (props: {
               router.push(router.pathname + toQueryString(newFetchConfig));
             }}
           >
-            検索
+            <Icon
+              path={mdiMagnify}
+              className={roomClassName('text-search-button-icon')}
+            />
           </button>
         </div>
       )}
       {props.currentFetchConfig.category == 'list' && (
         <div style={{ marginTop: 5 }}>
-          <SelectAsync placeholder="リストを選択" />
+          <SelectOption
+            options={[
+              {
+                label: props.lists.length
+                  ? 'リストを選択'
+                  : 'リストがありません',
+                value: null,
+                isPlaceholder: true,
+              },
+              ...props.lists.map((list) => ({
+                label: list.name,
+                value: list.id,
+              })),
+            ]}
+            value={props.currentFetchConfig.list}
+            onChange={(list) => {
+              const newFetchConfig: MessagesFetchConfig = {
+                ...props.currentFetchConfig,
+                list: list,
+              };
+
+              router.push(router.pathname + toQueryString(newFetchConfig));
+            }}
+          />
         </div>
       )}
       {(props.currentFetchConfig.category == 'character' ||
         props.currentFetchConfig.category == 'character-replied') && (
         <div style={{ marginTop: 5 }}>
-          <SelectAsync placeholder="キャラクターを検索" />
+          <SelectAsync
+            placeholder="キャラクターを検索"
+            value={selectedCharacter}
+            onChange={(e) => {
+              if (e == null) return;
+              setSelectedCharacter({
+                value: e.value,
+                label: e.label,
+              });
+              props.onTargetCharacterChange(e.value);
+            }}
+            loadOptions={fetchCharacterInlineSearchResult}
+            loadingMessage={() => '検索中…'}
+            noOptionsMessage={() => '該当なし'}
+          />
         </div>
       )}
       <ToggleMenu
@@ -152,6 +249,58 @@ const MessagesViewRightColumn = (props: {
           }}
         />
       )}
+      <MenuItem
+        label="現在の設定でタブを追加"
+        icon={mdiFloppy}
+        onClick={() => setIsConfigModalOpen(true)}
+      />
+      <ConfirmModal
+        heading="現在の設定でタブを追加"
+        disabled={newConfigName == ''}
+        isOpen={isConfigModalOpen}
+        onClose={() => setIsConfigModalOpen(false)}
+        onCancel={() => setIsConfigModalOpen(false)}
+        onOk={async () => {
+          if (!csrfHeader) return;
+
+          const config: NamedMessagesFetchConfig = {
+            name: newConfigName,
+            ...props.currentFetchConfig,
+          };
+
+          try {
+            await toast.promise(
+              axios.post('/rooms/fetch-configs/add', config, {
+                headers: csrfHeader,
+              }),
+              {
+                error: '閲覧設定の保存中にエラーが発生しました',
+                loading: '閲覧設定を保存しています',
+                success: '閲覧設定を保存しました',
+              }
+            );
+
+            setNewConfigName('');
+            setIsConfigModalOpen(false);
+            props.onAddSavedFetchConfig(config);
+          } catch (e) {
+            console.log(e);
+          }
+        }}
+      >
+        <div>
+          現在の閲覧設定をタブに追加します。新しい閲覧設定の名前を入力してください。
+        </div>
+        <div className={roomClassName('config-modal-input-wrapper')}>
+          <input
+            className={roomClassName('config-modal-open-input')}
+            type="text"
+            placeholder="新しい閲覧設定名"
+            value={newConfigName}
+            onChange={(e) => setNewConfigName(e.target.value)}
+          />
+        </div>
+      </ConfirmModal>
     </div>
   );
 };
