@@ -202,6 +202,7 @@ const HeaderNavigation = () => {
             { text: 'ルーム検索', href: '/rooms/search' },
             { text: 'ルーム作成', href: '/rooms/create' },
             { text: 'ルーム管理', href: '/rooms/owned' },
+            { text: 'タブ管理', href: '/rooms/tabs' },
           ],
         },
         {
