@@ -1,10 +1,15 @@
 @import 'styles/variables.scss';
 @import 'styles/room-message/variables.scss';
 
-.#{$prefix}__right-column {
+.#{$prefix}__right-column-wrapper {
   flex: none;
   width: 280px;
-  margin: 10px + $headerHeight 10px 10px 10px;
+}
+
+.#{$prefix}__right-column {
+  position: sticky;
+  top: $headerHeight + 10px;
+  padding: 10px 10px 10px 10px;
   height: calc(100vh - 20px - $headerHeight);
   height: calc(100dvh - 20px - $headerHeight);
   overflow-y: scroll;

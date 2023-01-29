@@ -19,6 +19,12 @@ import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 
 import styles from './DecorationEditor.module.scss';
 
+import Button from '@/components/atoms/Button/Button';
+import FileInputButton from '@/components/atoms/FileInputButton/FileInputButton';
+import Modal from '@/components/molecules/Modal/Modal';
+import useCsrfHeader from 'hooks/useCsrfHeader';
+import axios from 'plugins/axios';
+
 type InsertImagePosition = 'CENTER' | 'LEFT' | 'RIGHT';
 
 type ControllerButtonTooltipProps = {
@@ -137,10 +143,15 @@ type DecorationEditorProps = {
 };
 
 const DecorationEditor = (props: DecorationEditorProps) => {
+  const csrfHeader = useCsrfHeader();
   const editorRef = useRef<HTMLTextAreaElement>(null);
 
   const [selectionStart, setSelectionStart] = useState(-1);
   const [selectionEnd, setSelectionEnd] = useState(-1);
+  const [isImageInsertModalOpen, setIsImageInsertModalOpen] = useState(false);
+  const [insertImage, setInsertImage] = useState<File | null>(null);
+  const [insertImagePosition, setInsertImagePosition] =
+    useState<InsertImagePosition>('CENTER');
 
   useEffect(() => {
     if (selectionStart == -1 || selectionEnd == -1) return;
@@ -161,6 +172,27 @@ const DecorationEditor = (props: DecorationEditorProps) => {
       setSelectionStart(selectionStart);
       setSelectionEnd(selectionEnd);
     }
+  };
+
+  const handleSelectInsertImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    console.log(files);
+    if (!files) {
+      setInsertImage(null);
+      return;
+    }
+
+    (async () => {
+      const file: File = files[0];
+      //const fileReader: FileReader = await readerOnLoadEnd(file);
+
+      //if (fileReader.result != null) {
+      setInsertImage(file);
+      //}
+    })();
+
+    e.target.value = '';
   };
 
   return (
@@ -267,7 +299,7 @@ const DecorationEditor = (props: DecorationEditorProps) => {
           )}
           <ControllerButton
             path={mdiImage}
-            onClick={undefined}
+            onClick={() => setIsImageInsertModalOpen(true)}
             label="画像挿入"
           />
           {!props.noMessage && (
@@ -288,6 +320,93 @@ const DecorationEditor = (props: DecorationEditorProps) => {
           )}
         </div>
       </div>
+
+      <Modal
+        isOpen={isImageInsertModalOpen}
+        heading="画像選択"
+        onClose={() => setIsImageInsertModalOpen(false)}
+      >
+        <div className={styles['insert-image-position']}>
+          <div className={styles['insert-image-position-label']}>表示位置</div>
+          <select
+            className={styles['insert-image-position-select']}
+            value={insertImagePosition}
+            onChange={(e) =>
+              setInsertImagePosition(e.target.value as InsertImagePosition)
+            }
+          >
+            <option value="CENTER">中央寄せ</option>
+            <option value="LEFT">左寄せ</option>
+            <option value="RIGHT">右寄せ</option>
+          </select>
+        </div>
+        <div className={styles['insert-image-buttons']}>
+          <FileInputButton
+            className={styles['insert-image-button']}
+            accept=".png,.jpg,.jpeg,.gif,image/png,image/jpeg,image/gif"
+            onChange={handleSelectInsertImage}
+          >
+            画像選択
+          </FileInputButton>
+          <Button
+            className={styles['insert-image-button']}
+            disabled={insertImage == null}
+            onClick={async () => {
+              if (!csrfHeader) return;
+              if (!editorRef.current) return;
+              if (insertImage == null) return;
+
+              const submitData = new FormData();
+              submitData.append(`images[]`, insertImage);
+
+              const response = await axios.post<{ paths: string[] }>(
+                '/characters/main/upload?type=general',
+                submitData,
+                {
+                  headers: {
+                    'content-type': 'multipart/form-data',
+                    ...csrfHeader,
+                  },
+                }
+              );
+
+              if (!response.data.paths.length) {
+                return;
+              }
+
+              const imagePath = response.data.paths[0];
+              let tag = '';
+              switch (insertImagePosition) {
+                case 'CENTER':
+                  tag = '[img]' + imagePath + '[/img]';
+                  break;
+                case 'LEFT':
+                  tag = '[img-l]' + imagePath + '[/img-l]';
+                  break;
+                case 'RIGHT':
+                  tag = '[img-r]' + imagePath + '[/img-r]';
+                  break;
+              }
+
+              const s =
+                editorRef.current.value.slice(0, selectionEnd) +
+                tag +
+                editorRef.current.value.slice(selectionEnd);
+
+              onChange(
+                s,
+                selectionStart + tag.length,
+                selectionEnd + tag.length
+              );
+
+              setInsertImage(null);
+              setIsImageInsertModalOpen(false);
+            }}
+          >
+            アップロードして挿入
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

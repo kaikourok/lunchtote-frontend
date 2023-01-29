@@ -7,6 +7,16 @@ import {
   NamedMessagesFetchConfig,
 } from './types';
 
+type MessagesFetchOption =
+  | {
+      type: 'latest' | 'initial';
+      base?: undefined;
+    }
+  | {
+      type: 'previous' | 'following';
+      base: number;
+    };
+
 const newMessagesFetchConfig = (
   config: MessagesFetchConfig | NamedMessagesFetchConfig
 ): MessagesFetchConfig => {
@@ -182,18 +192,25 @@ export const messagesFetchConfigError = (config: MessagesFetchConfig) => {
 
 export const toQueryString = (
   fetchConfig?: MessagesFetchConfig | NamedMessagesFetchConfig,
-  fetchType?: MessagesFetchType
+  fetchOption?: MessagesFetchOption
 ) => {
   const params: {
     key: string;
     value: string | number | boolean;
   }[] = [];
 
-  if (fetchType) {
+  if (fetchOption) {
     params.push({
       key: 'type',
-      value: fetchType,
+      value: fetchOption.type,
     });
+
+    if (fetchOption.base != undefined) {
+      params.push({
+        key: 'base',
+        value: fetchOption.base,
+      });
+    }
   }
 
   if (fetchConfig) {
@@ -263,9 +280,9 @@ export const toQueryString = (
 
 export const toParsedUrlQueryInput = (
   fetchConfig?: MessagesFetchConfig | NamedMessagesFetchConfig,
-  fetchType?: MessagesFetchType
+  fetchOption?: MessagesFetchOption
 ) => {
-  let s = toQueryString(fetchConfig, fetchType);
+  let s = toQueryString(fetchConfig, fetchOption);
   if (s.indexOf('?') == 0) {
     s = s.slice(1);
   }

@@ -122,185 +122,187 @@ const MessagesViewRightColumn = (props: {
       : getCategories().filter((category) => category != 'conversation');
 
   return (
-    <div className={roomClassName('right-column')}>
-      {router.isReady && (
-        <SelectOption
-          options={categories.map((category) => ({
-            label: getCategoryName(category),
-            value: category,
-          }))}
-          value={props.currentFetchConfig.category}
-          onChange={(category) => {
-            const newFetchConfig: MessagesFetchConfig = {
-              ...props.currentFetchConfig,
-              category: category,
-            };
-
-            router.push(router.pathname + toQueryString(newFetchConfig));
-          }}
-        />
-      )}
-      {props.currentFetchConfig.category == 'search' && (
-        <div className={roomClassName('text-search-wrapper')}>
-          <input
-            className={roomClassName('text-search-input')}
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="検索するテキスト"
-          />
-          <button
-            className={classnames(roomClassName('text-search-button'), {
-              [roomClassName('disabled')]: !search,
-            })}
-            type="button"
-            onClick={() => {
-              if (!search) {
-                toast.error('検索するテキストを入力して下さい');
-                return;
-              }
-
-              const newFetchConfig: MessagesFetchConfig = {
-                ...props.currentFetchConfig,
-                search: search,
-              };
-
-              router.push(router.pathname + toQueryString(newFetchConfig));
-            }}
-          >
-            <Icon
-              path={mdiMagnify}
-              className={roomClassName('text-search-button-icon')}
-            />
-          </button>
-        </div>
-      )}
-      {props.currentFetchConfig.category == 'list' && (
-        <div style={{ marginTop: 5 }}>
+    <div className={roomClassName('right-column-wrapper')}>
+      <div className={roomClassName('right-column')}>
+        {router.isReady && (
           <SelectOption
-            options={[
-              {
-                label: props.lists.length
-                  ? 'リストを選択'
-                  : 'リストがありません',
-                value: null,
-                isPlaceholder: true,
-              },
-              ...props.lists.map((list) => ({
-                label: list.name,
-                value: list.id,
-              })),
-            ]}
-            value={props.currentFetchConfig.list}
-            onChange={(list) => {
+            options={categories.map((category) => ({
+              label: getCategoryName(category),
+              value: category,
+            }))}
+            value={props.currentFetchConfig.category}
+            onChange={(category) => {
               const newFetchConfig: MessagesFetchConfig = {
                 ...props.currentFetchConfig,
-                list: list,
+                category: category,
               };
 
               router.push(router.pathname + toQueryString(newFetchConfig));
             }}
           />
-        </div>
-      )}
-      {(props.currentFetchConfig.category == 'character' ||
-        props.currentFetchConfig.category == 'character-replied') && (
-        <div style={{ marginTop: 5 }}>
-          <SelectAsync
-            placeholder="キャラクターを検索"
-            value={selectedCharacter}
-            onChange={(e) => {
-              if (e == null) return;
-              setSelectedCharacter({
-                value: e.value,
-                label: e.label,
-              });
-              props.onTargetCharacterChange(e.value);
-            }}
-            loadOptions={fetchCharacterInlineSearchResult}
-            loadingMessage={() => '検索中…'}
-            noOptionsMessage={() => '該当なし'}
-          />
-        </div>
-      )}
-      <ToggleMenu
-        label="関連性の薄い発言を非表示"
-        value={!!props.currentFetchConfig.relateFilter}
-        onChange={(relateFilter) => {
-          const newFetchConfig: MessagesFetchConfig = {
-            ...props.currentFetchConfig,
-            relateFilter,
-          };
+        )}
+        {props.currentFetchConfig.category == 'search' && (
+          <div className={roomClassName('text-search-wrapper')}>
+            <input
+              className={roomClassName('text-search-input')}
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="検索するテキスト"
+            />
+            <button
+              className={classnames(roomClassName('text-search-button'), {
+                [roomClassName('disabled')]: !search,
+              })}
+              type="button"
+              onClick={() => {
+                if (!search) {
+                  toast.error('検索するテキストを入力して下さい');
+                  return;
+                }
 
-          router.push(router.pathname + toQueryString(newFetchConfig));
-        }}
-      />
-      {props.currentFetchConfig.room != null && (
+                const newFetchConfig: MessagesFetchConfig = {
+                  ...props.currentFetchConfig,
+                  search: search,
+                };
+
+                router.push(router.pathname + toQueryString(newFetchConfig));
+              }}
+            >
+              <Icon
+                path={mdiMagnify}
+                className={roomClassName('text-search-button-icon')}
+              />
+            </button>
+          </div>
+        )}
+        {props.currentFetchConfig.category == 'list' && (
+          <div style={{ marginTop: 5 }}>
+            <SelectOption
+              options={[
+                {
+                  label: props.lists.length
+                    ? 'リストを選択'
+                    : 'リストがありません',
+                  value: null,
+                  isPlaceholder: true,
+                },
+                ...props.lists.map((list) => ({
+                  label: list.name,
+                  value: list.id,
+                })),
+              ]}
+              value={props.currentFetchConfig.list}
+              onChange={(list) => {
+                const newFetchConfig: MessagesFetchConfig = {
+                  ...props.currentFetchConfig,
+                  list: list,
+                };
+
+                router.push(router.pathname + toQueryString(newFetchConfig));
+              }}
+            />
+          </div>
+        )}
+        {(props.currentFetchConfig.category == 'character' ||
+          props.currentFetchConfig.category == 'character-replied') && (
+          <div style={{ marginTop: 5 }}>
+            <SelectAsync
+              placeholder="キャラクターを検索"
+              value={selectedCharacter}
+              onChange={(e) => {
+                if (e == null) return;
+                setSelectedCharacter({
+                  value: e.value,
+                  label: e.label,
+                });
+                props.onTargetCharacterChange(e.value);
+              }}
+              loadOptions={fetchCharacterInlineSearchResult}
+              loadingMessage={() => '検索中…'}
+              noOptionsMessage={() => '該当なし'}
+            />
+          </div>
+        )}
         <ToggleMenu
-          label="所属ルームの発言も取得"
-          value={!!props.currentFetchConfig.children}
-          onChange={(children) => {
+          label="関連性の薄い発言を非表示"
+          value={!!props.currentFetchConfig.relateFilter}
+          onChange={(relateFilter) => {
             const newFetchConfig: MessagesFetchConfig = {
               ...props.currentFetchConfig,
-              children,
+              relateFilter,
             };
 
             router.push(router.pathname + toQueryString(newFetchConfig));
           }}
         />
-      )}
-      <MenuItem
-        label="現在の設定でタブを追加"
-        icon={mdiFloppy}
-        onClick={() => setIsConfigModalOpen(true)}
-      />
-      <ConfirmModal
-        heading="現在の設定でタブを追加"
-        disabled={newConfigName == ''}
-        isOpen={isConfigModalOpen}
-        onClose={() => setIsConfigModalOpen(false)}
-        onCancel={() => setIsConfigModalOpen(false)}
-        onOk={async () => {
-          if (!csrfHeader) return;
+        {props.currentFetchConfig.room != null && (
+          <ToggleMenu
+            label="所属ルームの発言も取得"
+            value={!!props.currentFetchConfig.children}
+            onChange={(children) => {
+              const newFetchConfig: MessagesFetchConfig = {
+                ...props.currentFetchConfig,
+                children,
+              };
 
-          const config: NamedMessagesFetchConfig = {
-            name: newConfigName,
-            ...props.currentFetchConfig,
-          };
-
-          try {
-            await toast.promise(
-              axios.post('/rooms/fetch-configs/add', config, {
-                headers: csrfHeader,
-              }),
-              {
-                error: '閲覧設定の保存中にエラーが発生しました',
-                loading: '閲覧設定を保存しています',
-                success: '閲覧設定を保存しました',
-              }
-            );
-
-            setNewConfigName('');
-            setIsConfigModalOpen(false);
-            props.onAddSavedFetchConfig(config);
-          } catch (e) {
-            console.log(e);
-          }
-        }}
-      >
-        <div>
-          現在の閲覧設定をタブに追加します。新しい閲覧設定の名前を入力してください。
-        </div>
-        <div className={roomClassName('config-modal-input-wrapper')}>
-          <input
-            className={roomClassName('config-modal-open-input')}
-            type="text"
-            placeholder="新しい閲覧設定名"
-            value={newConfigName}
-            onChange={(e) => setNewConfigName(e.target.value)}
+              router.push(router.pathname + toQueryString(newFetchConfig));
+            }}
           />
-        </div>
-      </ConfirmModal>
+        )}
+        <MenuItem
+          label="現在の設定でタブを追加"
+          icon={mdiFloppy}
+          onClick={() => setIsConfigModalOpen(true)}
+        />
+        <ConfirmModal
+          heading="現在の設定でタブを追加"
+          disabled={newConfigName == ''}
+          isOpen={isConfigModalOpen}
+          onClose={() => setIsConfigModalOpen(false)}
+          onCancel={() => setIsConfigModalOpen(false)}
+          onOk={async () => {
+            if (!csrfHeader) return;
+
+            const config: NamedMessagesFetchConfig = {
+              name: newConfigName,
+              ...props.currentFetchConfig,
+            };
+
+            try {
+              await toast.promise(
+                axios.post('/rooms/fetch-configs/add', config, {
+                  headers: csrfHeader,
+                }),
+                {
+                  error: '閲覧設定の保存中にエラーが発生しました',
+                  loading: '閲覧設定を保存しています',
+                  success: '閲覧設定を保存しました',
+                }
+              );
+
+              setNewConfigName('');
+              setIsConfigModalOpen(false);
+              props.onAddSavedFetchConfig(config);
+            } catch (e) {
+              console.log(e);
+            }
+          }}
+        >
+          <div>
+            現在の閲覧設定をタブに追加します。新しい閲覧設定の名前を入力してください。
+          </div>
+          <div className={roomClassName('config-modal-input-wrapper')}>
+            <input
+              className={roomClassName('config-modal-open-input')}
+              type="text"
+              placeholder="新しい閲覧設定名"
+              value={newConfigName}
+              onChange={(e) => setNewConfigName(e.target.value)}
+            />
+          </div>
+        </ConfirmModal>
+      </div>
     </div>
   );
 };

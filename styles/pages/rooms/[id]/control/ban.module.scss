@@ -1,0 +1,63 @@
+.characters {
+  margin: 10px 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 4px;
+}
+
+.character {
+  display: flex;
+  padding: 8px;
+  background: #eee;
+
+  .character-icon-wrapper {
+    flex: none;
+    margin-right: 8px;
+  }
+
+  .character-data {
+    flex: 1;
+
+    .character-heading {
+      display: flex;
+    }
+
+    .ban-button {
+      flex: none;
+      font-size: 0.9em;
+      font-weight: bold;
+      padding: 2px 8px;
+      cursor: pointer;
+      color: #222;
+      background: rgb(194, 194, 194);
+
+      &:hover {
+        color: #ddd;
+        background: #222;
+      }
+    }
+
+    .character-link {
+      display: block;
+      flex: 1;
+
+      .character-name {
+        font-weight: bold;
+        margin-right: 4px;
+        color: #333;
+      }
+
+      .character-id {
+        color: #888;
+        font-size: 0.9em;
+      }
+    }
+
+    .character-roles {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 4px;
+      margin-left: -4px;
+    }
+  }
+}

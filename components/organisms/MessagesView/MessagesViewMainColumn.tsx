@@ -1,15 +1,17 @@
 import {
   mdiAccountPlus,
+  mdiAccountRemove,
   mdiChevronDoubleRight,
   mdiMessageOutline,
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import classnames from 'classnames';
 import Link from 'next/link';
-import { Fragment, ReactNode, useState } from 'react';
+import { Fragment, ReactNode, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import SelectAsync from 'react-select/async';
 
-import { toParsedUrlQueryInput, toQueryString } from './FetchOptionManager';
+import { toParsedUrlQueryInput } from './FetchOptionManager';
 import { MessagesFetchConfig, RoomMessage, RoomOwnPermissions } from './types';
 
 import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
@@ -40,6 +42,11 @@ type ReplyTarget =
       permission: RoomPermission;
     };
 
+type SelectOption = {
+  value: number;
+  label: string;
+};
+
 const PERMISSION_NAMES: {
   [key in RelationPermission]: string;
 } = {
@@ -68,7 +75,52 @@ const MessageEditor = (props: {
   onSend: () => void;
   onCancelReply: () => void;
 }) => {
+  const csrfHeader = useCsrfHeader();
+
   const [isIconSelectModalOpen, setIsIconSelectModalOpen] = useState(false);
+  const [isDirectReplyModalOpen, setIsDirectReplyModalOpen] = useState(false);
+
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<SelectOption | null>(null);
+
+  useEffect(() => {
+    if (props.replyTarget != null) {
+      setSelectedCharacter(null);
+      setIsDirectReplyModalOpen(false);
+    }
+  }, [props.replyTarget]);
+
+  const fetchCharacterInlineSearchResult = (
+    inputValue: string,
+    callback: (options: SelectOption[]) => any
+  ) => {
+    if (!csrfHeader || !inputValue) {
+      callback([]);
+      return;
+    }
+
+    (async () => {
+      const response = await axios.post<CharacterInlineSearchResult[]>(
+        '/characters/inline-search',
+        {
+          text: inputValue,
+          excludeOwn: true,
+        },
+        {
+          headers: csrfHeader,
+        }
+      );
+
+      callback(
+        response.data.map((result) => {
+          return {
+            value: result.id,
+            label: result.text,
+          };
+        })
+      );
+    })();
+  };
 
   return (
     <>
@@ -147,8 +199,8 @@ const MessageEditor = (props: {
                   }}
                   className={roomClassName('message-editor-secret-select')}
                 >
-                  <option value={'' + false}>通常</option>
-                  <option value={'' + true}>秘話</option>
+                  <option value="false">通常</option>
+                  <option value="true">秘話</option>
                 </select>
                 <select
                   value={props.replyPermission}
@@ -173,15 +225,47 @@ const MessageEditor = (props: {
                 </select>
                 <div
                   className={roomClassName('message-editor-add-reply-target')}
+                  onClick={() => {
+                    if (!isDirectReplyModalOpen) {
+                      props.onCancelReply();
+                    }
+                    setIsDirectReplyModalOpen(!isDirectReplyModalOpen);
+                  }}
                 >
                   <Icon
                     className={roomClassName(
                       'message-editor-add-reply-target-icon'
                     )}
-                    path={mdiAccountPlus}
+                    path={
+                      isDirectReplyModalOpen ? mdiAccountRemove : mdiAccountPlus
+                    }
                   />
                 </div>
               </div>
+              {isDirectReplyModalOpen && (
+                <div
+                  className={roomClassName(
+                    'direct-reply-target-select-wrapper'
+                  )}
+                >
+                  <SelectAsync
+                    id="direct-reply-select"
+                    instanceId="direct-reply-select"
+                    placeholder="リプライを送る対象の登録番号もしくは名前で検索"
+                    classNames={{
+                      control: () =>
+                        roomClassName('direct-reply-target-select'),
+                    }}
+                    value={selectedCharacter}
+                    onChange={(e) => {
+                      setSelectedCharacter(e);
+                    }}
+                    loadOptions={fetchCharacterInlineSearchResult}
+                    loadingMessage={() => '検索中…'}
+                    noOptionsMessage={() => '該当なし'}
+                  />
+                </div>
+              )}
               <DecorationEditor
                 value={props.message}
                 onSend={props.onSend}
@@ -296,7 +380,9 @@ const Message = (props: {
           <div
             className={classnames(roomClassName('message-content'))}
             dangerouslySetInnerHTML={{
-              __html: stylizeMessagePreview(props.message.message),
+              __html: props.preview
+                ? stylizeMessagePreview(props.message.message)
+                : props.message.message,
             }}
           />
         </div>
@@ -376,6 +462,18 @@ const MessagesViewMainColumn = (props: {
     (props.messages == undefined ? '読み込み中です' : undefined);
 
   const messageActions: ReactNode[] = [];
+  if (!fetchError) {
+    messageActions.push(
+      <div
+        className={classnames(roomClassName('main-column-button'), {
+          [roomClassName('disabled')]: false,
+        })}
+        onClick={props.onRefreshRequired}
+      >
+        更新する
+      </div>
+    );
+  }
   if (props.room != null) {
     messageActions.push(
       <div
@@ -386,19 +484,7 @@ const MessagesViewMainColumn = (props: {
           setEditorMode(editorMode == 'UNOPENED' ? 'MESSAGE' : 'UNOPENED')
         }
       >
-        メッセージを送信する
-      </div>
-    );
-  }
-  if (!props.isContinuePrevious) {
-    messageActions.push(
-      <div
-        className={classnames(roomClassName('main-column-button'), {
-          [roomClassName('disabled')]: false,
-        })}
-        onClick={props.onRefreshRequired}
-      >
-        更新する
+        {editorMode == 'UNOPENED' ? 'メッセージを送信する' : '送信をキャンセル'}
       </div>
     );
   }
@@ -593,6 +679,7 @@ const MessagesViewMainColumn = (props: {
           )}
         </>
       )}
+      <></>
     </div>
   );
 };

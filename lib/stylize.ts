@@ -3,7 +3,7 @@
 
 import escapeHtml from './escapeHtml';
 
-const uploadPath = process.env.NEXT_PUBLIC_UPLOAD_PATH!;
+const uploaderPath = process.env.NEXT_PUBLIC_UPLOADER_PATH!;
 
 /*-------------------------------------------------------------------------------------------------
 	Util Functions
@@ -33,24 +33,18 @@ const isImageFileName = (s: string): boolean => {
 
 const isImagePath = (url: string): boolean => {
   const allowedExtensions = ['png', 'gif', 'jpg', 'jpeg'];
-  const uploadPathDepth = (uploadPath.match(/\//g) || []).length;
-
-  const prefixIndex = url.indexOf(uploadPath);
-  if (prefixIndex != 0) {
-    return false;
-  }
 
   const paths = url.split('/');
-  if (paths.length != 3 + uploadPathDepth) {
+  if (paths.length != 3) {
     return false;
   }
 
-  const characterDirectory = paths[1 + uploadPathDepth];
+  const characterDirectory = paths[1];
   if (isNaN(parseInt(characterDirectory, 10))) {
     return false;
   }
 
-  const fileFullname = paths[2 + uploadPathDepth];
+  const fileFullname = paths[2];
   const extensionIndex = fileFullname.lastIndexOf('.');
   if (extensionIndex == -1) {
     return false;
@@ -125,38 +119,37 @@ const replaceImageTag = (
 ): { result: string; found: boolean } => {
   let sp = target.length;
 
-  while (true) {
-    const { before, inner, after, index } = splitTagSections(
-      target.slice(0, sp),
-      startTag,
-      endTag
-    );
-    if (index == -1) {
-      break;
-    }
-
-    sp = index;
-    const url = inner.trim();
-    if (!isImagePath(url)) {
-      continue;
-    }
-
+  const { before, inner, after, index } = splitTagSections(
+    target.slice(0, sp),
+    startTag,
+    endTag
+  );
+  if (index == -1) {
     return {
-      result:
-        trimEnd(before, '<br>') +
-        `<img class="` +
-        className +
-        `" src="` +
-        url +
-        `">` +
-        trimStart(after + target.slice(sp), '<br>'),
+      result: target,
+      found: false,
+    };
+  }
+
+  const url = inner.trim();
+  if (!isImagePath(url)) {
+    return {
+      result: trimEnd(before, '<br>') + trimStart(after, '<br>'),
       found: true,
     };
   }
 
   return {
-    result: target,
-    found: false,
+    result:
+      trimEnd(before, '<br>') +
+      `<img class="` +
+      className +
+      `" src="` +
+      uploaderPath +
+      url +
+      `">` +
+      trimStart(after, '<br>'),
+    found: true,
   };
 };
 

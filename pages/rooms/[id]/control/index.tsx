@@ -47,7 +47,6 @@ import { findIndexFromUuid } from 'lib/findIndexFromUuid';
 import roomIdText from 'lib/roomIdText';
 import axios from 'plugins/axios';
 
-
 const titleMax = Number(process.env.NEXT_PUBLIC_ROOM_TITLE_MAX!);
 const summaryMax = Number(process.env.NEXT_PUBLIC_ROOM_SUMMARY_MAX!);
 
@@ -58,6 +57,7 @@ type Response = {
   tags: string[];
   searchable: boolean;
   allowRecommendation: boolean;
+  childrenReferable: boolean;
 };
 
 type Tag = {
@@ -137,6 +137,7 @@ const RoomsControl: NextPage = () => {
   const [description, setDescription] = useState('');
   const [searchable, setSearchable] = useState(true);
   const [allowRecommendation, setAllowRecommendation] = useState(true);
+  const [childrenReferable, setChildrenReferable] = useState(true);
   const [submitTried, setSubmitTried] = useState(false);
 
   const [isFetched, setIsFetched] = useState(false);
@@ -155,6 +156,7 @@ const RoomsControl: NextPage = () => {
           setDescription(response.data.description);
           setSearchable(response.data.searchable);
           setAllowRecommendation(response.data.allowRecommendation);
+          setChildrenReferable(response.data.childrenReferable);
           setTags(
             response.data.tags.map((tag) => {
               return {
@@ -173,6 +175,14 @@ const RoomsControl: NextPage = () => {
     })();
   }, [router.isReady]);
 
+  if (error) {
+    return (
+      <SubmenuPage menu={roomControlsSubmenu(Number(router.query.id))}>
+        <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
+      </SubmenuPage>
+    );
+  }
+
   if (!isFetched) {
     return (
       <SubmenuPage menu={roomControlsSubmenu(Number(router.query.id))}>
@@ -181,27 +191,23 @@ const RoomsControl: NextPage = () => {
     );
   }
 
-  if (error) {
-    return (
-      <SubmenuPage menu={roomControlsSubmenu(Number(router.query.id))}>
-        <CommentarySection noMargin>
-          表示中にエラーが発生しました。
-        </CommentarySection>
-      </SubmenuPage>
-    );
-  }
-
   const submit = async () => {
     if (!csrfHeader) return;
-
-    setSubmitTried(true);
 
     if (error) {
       return toast.error(error);
     }
+    if (submitTried) {
+      return toast('しばらくお待ち下さい');
+    }
+
     try {
       setSubmitTried(true);
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setSubmitTried(false);
+    }
   };
 
   const handleChangeTag = (
@@ -246,7 +252,7 @@ const RoomsControl: NextPage = () => {
 
   return (
     <SubmenuPage
-      title={`全般設定 | ${roomIdText(Number(router.query.id))} ${title}`}
+      title={'全般設定'}
       menu={roomControlsSubmenu(Number(router.query.id))}
     >
       <SectionWrapper>
@@ -390,8 +396,24 @@ const RoomsControl: NextPage = () => {
             >
               おすすめ表示を許可する
             </LabeledToggleButton>
+            <LabeledToggleButton
+              value={childrenReferable}
+              onToggle={(e) => setChildrenReferable(e)}
+              help={
+                <>
+                  <p>
+                    メッセージ画面にて、このルームに所属するルームが相互にリスト表示されるかどうかを選べます。
+                  </p>
+                  <p>
+                    基本的にはオンで構いません。所属ルーム間の関連性が薄い場合にのみオフにすることを推奨します。
+                  </p>
+                </>
+              }
+            >
+              所属ルーム間の相互参照を行う
+            </LabeledToggleButton>
           </InputForm.General>
-          <InputForm.Button>作成</InputForm.Button>
+          <InputForm.Button>更新</InputForm.Button>
         </InputForm>
       </SectionWrapper>
     </SubmenuPage>
