@@ -15,7 +15,7 @@ import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import axios from 'plugins/axios';
 import styles from 'styles/pages/characters/search.module.scss';
 
-type Order = 'id' | 'latest-post';
+type Order = 'id' | 'latest-post' | 'posts-per-day';
 type Sort = 'asc' | 'desc';
 type Participant = 'own' | 'follow';
 
@@ -28,6 +28,7 @@ type Response = {
 
 const orderLabels: { order: Order; label: string }[] = [
   { order: 'latest-post', label: '最終投稿' },
+  { order: 'posts-per-day', label: '勢い' },
   { order: 'id', label: 'ルーム番号' },
 ];
 
@@ -121,46 +122,6 @@ const Index: NextPage = () => {
     }
   }, [router.isReady]);
 
-  useEffect(() => {
-    if (!isAuthenticated || !router.isReady) return;
-
-    (async () => {
-      setLoadEnd(false);
-
-      const response = await axios.post<Response>(
-        `/rooms/search`,
-        {
-          order: orderOptions[orderOptionIndex].order,
-          sort: orderOptions[orderOptionIndex].sort,
-          participant: participant,
-          title: title,
-          tags: tags.filter((tag) => tag.indexOf('-') != 0),
-          excludedTags: tags
-            .filter((tag) => tag.indexOf('-') == 0)
-            .map((tag) => tag.slice(1)),
-          description: description,
-          limit: 100,
-          offset: rooms.length,
-        },
-        {
-          headers: csrfHeader!,
-        }
-      );
-
-      setRooms(response.data.rooms);
-      setIsContinue(response.data.isContinue);
-      setLoadEnd(true);
-    })();
-  }, [
-    isAuthenticated,
-    router.isReady,
-    orderOptionIndex,
-    participant,
-    title,
-    tags,
-    description,
-  ]);
-
   if (!isAuthenticationTried || !isAuthenticated) {
     return (
       <DefaultPage>
@@ -177,7 +138,37 @@ const Index: NextPage = () => {
     <DefaultPage>
       <PageData title="ルーム検索" />
       <SubHeading>ルーム検索</SubHeading>
-      <SearchForm onSearch={() => {}}>
+      <SearchForm
+        onSearch={async () => {
+          if (!isAuthenticated || !router.isReady) return;
+
+          setLoadEnd(false);
+
+          const response = await axios.post<Response>(
+            `/rooms/search`,
+            {
+              order: orderOptions[orderOptionIndexInput].order,
+              sort: orderOptions[orderOptionIndexInput].sort,
+              participant: participant,
+              title: title,
+              tags: tags.filter((tag) => tag.indexOf('-') != 0),
+              excludedTags: tags
+                .filter((tag) => tag.indexOf('-') == 0)
+                .map((tag) => tag.slice(1)),
+              description: description,
+              limit: 100,
+              offset: 0,
+            },
+            {
+              headers: csrfHeader!,
+            }
+          );
+
+          setRooms(response.data.rooms);
+          setIsContinue(response.data.isContinue);
+          setLoadEnd(true);
+        }}
+      >
         <SearchForm.TextFields>
           <SearchForm.TextField
             label="ルーム名"
@@ -226,7 +217,7 @@ const Index: NextPage = () => {
         </SearchForm.Buttons>
       </SearchForm>
       <SubHeading>検索結果</SubHeading>
-      {!loadEnd ? <Loading /> : <>{<RoomList rooms={rooms} />}</>}
+      {!loadEnd ? <></> : <>{<RoomList rooms={rooms} />}</>}
       {loadEnd && isContinue && (
         <div
           className={styles['continue-load-button']}
@@ -234,8 +225,16 @@ const Index: NextPage = () => {
             const response = await axios.post<Response>(
               `/characters/search`,
               {
-                follow: participant,
+                order: orderOptions[orderOptionIndexInput].order,
+                sort: orderOptions[orderOptionIndexInput].sort,
+                participant: participant,
                 title: title,
+                tags: tags.filter((tag) => tag.indexOf('-') != 0),
+                excludedTags: tags
+                  .filter((tag) => tag.indexOf('-') == 0)
+                  .map((tag) => tag.slice(1)),
+                description: description,
+                limit: 100,
                 offset: rooms.length,
               },
               {

@@ -14,6 +14,7 @@ type SubmenuPageProps = {
   title?: string;
   menu: SubmenuItem[];
   children: ReactNode;
+  noHeading?: boolean;
 };
 
 const SubmenuPage = (props: SubmenuPageProps) => {
@@ -56,7 +57,7 @@ const SubmenuPage = (props: SubmenuPageProps) => {
           </nav>
         </div>
         <section className={styles['content']}>
-          <SubHeading>{props.title || title}</SubHeading>
+          {!props.noHeading && <SubHeading>{props.title || title}</SubHeading>}
           <div className={styles['content-body']}>{props.children}</div>
         </section>
       </div>

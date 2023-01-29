@@ -3,8 +3,8 @@
 
 .#{$prefix}__main-column {
   flex: 1;
-  max-width: 690px;
-  padding: $headerHeight + 20px 5px 0 5px;
+  max-width: 710px;
+  padding: $headerHeight + 20px 5px 10px 5px;
 }
 
 .#{$prefix}__message-editor {
@@ -111,11 +111,22 @@
   width: 16px;
 }
 
+.#{$prefix}__direct-reply-target-select-wrapper {
+  margin: 2px 0;
+}
+
+.#{$prefix}__direct-reply-target-select[class] {
+  border-color: gray;
+  border-radius: 2px;
+}
+
 .#{$prefix}__main-column-buttons {
+  display: flex;
   margin: 0 0 10px 0;
 }
 
 .#{$prefix}__main-column-button {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,7 +136,7 @@
   cursor: pointer;
   user-select: none;
   transition: all 0.1s linear;
-  margin-bottom: 4px;
+  margin: 0 4px;
   font-size: 0.9em;
 
   &.#{$prefix}__disabled {

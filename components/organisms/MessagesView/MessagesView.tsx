@@ -161,7 +161,26 @@ const MessagesView = () => {
         isContinueFollowing={isContinueFollowing}
         isContinuePrevious={isContinuePrevious}
         onRefreshRequired={async () => {
-          toast.error('未実装です');
+          if (messages == undefined) return;
+
+          const queryString = toQueryString(currentFetchConfig, {
+            type: 'following',
+            base: messages[0]?.id ?? 0,
+          });
+
+          const response = await axios.get<RoomMessageResponse>(
+            '/rooms/messages' + queryString
+          );
+
+          if (!response.data.messages.length) {
+            toast.success('新着はありません');
+            return;
+          } else {
+            setIsContinueFollowing(response.data.isContinueFollowing || false);
+            setIsContinuePrevious(!!messages.length);
+            setMessages([...response.data.messages, ...messages]);
+            toast.success(`${response.data.messages.length}件の新着があります`);
+          }
         }}
       />
       <MessagesViewRightColumn

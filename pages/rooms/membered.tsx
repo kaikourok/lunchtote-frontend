@@ -12,12 +12,15 @@ import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 const RoomsOwned: NextPage = () => {
   useRequireAuthenticated();
 
-  const { data, error } = useSWR<RoomListItem[]>('/rooms/owned');
+  const { data, error } = useSWR<{
+    membereds: RoomListItem[];
+    inviteds: RoomListItem[];
+  }>('/rooms/membered');
 
   if (error) {
     return (
       <DefaultPage>
-        <SubHeading>管理ルーム一覧</SubHeading>
+        <SubHeading>参加ルーム</SubHeading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -26,7 +29,7 @@ const RoomsOwned: NextPage = () => {
   if (!data) {
     return (
       <DefaultPage>
-        <SubHeading>管理ルーム一覧</SubHeading>
+        <SubHeading>参加ルーム</SubHeading>
         <Loading />
       </DefaultPage>
     );
@@ -34,18 +37,15 @@ const RoomsOwned: NextPage = () => {
 
   return (
     <DefaultPage>
-      <PageData title="管理ルーム一覧" />
-      <SubHeading>管理ルーム一覧</SubHeading>
-      <RoomList
-        rooms={data.map((room) => {
-          return {
-            ...room,
-            linkTo: (id) => {
-              return { pathname: `/rooms/[id]/control`, query: { id } };
-            },
-          };
-        })}
-      />
+      <PageData title="参加ルーム" />
+      {!!data.inviteds.length && (
+        <>
+          <SubHeading>被招待ルーム</SubHeading>
+          <RoomList rooms={data.inviteds} />
+        </>
+      )}
+      <SubHeading>参加ルーム</SubHeading>
+      <RoomList rooms={data.membereds} />
     </DefaultPage>
   );
 };

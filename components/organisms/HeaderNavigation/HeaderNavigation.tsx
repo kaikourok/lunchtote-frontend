@@ -198,6 +198,7 @@ const HeaderNavigation = () => {
           href: '/rooms/messages',
           links: [
             { text: '交流', href: '/rooms/messages' },
+            { text: '参加ルーム', href: '/rooms/membered' },
             { text: 'ルーム検索', href: '/rooms/search' },
             { text: 'ルーム作成', href: '/rooms/create' },
             { text: 'ルーム管理', href: '/rooms/owned' },
