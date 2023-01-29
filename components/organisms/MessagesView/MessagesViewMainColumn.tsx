@@ -163,7 +163,10 @@ const MessageEditor = (props: {
                         'message-editor-reply-target-text-inner'
                       )}
                     >
-                      {props.replyTarget.target.message}
+                      {props.replyTarget.target.message.replaceAll(
+                        /<.+?>/g,
+                        ''
+                      )}
                     </span>
                   </span>
                 </div>
@@ -474,20 +477,22 @@ const MessagesViewMainColumn = (props: {
       </div>
     );
   }
-  if (props.room != null) {
-    messageActions.push(
-      <div
-        className={classnames(roomClassName('main-column-button'), {
-          [roomClassName('disabled')]: false,
-        })}
-        onClick={() =>
-          setEditorMode(editorMode == 'UNOPENED' ? 'MESSAGE' : 'UNOPENED')
+  messageActions.push(
+    <div
+      className={classnames(roomClassName('main-column-button'), {
+        [roomClassName('disabled')]: props.room == null,
+      })}
+      onClick={() => {
+        if (props.room == null) {
+          toast.error('トークルームを選択する必要があります');
+        } else {
+          setEditorMode(editorMode == 'UNOPENED' ? 'MESSAGE' : 'UNOPENED');
         }
-      >
-        {editorMode == 'UNOPENED' ? 'メッセージを送信する' : '送信をキャンセル'}
-      </div>
-    );
-  }
+      }}
+    >
+      {editorMode == 'UNOPENED' ? 'メッセージを送信する' : '送信をキャンセル'}
+    </div>
+  );
 
   return (
     <div className={roomClassName('main-column')}>
