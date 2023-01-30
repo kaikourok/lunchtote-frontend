@@ -20,7 +20,6 @@ import { getAnnouncementRelatedData } from 'lib/stringifyAnnouncementType';
 import { stringifyDate } from 'lib/stringifyDate';
 import axios from 'plugins/axios';
 
-
 const ControlGameAnnouncement: NextPage = () => {
   const router = useRouter();
   const csrfHeader = useCsrfHeader();
@@ -36,12 +35,13 @@ const ControlGameAnnouncement: NextPage = () => {
   const [title, setTitle] = useState('');
   const [overview, setOverview] = useState('');
   const [content, setContent] = useState('');
+  const [announcedAt, setAnnouncedAt] = useState('');
   const [silentUpdate, setSilentUpdate] = useState(false);
   const [fetched, setFetched] = useState(false);
   const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
-    if (!isAdministratorAuthenticated) return;
+    if (!router.isReady || !isAdministratorAuthenticated) return;
 
     (async () => {
       try {
@@ -50,19 +50,25 @@ const ControlGameAnnouncement: NextPage = () => {
           title: string;
           overview: string;
           content: string;
+          announcedAt: string;
         };
 
         const response = await axios.get<Response>(
-          `/control/announcements/${router.query.id}`
+          `/control/game/announcements/${router.query.id}`
         );
 
+        setAnnouncementType(response.data.type);
+        setTitle(response.data.title);
+        setOverview(response.data.overview);
+        setContent(response.data.content);
+        setAnnouncedAt(response.data.announcedAt);
         setFetched(true);
       } catch (e) {
         console.log(e);
         setFetchError(true);
       }
     })();
-  }, [isAdministratorAuthenticated]);
+  }, [router.isReady, isAdministratorAuthenticated]);
 
   const announcementTypeError = (() => {
     if (announcementType == null) {
@@ -133,9 +139,19 @@ const ControlGameAnnouncement: NextPage = () => {
 
             try {
               await toast.promise(
-                axios.put(`/announcements/${router.query.id}`, null, {
-                  headers: csrfHeader,
-                }),
+                axios.post(
+                  `/control/game/announcements/${router.query.id}/update`,
+                  {
+                    type: announcementType,
+                    title,
+                    overview,
+                    content,
+                    silentUpdate,
+                  },
+                  {
+                    headers: csrfHeader,
+                  }
+                ),
                 {
                   error: 'お知らせ更新中にエラーが発生しました',
                   loading: 'お知らせ更新を行っています',
@@ -237,16 +253,19 @@ const ControlGameAnnouncement: NextPage = () => {
         />
       </section>
       <section>
-        <SubHeading>{`[${stringifyDate(now, {
-          withoutDayOfWeek: true,
-        })}] ${title}`}</SubHeading>
+        <SubHeading>{`[${stringifyDate(
+          silentUpdate ? new Date(announcedAt) : now,
+          {
+            withoutDayOfWeek: true,
+          }
+        )}] ${title}`}</SubHeading>
         <AnnouncementDetail
           id={0}
           type={announcementType || 'UPDATE'}
           title={title}
           content={content}
-          announcedAt={now}
-          updatedAt={now}
+          announcedAt={new Date(announcedAt)}
+          updatedAt={silentUpdate ? new Date(announcedAt) : now}
         />
       </section>
     </DefaultPage>
