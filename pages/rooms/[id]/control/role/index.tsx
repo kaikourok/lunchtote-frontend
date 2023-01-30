@@ -32,6 +32,7 @@ import toast from 'react-hot-toast';
 
 import Button from '@/components/atoms/Button/Button';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
+import NoItemsMessage from '@/components/atoms/NoItemsMessage/NoItemsMessage';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Loading from '@/components/organisms/Loading/Loading';
 import SubmenuPage from '@/components/template/SubmenuPage/SubmenuPage';
@@ -264,9 +265,7 @@ const RoomsControlRole: NextPage = () => {
           </section>
         )}
         {!memberRoles.length && (
-          <section className={styles['no-roles']}>
-            追加の権限設定がありません。
-          </section>
+          <NoItemsMessage>追加の権限設定がありません。</NoItemsMessage>
         )}
       </DndContext>
       <hr />
