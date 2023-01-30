@@ -1,0 +1,56 @@
+.new-character {
+  margin: 10px 0;
+}
+
+.list-characters {
+  margin: 10px 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 8px;
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    grid-gap: 6px;
+  }
+}
+
+.list-character {
+  padding: 10px;
+  background: #eee;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .icon-wrapper {
+    margin-right: 10px;
+  }
+
+  .character-names {
+    .character-name {
+      color: #222;
+      font-weight: bold;
+    }
+
+    .character-id {
+      color: #888;
+      font-size: 0.9em;
+    }
+  }
+
+  .character-remove-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 2px 8px;
+    color: #222;
+    background: #ccc;
+    cursor: pointer;
+    user-select: none;
+    transition: linear all 0.1s;
+
+    &:hover {
+      color: #ddd;
+      background: #222;
+    }
+  }
+}

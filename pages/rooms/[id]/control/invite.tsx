@@ -131,7 +131,9 @@ const MembersControl: NextPage = () => {
               noOptionsMessage={() => '該当なし'}
             />
           </InputForm.General>
-          <InputForm.Button>招待を送る</InputForm.Button>
+          <InputForm.Button disabled={selectedCharacter == null}>
+            招待を送る
+          </InputForm.Button>
         </InputForm>
       </section>
       <SubHeading>招待管理</SubHeading>

@@ -225,6 +225,7 @@ const HeaderNavigation = () => {
           links: [
             { text: 'キャラクター一覧', href: '/characters' },
             { text: 'キャラクター検索', href: '/characters/search' },
+            { text: 'リスト管理', href: '/characters/lists' },
           ],
         },
         {

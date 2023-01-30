@@ -1,25 +1,25 @@
-.role-actions {
+.actions {
   display: flex;
   justify-content: flex-end;
   margin: 10px 0;
 }
 
-.role-action {
+.action {
   margin-left: 5px;
 }
 
-.roles {
+.items {
   margin: 10px 0;
 }
 
-.role {
+.item {
   display: flex;
   align-items: center;
   touch-action: none;
   background: #eee;
   margin: 5px 0;
 
-  .role-drag-handle {
+  .item-drag-handle {
     margin: 12px;
     flex: none;
     width: 24px;
@@ -32,11 +32,16 @@
     }
   }
 
-  .role-name {
+  .item-name {
     flex: auto;
+
+    .item-link {
+      font-weight: bold;
+      color: #444;
+    }
   }
 
-  .role-action {
+  .item-action {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,20 +65,20 @@
   }
 }
 
-.new-role-modal-inner {
+.input-modal-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  .new-role-modal-text {
+  .input-modal-text {
     margin: 4px;
   }
 
-  .new-role-modal-input-wrapper {
+  .input-modal-input-wrapper {
     margin: 4px;
   }
 
-  .new-role-modal-input {
+  .input-modal-input {
     height: 24px;
     padding: 4px;
   }
