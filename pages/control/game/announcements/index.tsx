@@ -23,8 +23,6 @@ import { getAnnouncementRelatedData } from 'lib/stringifyAnnouncementType';
 import { stringifyDate } from 'lib/stringifyDate';
 import axios from 'plugins/axios';
 
-
-
 const ControlGameAnnouncements: NextPage = () => {
   const csrfHeader = useCsrfHeader();
 
@@ -102,9 +100,18 @@ const ControlGameAnnouncements: NextPage = () => {
 
             try {
               await toast.promise(
-                axios.post('/control/game/announcements', null, {
-                  headers: csrfHeader,
-                }),
+                axios.post(
+                  '/control/game/announcements',
+                  {
+                    type: announcementType,
+                    title,
+                    overview,
+                    content,
+                  },
+                  {
+                    headers: csrfHeader,
+                  }
+                ),
                 {
                   error: 'お知らせ処理中にエラーが発生しました',
                   loading: 'お知らせを行っています',

@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 
@@ -13,8 +14,6 @@ import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import characterIdText from 'lib/characterIdText';
 import { selectCharacter } from 'store/selector/character';
-
-
 
 type Response = {
   nickname: string;
@@ -73,7 +72,7 @@ const Home: NextPage = () => {
         </CommentarySection>
       </section>
       {!!data.announcements.length && (
-        <section>
+        <>
           <SubHeading>お知らせ一覧</SubHeading>
           <section className={styles['announcements']}>
             {data.announcements.map((announcement) => (
@@ -87,7 +86,12 @@ const Home: NextPage = () => {
               />
             ))}
           </section>
-        </section>
+          <Link href="/announcements">
+            <a className={styles['announcements-link']}>
+              すべてのお知らせを確認する
+            </a>
+          </Link>
+        </>
       )}
     </DefaultPage>
   );
