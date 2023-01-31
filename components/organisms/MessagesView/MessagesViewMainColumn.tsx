@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import Link from 'next/link';
 import { Fragment, ReactNode, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import SelectAsync from 'react-select/async';
 
 import { toParsedUrlQueryInput } from './FetchOptionManager';
@@ -24,6 +25,8 @@ import roomClassName from 'lib/roomClassName';
 import { stringifyDate } from 'lib/stringifyDate';
 import { stylizeMessagePreview } from 'lib/stylize';
 import axios from 'plugins/axios';
+import { messageAutoSaveRequest } from 'store/actions/draft';
+import { selectAutoSavedMessage } from 'store/selector/draft';
 
 type EditorMode = 'UNOPENED' | 'MESSAGE';
 
@@ -448,15 +451,30 @@ const MessagesViewMainColumn = (props: {
   onRefreshRequired: () => void;
 }) => {
   const csrfHeader = useCsrfHeader();
+  const dispatch = useDispatch();
+
+  const autoSavedMessage = useSelector(selectAutoSavedMessage);
 
   const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
   const [editorMode, setEditorMode] = useState<EditorMode>('UNOPENED');
   const [icon, setIcon] = useState<string | null>(null);
   const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<string | null>(null);
   const [secret, setSecret] = useState(false);
   const [replyPermission, setReplyPermission] =
     useState<RelationPermission>('ALL');
+
+  useEffect(() => {
+    if (message != null) {
+      dispatch(messageAutoSaveRequest({ content: message }));
+    }
+  }, [message]);
+
+  useEffect(() => {
+    if (message == null && autoSavedMessage != null) {
+      setMessage(autoSavedMessage);
+    }
+  }, [autoSavedMessage, message]);
 
   const messageName = name || props.character.name;
 
@@ -493,6 +511,10 @@ const MessagesViewMainColumn = (props: {
       {editorMode == 'UNOPENED' ? 'メッセージを送信する' : '送信をキャンセル'}
     </div>
   );
+
+  if (message == null) {
+    return <div className={roomClassName('main-column')} />;
+  }
 
   return (
     <div className={roomClassName('main-column')}>

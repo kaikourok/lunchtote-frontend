@@ -24,6 +24,7 @@
     "jssha": "^3.2.0",
     "jszip": "^3.10.1",
     "jszip-utils": "^0.1.0",
+    "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
     "marked": "^4.2.2",
     "next": "12.1.6",
