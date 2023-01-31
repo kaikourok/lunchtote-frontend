@@ -1,4 +1,5 @@
 import '@/styles/sanitize.css';
+import 'react-toggle/style.css';
 import '@/styles/global.scss';
 import '@/styles/room-message/index.scss';
 import { NextPage } from 'next';
