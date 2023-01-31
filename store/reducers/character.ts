@@ -90,6 +90,8 @@ export default function characterReducer(
         };
       }
     default:
-      return state;
+      return {
+        ...state,
+      };
   }
 }

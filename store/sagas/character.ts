@@ -1,14 +1,6 @@
 import router from 'next/router';
 import toast from 'react-hot-toast';
-import {
-  call,
-  CallEffect,
-  Effect,
-  fork,
-  put,
-  select,
-  takeEvery,
-} from 'redux-saga/effects';
+import { call, fork, put, select, takeEvery } from 'redux-saga/effects';
 
 import characterIdText from 'lib/characterIdText';
 import hashPassword from 'lib/hashPassword';
@@ -16,16 +8,11 @@ import axios from 'plugins/axios';
 import * as actions from 'store/actions/character';
 import { selectCsrfToken } from 'store/selector/character';
 import { InitialData } from 'store/types/character';
-
-type EffectRT<T extends Effect> = T extends CallEffect<infer R> ? R : never;
+import { EffectRT, Replace } from 'types/store';
 
 /*-------------------------------------------------------------------------------------------------
   FetchData
 -------------------------------------------------------------------------------------------------*/
-
-type Replace<T, U> = {
-  [P in keyof T]: P extends keyof U ? U[P] : T[P];
-};
 
 async function getInitialData() {
   try {
