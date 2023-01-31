@@ -5,8 +5,8 @@ import { toast } from 'react-hot-toast';
 import ReactToggle from 'react-toggle';
 
 import Button from '@/components/atoms/Button/Button';
+import Heading from '@/components/atoms/Heading/Heading';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import Loading from '@/components/organisms/Loading/Loading';
@@ -206,7 +206,7 @@ const SettingsGeneral: NextPage = () => {
   if (!fetched) {
     return (
       <DefaultPage>
-        <SubHeading>その他設定</SubHeading>
+        <Heading>その他設定</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -215,7 +215,7 @@ const SettingsGeneral: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="その他設定" />
-      <SubHeading>その他設定</SubHeading>
+      <Heading>その他設定</Heading>
       <SectionWrapper>
         <InputForm
           onSubmit={(e) => {

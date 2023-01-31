@@ -4,8 +4,8 @@ import toast from 'react-hot-toast';
 
 import Button from '@/components/atoms/Button/Button';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import Heading from '@/components/atoms/Heading/Heading';
+import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import AnnouncementDetail from '@/components/organisms/AnnouncementDetail/AnnouncementDetail';

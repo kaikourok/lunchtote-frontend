@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import Heading from '@/components/atoms/Heading/Heading';
+import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
