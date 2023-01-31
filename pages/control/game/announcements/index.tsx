@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import Button from '@/components/atoms/Button/Button';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import AnnouncementDetail from '@/components/organisms/AnnouncementDetail/AnnouncementDetail';
@@ -79,7 +79,7 @@ const ControlGameAnnouncements: NextPage = () => {
     <DefaultPage>
       <PageData title="お知らせ" />
       <section>
-        <SubHeading>お知らせ</SubHeading>
+        <Heading>お知らせ</Heading>
         <CommentarySection>
           新規お知らせを行います。 過去のお知らせを編集したい場合、
           <InlineLink href="/announcements">こちら</InlineLink>
@@ -211,7 +211,7 @@ const ControlGameAnnouncements: NextPage = () => {
         </InputForm>
       </section>
       <section>
-        <SubHeading>お知らせ一覧画面プレビュー</SubHeading>
+        <Heading>お知らせ一覧画面プレビュー</Heading>
         <AnnouncementOverview
           id={0}
           type={announcementType || 'UPDATE'}
@@ -222,9 +222,9 @@ const ControlGameAnnouncements: NextPage = () => {
         />
       </section>
       <section>
-        <SubHeading>{`[${stringifyDate(now, {
+        <Heading>{`[${stringifyDate(now, {
           withoutDayOfWeek: true,
-        })}] ${title}`}</SubHeading>
+        })}] ${title}`}</Heading>
         <AnnouncementDetail
           id={0}
           type={announcementType || 'UPDATE'}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import CharacterList from '@/components/organisms/CharacterList/CharacterList';
 import Loading from '@/components/organisms/Loading/Loading';
@@ -14,8 +14,6 @@ import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import characterIdText from 'lib/characterIdText';
 import axios from 'plugins/axios';
-
-
 
 const characterListItemPerPage = Number(
   process.env.NEXT_PUBLIC_CHARACTER_LIST_ITEM_PER_PAGE!
@@ -72,7 +70,7 @@ const Characters: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="キャラクター一覧" />
-        <SubHeading>キャラクター一覧</SubHeading>
+        <Heading>キャラクター一覧</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -105,7 +103,7 @@ const Characters: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="キャラクター一覧" />
-      <SubHeading>キャラクター一覧</SubHeading>
+      <Heading>キャラクター一覧</Heading>
       {pageSelector}
       <CharacterList characters={data.characters} />
       {pageSelector}

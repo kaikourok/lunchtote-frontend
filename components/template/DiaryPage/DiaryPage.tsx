@@ -4,11 +4,10 @@ import styles from './DiaryPage.module.scss';
 
 import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import characterIdText from 'lib/characterIdText';
-
 
 const DiaryPage = (props: {
   title: string;
@@ -20,7 +19,7 @@ const DiaryPage = (props: {
   return (
     <DefaultPage>
       <PageData title={props.title + (props.preview ? ' (プレビュー)' : '')} />
-      <SubHeading>{props.title}</SubHeading>
+      <Heading>{props.title}</Heading>
       <div className={styles['columns']}>
         <div className={styles['sub-column']}>
           {props.preview ? (

@@ -37,7 +37,7 @@ import { NamedMessagesFetchConfig } from '@/components/organisms/MessagesView/ty
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import styles from '@/styles/pages/rooms/tabs.module.scss';
-import SubHeading from 'components/atoms/SubHeading/SubHeading';
+import Heading from 'components/atoms/Heading/Heading';
 import Loading from 'components/organisms/Loading/Loading';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
@@ -147,7 +147,7 @@ const RoomsTabs: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="タブ管理" />
-        <SubHeading>タブ管理</SubHeading>
+        <Heading>タブ管理</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -157,7 +157,7 @@ const RoomsTabs: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="タブ管理" />
-        <SubHeading>タブ管理</SubHeading>
+        <Heading>タブ管理</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -167,7 +167,7 @@ const RoomsTabs: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="タブ管理" />
-        <SubHeading>タブ管理</SubHeading>
+        <Heading>タブ管理</Heading>
         <NoItemsMessage>
           タブがありません。
           <br />
@@ -191,7 +191,7 @@ const RoomsTabs: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="タブ管理" />
-      <SubHeading>タブ管理</SubHeading>
+      <Heading>タブ管理</Heading>
       <section className={styles['actions']}>
         <Button
           className={styles['action']}

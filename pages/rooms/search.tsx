@@ -7,7 +7,7 @@ import PageData from '@/components/organisms/PageData/PageData';
 import RoomList from '@/components/organisms/RoomList/RoomList';
 import SearchForm from '@/components/organisms/SearchForm/SearchForm';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
-import SubHeading from 'components/atoms/SubHeading/SubHeading';
+import Heading from 'components/atoms/Heading/Heading';
 import Loading from 'components/organisms/Loading/Loading';
 import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useCsrfHeader from 'hooks/useCsrfHeader';
@@ -137,7 +137,7 @@ const Index: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="ルーム検索" />
-      <SubHeading>ルーム検索</SubHeading>
+      <Heading>ルーム検索</Heading>
       <SearchForm
         onSearch={async () => {
           if (!isAuthenticated || !router.isReady) return;
@@ -216,7 +216,7 @@ const Index: NextPage = () => {
           <SearchForm.SearchButton />
         </SearchForm.Buttons>
       </SearchForm>
-      <SubHeading>検索結果</SubHeading>
+      <Heading>検索結果</Heading>
       {!loadEnd ? <></> : <>{<RoomList rooms={rooms} />}</>}
       {loadEnd && isContinue && (
         <div

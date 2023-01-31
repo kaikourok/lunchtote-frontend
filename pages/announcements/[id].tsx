@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import AnnouncementDetail from '@/components/organisms/AnnouncementDetail/AnnouncementDetail';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -114,7 +114,7 @@ const Announcement: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title={displayTitle} />
-      <SubHeading>{displayTitle}</SubHeading>
+      <Heading>{displayTitle}</Heading>
       {isAdministratorAuthenticated && (
         <div className={styles['announcement-edit-link-wrapper']}>
           <Link

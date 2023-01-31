@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';
@@ -19,10 +19,6 @@ import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import axios from 'plugins/axios';
-
-
-
-
 
 const titleMax = Number(process.env.NEXT_PUBLIC_DIARY_TITLE_MAX!);
 
@@ -86,7 +82,7 @@ const DiariesWrite: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="日記作成" />
-        <SubHeading>日記作成</SubHeading>
+        <Heading>日記作成</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -96,7 +92,7 @@ const DiariesWrite: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="日記作成" />
-        <SubHeading>日記作成</SubHeading>
+        <Heading>日記作成</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -130,7 +126,7 @@ const DiariesWrite: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="日記作成" />
-      <SubHeading>日記作成</SubHeading>
+      <Heading>日記作成</Heading>
       <CommentarySection>
         作成した日記は即時に公開されるのではなく、
         <InlineLink href="#">更新タイミング</InlineLink>

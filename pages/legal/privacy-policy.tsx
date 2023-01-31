@@ -1,4 +1,4 @@
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import styles from '@/styles/pages/legal/terms.module.scss';
@@ -12,11 +12,11 @@ const Terms = () => {
     <DefaultPage>
       <PageData title="プライバシーポリシー" />
       <section>
-        <SubHeading>プライバシーポリシー</SubHeading>
+        <Heading>プライバシーポリシー</Heading>
         <div className={styles['terms-wrapper']}>プライバシーポリシー</div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 条項名</SubHeading>
+        <Heading>第{++sectionCount}条 条項名</Heading>
         <div className={styles['terms-wrapper']}>条項内容</div>
       </section>
       <section className={styles['terms-end-wrapper']}>以上</section>

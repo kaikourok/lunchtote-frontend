@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 import CheckBox from '@/components/atoms/CheckBox/CheckBox';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -82,7 +82,7 @@ const Index: NextPage = () => {
   if (!fetched) {
     return (
       <DefaultPage>
-        <SubHeading>アップロード画像管理</SubHeading>
+        <Heading>アップロード画像管理</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -115,7 +115,7 @@ const Index: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="アップロード画像管理" />
-      <SubHeading>アップロード画像管理</SubHeading>
+      <Heading>アップロード画像管理</Heading>
       <CommentarySection>
         <p>
           削除したい画像にチェックを付け、削除ボタンを押すことでサーバーから画像を削除できます。

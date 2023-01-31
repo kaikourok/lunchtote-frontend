@@ -8,7 +8,7 @@ import useSWR, { useSWRConfig } from 'swr';
 
 import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import Loading from '@/components/organisms/Loading/Loading';
@@ -105,7 +105,7 @@ const MembersControl: NextPage = () => {
       menu={roomControlsSubmenu(Number(router.query.id))}
       noHeading
     >
-      <SubHeading>新規招待</SubHeading>
+      <Heading>新規招待</Heading>
       <section className={styles['new-invite']}>
         <InputForm
           onSubmit={(e) => {
@@ -136,7 +136,7 @@ const MembersControl: NextPage = () => {
           </InputForm.Button>
         </InputForm>
       </section>
-      <SubHeading>招待管理</SubHeading>
+      <Heading>招待管理</Heading>
       {!invitedStates.length ? (
         <CommentarySection>招待されているユーザーはいません</CommentarySection>
       ) : (

@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import Loading from '@/components/organisms/Loading/Loading';
@@ -37,7 +37,7 @@ const ForumNew: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="新規トピック" />
-        <SubHeading>新規トピック</SubHeading>
+        <Heading>新規トピック</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -47,7 +47,7 @@ const ForumNew: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="新規トピック" />
-        <SubHeading>新規トピック</SubHeading>
+        <Heading>新規トピック</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -60,7 +60,7 @@ const ForumNew: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="新規トピック" />
-        <SubHeading>新規トピック</SubHeading>
+        <Heading>新規トピック</Heading>
         <CommentarySection>
           このフォーラムにトピックを立てるにはログインする必要があります。
         </CommentarySection>
@@ -75,7 +75,7 @@ const ForumNew: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="新規トピック" />
-        <SubHeading>新規トピック</SubHeading>
+        <Heading>新規トピック</Heading>
         <CommentarySection>
           このフォーラムにトピックを立てられるのは管理者のみです。
         </CommentarySection>
@@ -150,7 +150,7 @@ const ForumNew: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="新規トピック" />
-      <SubHeading>新規トピック</SubHeading>
+      <Heading>新規トピック</Heading>
       <InputForm
         onSubmit={async (e) => {
           e.preventDefault();

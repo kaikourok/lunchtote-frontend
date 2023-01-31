@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import useSWR from 'swr';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -34,7 +34,7 @@ const SettingsBlockList: NextPage = () => {
   if (!data) {
     return (
       <DefaultPage>
-        <SubHeading>ブロック一覧</SubHeading>
+        <Heading>ブロック一覧</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -43,7 +43,7 @@ const SettingsBlockList: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="ブロック一覧" />
-      <SubHeading>ブロック一覧</SubHeading>
+      <Heading>ブロック一覧</Heading>
       <>あああ</>
     </DefaultPage>
   );

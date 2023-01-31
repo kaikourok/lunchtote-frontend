@@ -14,7 +14,7 @@ import InputForm from '@/components/organisms/InputForm/InputForm';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import styles from '@/styles/pages/characters/lists/[list].module.scss';
-import SubHeading from 'components/atoms/SubHeading/SubHeading';
+import Heading from 'components/atoms/Heading/Heading';
 import Loading from 'components/organisms/Loading/Loading';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
@@ -45,7 +45,7 @@ const CharacterList: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="リスト管理" />
-        <SubHeading>リスト管理</SubHeading>
+        <Heading>リスト管理</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -55,7 +55,7 @@ const CharacterList: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="リスト管理" />
-        <SubHeading>リスト管理</SubHeading>
+        <Heading>リスト管理</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -101,7 +101,7 @@ const CharacterList: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title={`リスト管理 | ${data.name}`} />
-      <SubHeading>リストキャラクター追加</SubHeading>
+      <Heading>リストキャラクター追加</Heading>
       <section className={styles['new-character']}>
         <InputForm
           onSubmit={(e) => {
@@ -154,7 +154,7 @@ const CharacterList: NextPage = () => {
           </InputForm.Button>
         </InputForm>
       </section>
-      <SubHeading>リストキャラクター管理</SubHeading>
+      <Heading>リストキャラクター管理</Heading>
       {!data.characters.length && (
         <NoItemsMessage>リストにキャラクターが存在しません。</NoItemsMessage>
       )}

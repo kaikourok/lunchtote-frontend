@@ -3,7 +3,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import Button from '@/components/atoms/Button/Button';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -36,7 +36,7 @@ const ControlCharacterDistributeAP: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="パスワード再発行" />
-      <SubHeading>パスワード再発行</SubHeading>
+      <Heading>パスワード再発行</Heading>
       <InputForm
         onSubmit={(e) => {
           e.preventDefault();

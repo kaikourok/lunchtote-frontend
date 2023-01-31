@@ -9,7 +9,6 @@ $mobilePadding: 0;
   min-height: 100vh;
   padding: $pcPadding;
   padding-top: $pcPadding + $headerHeight;
-  // background: #fcfbfa;
 
   @media screen and (max-width: 500px) {
     padding: $mobilePadding;

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import LabeledToggleButton from '@/components/molecules/LabeledToggleButton/LabeledToggleButton';
 import AnnouncementDetail from '@/components/organisms/AnnouncementDetail/AnnouncementDetail';
 import AnnouncementOverview from '@/components/organisms/AnnouncementOverview/AnnouncementOverview';
@@ -101,7 +101,7 @@ const ControlGameAnnouncement: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="お知らせ編集" />
-        <SubHeading>お知らせ編集</SubHeading>
+        <Heading>お知らせ編集</Heading>
         <CommentarySection>読み込み中にエラーが発生しました</CommentarySection>
       </DefaultPage>
     );
@@ -111,7 +111,7 @@ const ControlGameAnnouncement: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="お知らせ編集" />
-        <SubHeading>お知らせ編集</SubHeading>
+        <Heading>お知らせ編集</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -123,7 +123,7 @@ const ControlGameAnnouncement: NextPage = () => {
     <DefaultPage>
       <PageData title="お知らせ編集" />
       <section>
-        <SubHeading>お知らせ編集</SubHeading>
+        <Heading>お知らせ編集</Heading>
         <InputForm
           onSubmit={async (e) => {
             e.preventDefault();
@@ -242,7 +242,7 @@ const ControlGameAnnouncement: NextPage = () => {
         </InputForm>
       </section>
       <section>
-        <SubHeading>お知らせ一覧画面プレビュー</SubHeading>
+        <Heading>お知らせ一覧画面プレビュー</Heading>
         <AnnouncementOverview
           id={0}
           type={announcementType || 'UPDATE'}
@@ -253,12 +253,12 @@ const ControlGameAnnouncement: NextPage = () => {
         />
       </section>
       <section>
-        <SubHeading>{`[${stringifyDate(
+        <Heading>{`[${stringifyDate(
           silentUpdate ? new Date(announcedAt) : now,
           {
             withoutDayOfWeek: true,
           }
-        )}] ${title}`}</SubHeading>
+        )}] ${title}`}</Heading>
         <AnnouncementDetail
           id={0}
           type={announcementType || 'UPDATE'}

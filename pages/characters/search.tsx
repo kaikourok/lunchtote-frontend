@@ -6,7 +6,7 @@ import CharacterList from '@/components/organisms/CharacterList/CharacterList';
 import PageData from '@/components/organisms/PageData/PageData';
 import SearchForm from '@/components/organisms/SearchForm/SearchForm';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
-import SubHeading from 'components/atoms/SubHeading/SubHeading';
+import Heading from 'components/atoms/Heading/Heading';
 import Loading from 'components/organisms/Loading/Loading';
 import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useCsrfHeader from 'hooks/useCsrfHeader';
@@ -180,7 +180,7 @@ const Index: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="キャラクター検索" />
-      <SubHeading>キャラクター検索</SubHeading>
+      <Heading>キャラクター検索</Heading>
       <SearchForm onSearch={() => {}}>
         <SearchForm.TextFields>
           <SearchForm.TextField
@@ -250,7 +250,7 @@ const Index: NextPage = () => {
           <SearchForm.SearchButton />
         </SearchForm.Buttons>
       </SearchForm>
-      <SubHeading>検索結果</SubHeading>
+      <Heading>検索結果</Heading>
       {!loadEnd ? (
         <Loading />
       ) : (

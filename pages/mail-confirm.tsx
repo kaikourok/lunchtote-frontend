@@ -3,7 +3,7 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -17,7 +17,7 @@ const Wrapper = (props: { children: ReactNode }) => {
   return (
     <DefaultPage>
       <PageData title="メールアドレス認証" />
-      <SubHeading>メールアドレス認証</SubHeading>
+      <Heading>メールアドレス認証</Heading>
       <SectionWrapper>{props.children}</SectionWrapper>
     </DefaultPage>
   );
