@@ -62,11 +62,13 @@ function* watchFetchDataRequest() {
 -------------------------------------------------------------------------------------------------*/
 
 async function postSignIn(action: ReturnType<typeof actions.signInRequest>) {
-  const payload = action.payload;
-  payload.password = hashPassword(action.payload.password);
+  const password = hashPassword(action.payload.password);
 
   try {
-    await axios.post('/signin', payload);
+    await axios.post('/signin', {
+      ...action.payload,
+      password,
+    });
   } catch {
     return false;
   }
@@ -98,11 +100,13 @@ function* watchSignInRequest() {
 -------------------------------------------------------------------------------------------------*/
 
 async function postSignUp(action: ReturnType<typeof actions.signUpRequest>) {
-  const payload = action.payload;
-  payload.password = hashPassword(action.payload.password);
+  const password = hashPassword(action.payload.password);
 
   try {
-    return await axios.post<{ id: number }>('/characters', payload);
+    return await axios.post<{ id: number }>('/characters', {
+      ...action.payload,
+      password,
+    });
   } catch {
     return null;
   }
@@ -113,9 +117,16 @@ function* signUp(action: ReturnType<typeof actions.signUpRequest>) {
   const result: EffectRT<typeof resultCall> = yield resultCall;
 
   if (result) {
+    yield call(postSignIn, {
+      type: 'character/sign_in_request',
+      payload: {
+        key: action.payload.username,
+        password: action.payload.password,
+      },
+    });
     yield call(fetchData);
     toast.success(`${characterIdText(result.data.id)}として登録しました`);
-    router.push('/introduction');
+    router.push('/home');
     yield;
   } else {
     toast.error('登録中にエラーが発生しました');
