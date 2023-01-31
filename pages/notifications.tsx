@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -133,7 +133,7 @@ const Notifications: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="通知" />
-      <SubHeading>通知</SubHeading>
+      <Heading>通知</Heading>
       <SectionWrapper>
         {!notificationsGroupedByDay.length ? (
           <CommentarySection>通知はまだありません</CommentarySection>

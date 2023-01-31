@@ -36,7 +36,7 @@ import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import styles from '@/styles/pages/characters/lists/index.module.scss';
-import SubHeading from 'components/atoms/SubHeading/SubHeading';
+import Heading from 'components/atoms/Heading/Heading';
 import Loading from 'components/organisms/Loading/Loading';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
@@ -158,7 +158,7 @@ const CharacterLists: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="リスト管理" />
-        <SubHeading>リスト管理</SubHeading>
+        <Heading>リスト管理</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -168,7 +168,7 @@ const CharacterLists: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="リスト管理" />
-        <SubHeading>リスト管理</SubHeading>
+        <Heading>リスト管理</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -186,7 +186,7 @@ const CharacterLists: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="リスト管理" />
-      <SubHeading>リスト管理</SubHeading>
+      <Heading>リスト管理</Heading>
       <section className={styles['actions']}>
         <Button
           className={styles['action']}

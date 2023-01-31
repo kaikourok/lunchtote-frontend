@@ -9,7 +9,7 @@ import useSWR from 'swr';
 
 import Button from '@/components/atoms/Button/Button';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -19,7 +19,6 @@ import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import axios from 'plugins/axios';
-
 
 type LayeringGroup = {
   id: number;
@@ -57,7 +56,7 @@ const SettingsMakeIcons: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="アイコンレイヤリング" />
-        <SubHeading>アイコンレイヤリング</SubHeading>
+        <Heading>アイコンレイヤリング</Heading>
         <CommentarySection>
           ページの読み込み中にエラーが発生しました。
         </CommentarySection>
@@ -69,7 +68,7 @@ const SettingsMakeIcons: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="アイコンレイヤリング" />
-        <SubHeading>アイコンレイヤリング</SubHeading>
+        <Heading>アイコンレイヤリング</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -78,7 +77,7 @@ const SettingsMakeIcons: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="アイコンレイヤリング" />
-      <SubHeading>アイコンレイヤリング</SubHeading>
+      <Heading>アイコンレイヤリング</Heading>
       <CommentarySection>
         重ね合わせ合成を行うことで新規アイコンを生成します。
       </CommentarySection>

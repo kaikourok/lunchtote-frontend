@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
 import toast from 'react-hot-toast';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -21,7 +21,7 @@ const Wrapper = (props: { children: ReactNode }) => {
   return (
     <DefaultPage>
       <PageData title="パスワード再設定" />
-      <SubHeading>パスワード再設定</SubHeading>
+      <Heading>パスワード再設定</Heading>
       <SectionWrapper>{props.children}</SectionWrapper>
     </DefaultPage>
   );

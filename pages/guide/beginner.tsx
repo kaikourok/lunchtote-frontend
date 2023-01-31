@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -11,7 +11,7 @@ const RulebookGuideBeginnerIntroduction: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="ビギナーガイド" />
-      <SubHeading>ビギナーガイド</SubHeading>
+      <Heading>ビギナーガイド</Heading>
       <CommentarySection>
         このページでは、交流ゲーム初心者、あるいは初めての方に向けた解説を行っています。類似のゲームと多少違う部分もあるので、慣れている方も一度目を通しておくとよいかもしれません。
       </CommentarySection>

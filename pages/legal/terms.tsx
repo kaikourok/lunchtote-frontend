@@ -1,4 +1,4 @@
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import styles from '@/styles/pages/legal/terms.module.scss';
@@ -10,13 +10,13 @@ const Terms = () => {
     <DefaultPage>
       <PageData title="利用規約" />
       <section>
-        <SubHeading>利用規約</SubHeading>
+        <Heading>利用規約</Heading>
         <div className={styles['terms-wrapper']}>
           この利用規約（以下、「本規約」といいます。）は、本サイト提供者（以下、「当サークル」といいます。）がこのウェブサイト上で提供するサービス（以下、「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下、「ユーザー」といいます。）には、本規約に従って、本サービスをご利用いただきます。
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 適用</SubHeading>
+        <Heading>第{++sectionCount}条 適用</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>
@@ -32,7 +32,7 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 利用登録</SubHeading>
+        <Heading>第{++sectionCount}条 利用登録</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>
@@ -50,7 +50,7 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 パスワードの管理</SubHeading>
+        <Heading>第{++sectionCount}条 パスワードの管理</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>
@@ -66,7 +66,7 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 禁止事項</SubHeading>
+        <Heading>第{++sectionCount}条 禁止事項</Heading>
         <div className={styles['terms-wrapper']}>
           <p>
             ユーザーは、本サービスの利用にあたり、以下の行為をしてはなりません。
@@ -123,7 +123,7 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 本サービスの提供の停止等</SubHeading>
+        <Heading>第{++sectionCount}条 本サービスの提供の停止等</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>
@@ -148,7 +148,7 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 著作権</SubHeading>
+        <Heading>第{++sectionCount}条 著作権</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>
@@ -164,7 +164,7 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 利用制限および登録抹消</SubHeading>
+        <Heading>第{++sectionCount}条 利用制限および登録抹消</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>
@@ -184,13 +184,13 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 退会</SubHeading>
+        <Heading>第{++sectionCount}条 退会</Heading>
         <div className={styles['terms-wrapper']}>
           ユーザーは、当サークルの定める退会手続により、本サービスから退会できるものとします。
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 保証の否認および免責事項</SubHeading>
+        <Heading>第{++sectionCount}条 保証の否認および免責事項</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>
@@ -206,13 +206,13 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 サービス内容の変更等</SubHeading>
+        <Heading>第{++sectionCount}条 サービス内容の変更等</Heading>
         <div className={styles['terms-wrapper']}>
           当サークルは、ユーザーへの事前の告知をもって、本サービスの内容を変更、追加または廃止することがあり、ユーザーはこれを承諾するものとします。
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 利用規約の変更</SubHeading>
+        <Heading>第{++sectionCount}条 利用規約の変更</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>
@@ -231,19 +231,19 @@ const Terms = () => {
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 個人情報の取扱い</SubHeading>
+        <Heading>第{++sectionCount}条 個人情報の取扱い</Heading>
         <div className={styles['terms-wrapper']}>
           当サークルは、本サービスの利用によって取得する個人情報については、当サークル「プライバシーポリシー」に従い適切に取り扱うものとします。
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 権利義務の譲渡の禁止</SubHeading>
+        <Heading>第{++sectionCount}条 権利義務の譲渡の禁止</Heading>
         <div className={styles['terms-wrapper']}>
           ユーザーは、当サークルの事前の承諾なく、利用契約上の地位または本規約に基づく権利もしくは義務を第三者に譲渡し、または担保に供することはできません。
         </div>
       </section>
       <section>
-        <SubHeading>第{++sectionCount}条 準拠法・裁判管轄</SubHeading>
+        <Heading>第{++sectionCount}条 準拠法・裁判管轄</Heading>
         <div className={styles['terms-wrapper']}>
           <ol className={styles['terms-list']}>
             <li>本規約の解釈にあたっては、日本法を準拠法とします。</li>

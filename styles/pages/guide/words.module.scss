@@ -1,0 +1,39 @@
+.words {
+  margin: 10px 0;
+}
+
+.word {
+  display: flex;
+  margin: 3px 0;
+}
+
+.word-names {
+  width: 180px;
+  flex: none;
+  padding: 10px;
+  background: rgb(235, 235, 235);
+
+  .word-name {
+    font-weight: bold;
+  }
+
+  .word-alternate-name {
+    font-size: 0.9em;
+    color: #888;
+  }
+}
+
+.word-description {
+  flex: auto;
+  padding: 10px;
+
+  p {
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

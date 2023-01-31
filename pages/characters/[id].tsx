@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import PageData from '@/components/organisms/PageData/PageData';
 import Button from 'components/atoms/Button/Button';
@@ -197,9 +197,9 @@ const Characters: NextPage<Response> = (data: Response) => {
         description={data.character.summary}
       />
       <div className={styles['top-spacer']}>
-        <SubHeading>
+        <Heading>
           {characterIdText(data.character.id)} {data.character.name}
-        </SubHeading>
+        </Heading>
       </div>
       <section
         className={styles['hero-view-wrapper']}
@@ -317,7 +317,7 @@ const Characters: NextPage<Response> = (data: Response) => {
             <div className={styles['body-heading']}>
               <img
                 className={styles['body-heading-image']}
-                src={'/images/profile/information_subheading.png'}
+                src={'/images/profile/information_Heading.png'}
               />
             </div>
             <section className={styles['information']}>
@@ -374,7 +374,7 @@ const Characters: NextPage<Response> = (data: Response) => {
           <div className={styles['body-heading']}>
             <img
               className={styles['body-heading-image']}
-              src={'/images/profile/profile_subheading.png'}
+              src={'/images/profile/profile_Heading.png'}
             />
           </div>
           <section className={styles['profile-wrapper']}>
@@ -388,7 +388,7 @@ const Characters: NextPage<Response> = (data: Response) => {
           <div className={styles['body-heading']}>
             <img
               className={styles['body-heading-image']}
-              src={'/images/profile/icons_subheading.png'}
+              src={'/images/profile/icons_Heading.png'}
             />
           </div>
           <section className={styles['icons']}>

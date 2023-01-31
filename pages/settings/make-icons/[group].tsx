@@ -24,7 +24,7 @@ import Button from '@/components/atoms/Button/Button';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
 import FileInputButton from '@/components/atoms/FileInputButton/FileInputButton';
 import SelectOption from '@/components/atoms/SelectOption/SelectOption';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import CropperModal from '@/components/organisms/CropperModal/CropperModal';
@@ -509,7 +509,7 @@ const SettingsMakeIconsGroup: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="アイコンレイヤリング" />
-        <SubHeading>アイコンレイヤリング</SubHeading>
+        <Heading>アイコンレイヤリング</Heading>
         <CommentarySection>
           ページの読み込み中にエラーが発生しました。
         </CommentarySection>
@@ -521,7 +521,7 @@ const SettingsMakeIconsGroup: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="アイコンレイヤリング" />
-        <SubHeading>アイコンレイヤリング</SubHeading>
+        <Heading>アイコンレイヤリング</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -558,7 +558,7 @@ const SettingsMakeIconsGroup: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title={`アイコンレイヤリング | ${data.name}`} />
-      <SubHeading>アイコンレイヤリング | {data.name}</SubHeading>
+      <Heading>アイコンレイヤリング | {data.name}</Heading>
       <CommentarySection>
         <p>
           各レイヤーから画像を選択し、新たなアイコンを作成します。レイヤーアイテムを削除する場合、

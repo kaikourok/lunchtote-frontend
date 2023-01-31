@@ -1,0 +1,159 @@
+@import 'styles/variables.scss';
+
+$pcPadding: 20px;
+$mobilePadding: 0;
+
+.page {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100%;
+  box-sizing: border-box;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.sidemenu {
+  position: sticky;
+  top: 60px;
+  flex: 1;
+  margin: 60px 30px 10px 20px;
+  height: fit-content;
+  max-height: calc(100vh - 70px);
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 11px;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px #ddd;
+    border: solid 3px transparent;
+  }
+
+  .sidemenu-link {
+    text-align: right;
+    display: block;
+    color: rgba(252, 252, 252, 0.993);
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 18px;
+    padding: 10px 20px;
+  }
+
+  @media screen and (max-width: 1400px) {
+    margin-right: 10px;
+    max-width: 150px;
+  }
+
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    max-width: 600px;
+    position: static;
+    flex: auto;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: flex-end;
+    height: auto;
+    max-height: none;
+    padding-top: 60px;
+    margin: 0 auto;
+
+    .sidemenu-link {
+      writing-mode: vertical-lr;
+      text-align: end;
+      padding: 20px 15px;
+    }
+  }
+}
+
+.main-column {
+  flex: none;
+  margin: 0 10px 0 10px;
+  max-width: 900px;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  padding: $pcPadding + $headerHeight $pcPadding $pcPadding * 2 $pcPadding;
+  flex-direction: column;
+  font-family: 'BIZ UDPGothic', sans-serif;
+
+  @media screen and (max-width: 1200px) {
+    max-width: 800px;
+  }
+
+  @media screen and (max-width: 1000px) {
+    max-width: 600px;
+  }
+
+  @media screen and (max-width: 900px) {
+    margin: 0;
+  }
+
+  @media screen and (max-width: 800px) {
+    padding-top: 0;
+  }
+
+  @media screen and (max-width: 600px) {
+    font-size: 14px;
+  }
+}
+
+.scrollspy-nav {
+  position: sticky;
+  top: $headerHeight + 20px;
+  flex: 1;
+  margin: $headerHeight + 20px 10px 10px 10px;
+  height: fit-content;
+  max-height: calc(100vh - $headerHeight - 40px);
+  max-height: calc(100dvh - $headerHeight - 40px);
+  overflow-y: auto;
+  cursor: pointer;
+
+  &::-webkit-scrollbar {
+    width: 11px;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px #ddd;
+    border: solid 3px transparent;
+  }
+
+  .scrollspy-link {
+    display: block;
+    color: #bbb;
+    font-family: 'BIZ UDPGothic', sans-serif;
+    padding: 8px 0px 8px 16px;
+
+    &.scrollspy-link-sub {
+      font-size: 14px;
+      padding-left: 28px;
+    }
+
+    border-left: 2px solid #ddd;
+
+    &.active {
+      font-weight: bold;
+      color: $accentColor;
+      border-left: 2px solid $accentColor;
+    }
+  }
+
+  @media screen and (max-width: 1400px) {
+    display: none;
+  }
+}

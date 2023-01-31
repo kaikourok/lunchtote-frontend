@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import styles from '@/styles/pages/legal/license.module.scss';
@@ -14,7 +14,7 @@ type LicenseItemProps = {
 const LicenseItem = (props: LicenseItemProps) => {
   return (
     <section>
-      <SubHeading>{props.title}</SubHeading>
+      <Heading>{props.title}</Heading>
       <div className={styles['license-wrapper']}>
         <div className={styles['license']}>{props.children}</div>
         {

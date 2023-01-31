@@ -27,7 +27,7 @@ import CommentarySection from '@/components/atoms/CommentarySection/CommentarySe
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import ItemAddButton from '@/components/atoms/ItemAddButton/ItemAddButton';
 import SelectOption from '@/components/atoms/SelectOption/SelectOption';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import LabeledToggleButton from '@/components/molecules/LabeledToggleButton/LabeledToggleButton';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';
@@ -137,7 +137,7 @@ const SettingsProfile: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="ルーム作成" />
-        <SubHeading>ルーム作成</SubHeading>
+        <Heading>ルーム作成</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -147,7 +147,7 @@ const SettingsProfile: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="ルーム作成" />
-        <SubHeading>ルーム作成</SubHeading>
+        <Heading>ルーム作成</Heading>
         <CommentarySection>
           ルーム作成に関わる情報の取得中にエラーが発生しました。
         </CommentarySection>
@@ -235,7 +235,7 @@ const SettingsProfile: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="ルーム作成" />
-      <SubHeading>ルーム作成</SubHeading>
+      <Heading>ルーム作成</Heading>
       <SectionWrapper>
         <InputForm
           onSubmit={(e) => {

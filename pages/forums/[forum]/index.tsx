@@ -18,7 +18,7 @@ import useSWR from 'swr';
 import AdministratorIcon from '@/components/atoms/AdministratorIcon/AdministratorIcon';
 import Button from '@/components/atoms/Button/Button';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ForumSender from '@/components/molecules/ForumSender/ForumSender';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -227,7 +227,7 @@ const Forum: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title={`フォーラム | ${forum.title}`} />
-      <SubHeading>フォーラム | {forum.title}</SubHeading>
+      <Heading>フォーラム | {forum.title}</Heading>
       {!impostableMessage && (
         <div className={styles['actions']}>
           <Link

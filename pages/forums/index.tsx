@@ -5,7 +5,7 @@ import useSWR from 'swr';
 
 import AdministratorIcon from '@/components/atoms/AdministratorIcon/AdministratorIcon';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -70,7 +70,7 @@ const Forums: NextPage = () => {
         {forumGroups.map((forumGroup) => {
           return (
             <div className={styles['forum-group']} key={forumGroup.id}>
-              <SubHeading>{forumGroup.title}</SubHeading>
+              <Heading>{forumGroup.title}</Heading>
               <div className={styles['forums']}>
                 {forumGroup.forums.map((forum) => {
                   return (

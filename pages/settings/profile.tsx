@@ -32,7 +32,7 @@ import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
 import FileInputButton from '@/components/atoms/FileInputButton/FileInputButton';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import ItemAddButton from '@/components/atoms/ItemAddButton/ItemAddButton';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';
 import InputForm from '@/components/organisms/InputForm/InputForm';
@@ -190,7 +190,7 @@ const SettingsProfile: NextPage = () => {
   if (!fetched) {
     return (
       <DefaultPage>
-        <SubHeading>プロフィール設定</SubHeading>
+        <Heading>プロフィール設定</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -359,7 +359,7 @@ const SettingsProfile: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="プロフィール設定" />
-      <SubHeading>プロフィール設定</SubHeading>
+      <Heading>プロフィール設定</Heading>
       <SectionWrapper>
         <InputForm
           onSubmit={(e) => {

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import SectionWrapper from '@/components/template/SectionWrapper/SectionWrapper';
@@ -10,7 +10,7 @@ const Guideline = () => {
   return (
     <DefaultPage>
       <PageData title="法的情報" />
-      <SubHeading>法的情報</SubHeading>
+      <Heading>法的情報</Heading>
       <SectionWrapper>
         <div className={styles['link-wrapper']}>
           <Link href="/legal/terms">

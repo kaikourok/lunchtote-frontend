@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -115,7 +115,7 @@ const ControlDummyCharacter: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="ダミーキャラ作成" />
-      <SubHeading>ダミーキャラ作成</SubHeading>
+      <Heading>ダミーキャラ作成</Heading>
       <SectionWrapper>
         <InputForm
           onSubmit={(e) => {

@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import AnnouncementOverview from '@/components/organisms/AnnouncementOverview/AnnouncementOverview';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -24,7 +24,7 @@ const Announcements: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="お知らせ一覧" />
-        <SubHeading>お知らせ一覧</SubHeading>
+        <Heading>お知らせ一覧</Heading>
         <CommentarySection>
           読み込み中にエラーが発生しました。
         </CommentarySection>
@@ -36,7 +36,7 @@ const Announcements: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="お知らせ一覧" />
-        <SubHeading>お知らせ一覧</SubHeading>
+        <Heading>お知らせ一覧</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -45,7 +45,7 @@ const Announcements: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="お知らせ一覧" />
-      <SubHeading>お知らせ一覧</SubHeading>
+      <Heading>お知らせ一覧</Heading>
       <section className={styles['announcements']}>
         {data.map((announcement) => (
           <AnnouncementOverview

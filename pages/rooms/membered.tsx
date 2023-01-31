@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import RoomList from '@/components/organisms/RoomList/RoomList';
@@ -20,7 +20,7 @@ const RoomsOwned: NextPage = () => {
   if (error) {
     return (
       <DefaultPage>
-        <SubHeading>参加ルーム</SubHeading>
+        <Heading>参加ルーム</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -29,7 +29,7 @@ const RoomsOwned: NextPage = () => {
   if (!data) {
     return (
       <DefaultPage>
-        <SubHeading>参加ルーム</SubHeading>
+        <Heading>参加ルーム</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -40,11 +40,11 @@ const RoomsOwned: NextPage = () => {
       <PageData title="参加ルーム" />
       {!!data.inviteds.length && (
         <>
-          <SubHeading>被招待ルーム</SubHeading>
+          <Heading>被招待ルーム</Heading>
           <RoomList rooms={data.inviteds} />
         </>
       )}
-      <SubHeading>参加ルーム</SubHeading>
+      <Heading>参加ルーム</Heading>
       <RoomList rooms={data.membereds} />
     </DefaultPage>
   );

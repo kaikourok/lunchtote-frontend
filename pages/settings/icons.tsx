@@ -28,7 +28,7 @@ import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import Button from 'components/atoms/Button/Button';
@@ -41,7 +41,6 @@ import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import { findIndexFromUuid } from 'lib/findIndexFromUuid';
 import axios from 'plugins/axios';
 import styles from 'styles/pages/settings/image.module.scss';
-
 
 const uploaderPath = process.env.NEXT_PUBLIC_UPLOADER_PATH!;
 
@@ -200,7 +199,7 @@ const SettingsIcons: NextPage = () => {
   if (!fetched) {
     return (
       <DefaultPage>
-        <SubHeading>アイコン設定</SubHeading>
+        <Heading>アイコン設定</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -461,7 +460,7 @@ const SettingsIcons: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="アイコン設定" />
-      <SubHeading>アイコン設定</SubHeading>
+      <Heading>アイコン設定</Heading>
       <CommentarySection>
         <p>
           アイコンは以下のリストから先頭30件を上限としてプロフィール欄に表示されます。

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import AnnouncementOverview from '@/components/organisms/AnnouncementOverview/AnnouncementOverview';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -38,7 +38,7 @@ const Home: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="ホーム" />
-        <SubHeading>ホーム</SubHeading>
+        <Heading>ホーム</Heading>
         <CommentarySection>
           読み込み中にエラーが発生しました。
         </CommentarySection>
@@ -55,7 +55,7 @@ const Home: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="ホーム" />
-        <SubHeading>ホーム</SubHeading>
+        <Heading>ホーム</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -65,7 +65,7 @@ const Home: NextPage = () => {
     <DefaultPage>
       <PageData title="ホーム" />
       <section>
-        <SubHeading>ホーム</SubHeading>
+        <Heading>ホーム</Heading>
         <CommentarySection>
           {data.nickname}としてログインしています。あなたの登録番号は
           {characterIdText(character.id)}です。
@@ -73,7 +73,7 @@ const Home: NextPage = () => {
       </section>
       {!!data.announcements.length && (
         <>
-          <SubHeading>お知らせ一覧</SubHeading>
+          <Heading>お知らせ一覧</Heading>
           <section className={styles['announcements']}>
             {data.announcements.map((announcement) => (
               <AnnouncementOverview
