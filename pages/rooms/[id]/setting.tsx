@@ -24,9 +24,9 @@ import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import { v4 as uuidv4 } from 'uuid';
 
+import Heading from '@/components/atoms/Heading/Heading';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import ItemAddButton from '@/components/atoms/ItemAddButton/ItemAddButton';
-import Heading from '@/components/atoms/Heading/Heading';
 import LabeledToggleButton from '@/components/molecules/LabeledToggleButton/LabeledToggleButton';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';

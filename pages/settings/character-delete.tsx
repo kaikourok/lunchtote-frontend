@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -34,7 +34,7 @@ const SettingsCharacterDelete: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="キャラクター削除" />
-      <SubHeading>キャラクター削除</SubHeading>
+      <Heading>キャラクター削除</Heading>
       <SectionWrapper>
         <InputForm
           onSubmit={(e) => {

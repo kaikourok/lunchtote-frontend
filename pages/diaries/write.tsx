@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import Heading from '@/components/atoms/Heading/Heading';
+import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';
