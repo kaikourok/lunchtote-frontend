@@ -171,10 +171,10 @@ const HeaderNavigation = () => {
           ],
         },
         {
-          text: 'Rulebook',
-          textLocalized: '遊び方',
-          prefix: '/rulebook',
-          href: '/rulebook',
+          text: 'Guide',
+          textLocalized: 'ガイド',
+          prefix: '/guide',
+          href: '/guide',
         },
         {
           text: 'Forum',
