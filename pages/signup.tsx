@@ -176,7 +176,7 @@ const SignUp: NextPage = () => {
               <>
                 ログインの際などに使用できるIDです。
                 {usernameMin}～{usernameMax != 0 ? usernameMax : ''}
-                文字入力でき、半角英数及びアンダースコアが利用可能です。
+                文字入力でき、半角英数及びアンダースコアが利用可能です。少なくとも1文字以上のアルファベットが含まれている必要があります。
                 <ModalNotes>
                   <ModalNotes.Note>
                     この項目は後から変更可能です。

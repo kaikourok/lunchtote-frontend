@@ -7,6 +7,12 @@ const validationUsername = (username: string) => {
   if (!username) {
     return 'ユーザーIDが入力されていません';
   }
+  if (username.match(/[^_0-9a-zA-Z]/) != null) {
+    return 'ユーザーIDに使用できるのは半角英数と半角アンダーバーのみです';
+  }
+  if (username.match(/[a-zA-Z]/) == null) {
+    return 'ユーザーIDには少なくとも1文字以上のアルファベットが含まれている必要があります';
+  }
   if (username.length < usernameMin) {
     return `ユーザーIDは最低${usernameMin}文字入力する必要があります`;
   }
