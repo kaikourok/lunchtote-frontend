@@ -1,3 +1,6 @@
+@use 'sass:math';
+@import 'styles/variables.scss';
+
 .notification-group {
   margin-bottom: 12px;
   display: flex;
@@ -27,21 +30,62 @@
 
 .notification {
   background: #eee;
-  padding: 6px 6px 6px 10px;
+  padding: 6px;
   margin: 4px;
 
   .notification-message {
-    font-weight: bold;
   }
 
   .notification-detail {
     color: #888;
+    font-size: 0.9em;
+    margin-left: math.div($iconWidth, 2) + 5px;
   }
 
   .notification-date {
     text-align: right;
     color: #888;
     font-size: 0.8em;
+  }
+}
+
+.message-link {
+  $normalColor: #333;
+  $highlightColor: rgb(71, 99, 224);
+
+  color: $normalColor;
+  font-weight: bold;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .icon-wrapper {
+    flex: none;
+    width: math.div($iconWidth, 2);
+    height: math.div($iconHeight, 2);
+    margin-right: 5px;
+  }
+
+  .message-link-content {
+    flex: 1;
+
+    .character-names {
+      color: $highlightColor;
+
+      .character-name {
+        font-weight: bold;
+      }
+
+      .character-id {
+        font-size: 0.8em;
+      }
+    }
+
+    .room-title {
+      color: $highlightColor;
+      font-size: 1rem;
+      font-weight: bold;
+    }
   }
 }
 

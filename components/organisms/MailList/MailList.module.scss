@@ -4,6 +4,10 @@ $tableMargin: 2px;
   margin-bottom: $tableMargin;
 }
 
+.mails {
+  margin: 10px 0;
+}
+
 .mail-overviews {
   display: flex;
   position: relative;
@@ -11,7 +15,7 @@ $tableMargin: 2px;
   user-select: none;
   padding: 8px 4px 8px 12px;
   justify-content: space-between;
-  background: #ddd;
+  background: #eee;
   color: #333;
   font-weight: normal;
   transition: all 0.2s;
@@ -73,12 +77,12 @@ $tableMargin: 2px;
   padding: 2px 10px;
   flex: 1;
   align-items: center;
-  background: #ddd;
+  background: #eee;
 }
 
 .mail-message {
   padding: 8px 8px;
-  background: #ddd;
+  background: #eee;
   margin-bottom: 10px;
 }
 

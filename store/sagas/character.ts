@@ -166,6 +166,26 @@ function* watchSignOutRequest() {
 }
 
 /*-------------------------------------------------------------------------------------------------
+  ReadNotification
+-------------------------------------------------------------------------------------------------*/
+
+function* readNotifications() {
+  const csrfToken: string | null = yield select(selectCsrfToken);
+
+  if (csrfToken != null) {
+    axios.post('/characters/main/notifications/checked', null, {
+      headers: { 'X-Auth-key': csrfToken },
+    });
+  }
+
+  yield;
+}
+
+function* watchReadNotification() {
+  yield takeEvery(actions.Types.READ_NOTIFICATIONS, readNotifications);
+}
+
+/*-------------------------------------------------------------------------------------------------
   Notify
 -------------------------------------------------------------------------------------------------*/
 
@@ -187,6 +207,7 @@ const characterSagas = [
   fork(watchSignUpRequest),
   fork(watchSignOutRequest),
   fork(watchFetchDataRequest),
+  fork(watchReadNotification),
   fork(watchNotify),
 ];
 

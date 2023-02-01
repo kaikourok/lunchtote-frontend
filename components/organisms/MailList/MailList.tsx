@@ -7,8 +7,6 @@ import CommentarySection from '@/components/atoms/CommentarySection/CommentarySe
 import characterIdText from 'lib/characterIdText';
 import { stringifyDate } from 'lib/stringifyDate';
 
-
-
 type MailBase = {
   id: number;
   title: string;
@@ -93,7 +91,7 @@ type MailListProps = {
 
 const MailList = (props: MailListProps) => {
   if (!props.mails.length) {
-    return <CommentarySection noMargin>メールはありません。</CommentarySection>;
+    return <CommentarySection>メールはありません。</CommentarySection>;
   }
 
   return (
