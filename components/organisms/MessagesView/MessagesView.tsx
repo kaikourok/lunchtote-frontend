@@ -17,12 +17,14 @@ import {
   NamedMessagesFetchConfig,
   RoomMessage,
   RoomRelations,
+  RoomSubscribeStates,
 } from './types';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
+import useCsrfHeader from 'hooks/useCsrfHeader';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import roomClassName from 'lib/roomClassName';
 import axios from 'plugins/axios';
@@ -33,6 +35,7 @@ type RoomInitialData = {
   relations: RoomRelations;
   permissions: RoomPermission;
   banned: boolean;
+  subscribeStates: RoomSubscribeStates;
 };
 
 type MessageEditRequiredData = {
@@ -48,15 +51,16 @@ type RoomMessageResponse = {
 };
 
 const MessagesView = () => {
-  useRequireAuthenticated();
-
   const router = useRouter();
+  const csrfHeader = useCsrfHeader();
+
+  useRequireAuthenticated();
 
   const roomMode = router.isReady && router.query.room;
 
   const characterId = useSelector(selectCharacter)?.id;
 
-  const { data: roomData } = useSWR<RoomInitialData>(
+  const { data: roomData, mutate: mutateRoomData } = useSWR<RoomInitialData>(
     roomMode ? `/rooms/${router.query.room}` : null
   );
 
@@ -185,6 +189,85 @@ const MessagesView = () => {
       />
       <MessagesViewRightColumn
         currentFetchConfig={currentFetchConfig}
+        subscribeStates={roomData?.subscribeStates ?? null}
+        onMessageSubscribeToggle={async () => {
+          if (!csrfHeader) return;
+          if (!roomData) return;
+
+          try {
+            await toast.promise(
+              axios.post(
+                `/rooms/${router.query.room}/message-event/${
+                  roomData.subscribeStates.message ? 'unsubscribe' : 'subscribe'
+                }`,
+                null,
+                { headers: csrfHeader }
+              ),
+              {
+                loading: `新規メッセージ通知を${
+                  roomData.subscribeStates.message ? 'OFF' : 'ON'
+                }にしています`,
+                success: `新規メッセージ通知を${
+                  roomData.subscribeStates.message ? 'OFF' : 'ON'
+                }にしました`,
+                error: `通知情報の変更中にエラーが発生しました`,
+              }
+            );
+
+            mutateRoomData(
+              {
+                ...roomData,
+                subscribeStates: {
+                  ...roomData.subscribeStates,
+                  message: !roomData.subscribeStates.message,
+                },
+              },
+              false
+            );
+          } catch (e) {
+            console.log(e);
+          }
+        }}
+        onNewMemberSubscribeToggle={async () => {
+          if (!csrfHeader) return;
+          if (!roomData) return;
+
+          try {
+            await toast.promise(
+              axios.post(
+                `/rooms/${router.query.room}/new-member-event/${
+                  roomData.subscribeStates.newMember
+                    ? 'unsubscribe'
+                    : 'subscribe'
+                }`,
+                null,
+                { headers: csrfHeader }
+              ),
+              {
+                loading: `新規メンバー通知を${
+                  roomData.subscribeStates.newMember ? 'OFF' : 'ON'
+                }にしています`,
+                success: `新規メンバー通知を${
+                  roomData.subscribeStates.newMember ? 'OFF' : 'ON'
+                }にしました`,
+                error: `通知情報の変更中にエラーが発生しました`,
+              }
+            );
+
+            mutateRoomData(
+              {
+                ...roomData,
+                subscribeStates: {
+                  ...roomData.subscribeStates,
+                  newMember: !roomData.subscribeStates.newMember,
+                },
+              },
+              false
+            );
+          } catch (e) {
+            console.log(e);
+          }
+        }}
         onTargetCharacterChange={(target) => {
           const newFetchConfig: MessagesFetchConfig = {
             ...currentFetchConfig,

@@ -265,21 +265,32 @@ const SettingsProfile: NextPage = () => {
       currentProfile.mainicon = mainicon ? mainicon.url : '';
     }
 
-    await axios.post('/characters/main/settings/profile', currentProfile, {
-      headers: csrfHeader,
-    });
+    try {
+      await toast.promise(
+        axios.post('/characters/main/settings/profile', currentProfile, {
+          headers: csrfHeader,
+        }),
+        {
+          loading: 'プロフィールを更新しています',
+          success: 'プロフィールを更新しました',
+          error: 'プロフィールの更新中にエラーが発生しました',
+        }
+      );
 
-    if (uploadedPath) {
-      setMainicon({
-        uploaded: true,
-        url: uploadedPath,
-      });
+      if (uploadedPath) {
+        setMainicon({
+          uploaded: true,
+          url: uploadedPath,
+        });
+      }
+      setTags(
+        currentProfile.tags.map((tag) => {
+          return { uuid: uuidv4(), tag: tag };
+        })
+      );
+    } catch (e) {
+      console.log(e);
     }
-    setTags(
-      currentProfile.tags.map((tag) => {
-        return { uuid: uuidv4(), tag: tag };
-      })
-    );
   };
 
   const handleChangeTag = (

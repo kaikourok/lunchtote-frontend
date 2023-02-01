@@ -1,4 +1,12 @@
-import { mdiCheck, mdiFloppy, mdiMagnify, mdiSwapHorizontal } from '@mdi/js';
+import {
+  mdiBellOffOutline,
+  mdiBellPlusOutline,
+  mdiCheck,
+  mdiFloppy,
+  mdiMagnify,
+  mdiSwapHorizontal,
+  mdiTagPlusOutline,
+} from '@mdi/js';
 import Icon from '@mdi/react';
 import classnames from 'classnames';
 import { useRouter } from 'next/router';
@@ -11,7 +19,11 @@ import {
   getCategoryName,
   toQueryString,
 } from './FetchOptionManager';
-import { NamedMessagesFetchConfig, MessagesFetchConfig } from './types';
+import {
+  NamedMessagesFetchConfig,
+  MessagesFetchConfig,
+  RoomSubscribeStates,
+} from './types';
 
 import SelectOption from '@/components/atoms/SelectOption/SelectOption';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
@@ -63,7 +75,10 @@ const ToggleMenu = (props: {
 
 const MessagesViewRightColumn = (props: {
   currentFetchConfig: MessagesFetchConfig;
+  subscribeStates: RoomSubscribeStates | null;
   lists: ListOverview[];
+  onMessageSubscribeToggle: () => void;
+  onNewMemberSubscribeToggle: () => void;
   onTargetCharacterChange: (target: number) => void;
   onAddSavedFetchConfig: (config: NamedMessagesFetchConfig) => void;
 }) => {
@@ -250,11 +265,43 @@ const MessagesViewRightColumn = (props: {
             }}
           />
         )}
-        <MenuItem
-          label="現在の設定でタブを追加"
-          icon={mdiFloppy}
-          onClick={() => setIsConfigModalOpen(true)}
-        />
+        <section className={roomClassName('right-column-edit-menus')}>
+          <MenuItem
+            label="現在の設定でタブを追加"
+            icon={mdiTagPlusOutline}
+            onClick={() => setIsConfigModalOpen(true)}
+          />
+          {props.subscribeStates != null && (
+            <MenuItem
+              label={
+                props.subscribeStates.message
+                  ? '新規メッセージ通知をOFF'
+                  : '新規メッセージ通知をON'
+              }
+              icon={
+                props.subscribeStates.message
+                  ? mdiBellOffOutline
+                  : mdiBellPlusOutline
+              }
+              onClick={props.onMessageSubscribeToggle}
+            />
+          )}
+          {props.subscribeStates != null && (
+            <MenuItem
+              label={
+                props.subscribeStates.newMember
+                  ? '新規メンバー通知をOFF'
+                  : '新規メンバー通知をON'
+              }
+              icon={
+                props.subscribeStates.newMember
+                  ? mdiBellOffOutline
+                  : mdiBellPlusOutline
+              }
+              onClick={props.onNewMemberSubscribeToggle}
+            />
+          )}
+        </section>
         <ConfirmModal
           heading="現在の設定でタブを追加"
           disabled={newConfigName == ''}

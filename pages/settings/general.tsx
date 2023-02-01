@@ -1,6 +1,6 @@
 import * as EmailValidator from 'email-validator';
 import { NextPage } from 'next';
-import { MouseEvent, ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import ReactToggle from 'react-toggle';
 
@@ -8,6 +8,7 @@ import Button from '@/components/atoms/Button/Button';
 import Heading from '@/components/atoms/Heading/Heading';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
+import HelpButton from '@/components/molecules/Help/Help';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -45,10 +46,12 @@ const NoticeSettings = (props: {
   followed: boolean;
   replied: boolean;
   subscribe: boolean;
+  newMember: boolean;
   mail: boolean;
   onFollowedChange: () => void;
   onRepliedChange: () => void;
   onSubscribeChange: () => void;
+  onNewMemberChange: () => void;
   onMailChange: () => void;
 }) => {
   return (
@@ -59,11 +62,20 @@ const NoticeSettings = (props: {
       <NoticeSetting value={props.replied} onChange={props.onRepliedChange}>
         返信された際に通知する
       </NoticeSetting>
-      <NoticeSetting value={props.subscribe} onChange={props.onSubscribeChange}>
-        購読中のルームに新規書き込みがあった際に通知する
-      </NoticeSetting>
       <NoticeSetting value={props.mail} onChange={props.onMailChange}>
         ゲーム内メールに新着があった際に通知する
+      </NoticeSetting>
+      <NoticeSetting value={props.subscribe} onChange={props.onSubscribeChange}>
+        対象ルームに新規メッセージの投稿があった際に通知する
+        <HelpButton>
+          トークルーム画面にて新規メッセージ通知をONにしたルームで新規メッセージがあった際に通知します。
+        </HelpButton>
+      </NoticeSetting>
+      <NoticeSetting value={props.newMember} onChange={props.onNewMemberChange}>
+        対象ルームに新規メンバーが参加した際に通知する
+        <HelpButton>
+          トークルーム画面にて新規メンバー通知をONにしたルームで新規メンバーが参加した際に通知します。
+        </HelpButton>
       </NoticeSetting>
     </div>
   );
@@ -105,10 +117,12 @@ const SettingsGeneral: NextPage = () => {
   const [webhookFollowed, setWebhookFollowed] = useState(false);
   const [webhookReplied, setWebhookReplied] = useState(false);
   const [webhookSubscribe, setWebhookSubscribe] = useState(false);
+  const [webhookNewMember, setWebhookNewMember] = useState(false);
   const [webhookMail, setWebhookMail] = useState(false);
   const [notificationFollowed, setNotificationFollowed] = useState(false);
   const [notificationReplied, setNotificationReplied] = useState(false);
   const [notificationSubscribe, setNotificationSubscribe] = useState(false);
+  const [notificationNewMember, setNotificationNewMember] = useState(false);
   const [notificationMail, setNotificationMail] = useState(false);
   const [otherSettingsStates, setOtherSettingsStates] = useState<{
     email: string | null;
@@ -154,12 +168,14 @@ const SettingsGeneral: NextPage = () => {
             followed: boolean;
             replied: boolean;
             subscribe: boolean;
+            newMember: boolean;
             mail: boolean;
           };
           notification: {
             followed: boolean;
             replied: boolean;
             subscribe: boolean;
+            newMember: boolean;
             mail: boolean;
           };
         };
@@ -172,10 +188,12 @@ const SettingsGeneral: NextPage = () => {
         setWebhookFollowed(response.data.webhook.followed);
         setWebhookReplied(response.data.webhook.replied);
         setWebhookSubscribe(response.data.webhook.subscribe);
+        setWebhookNewMember(response.data.webhook.newMember);
         setWebhookMail(response.data.webhook.mail);
         setNotificationFollowed(response.data.notification.followed);
         setNotificationReplied(response.data.notification.replied);
         setNotificationSubscribe(response.data.notification.subscribe);
+        setNotificationNewMember(response.data.notification.newMember);
         setNotificationMail(response.data.notification.mail);
         setOtherSettingsStates({
           email: response.data.email,
@@ -230,15 +248,18 @@ const SettingsGeneral: NextPage = () => {
                     '/characters/main/settings/other',
                     {
                       webhook: {
+                        url: webhookUrl,
                         followed: webhookFollowed,
                         replied: webhookReplied,
                         subscribe: webhookSubscribe,
+                        newMember: webhookNewMember,
                         mail: webhookMail,
                       },
                       notification: {
                         followed: notificationFollowed,
                         replied: notificationReplied,
                         subscribe: notificationSubscribe,
+                        newMember: notificationNewMember,
                         mail: notificationMail,
                       },
                     },
@@ -377,6 +398,7 @@ const SettingsGeneral: NextPage = () => {
               followed={notificationFollowed}
               replied={notificationReplied}
               subscribe={notificationSubscribe}
+              newMember={notificationNewMember}
               mail={notificationMail}
               onFollowedChange={() =>
                 setNotificationFollowed(!notificationFollowed)
@@ -387,6 +409,9 @@ const SettingsGeneral: NextPage = () => {
               onSubscribeChange={() =>
                 setNotificationSubscribe(!notificationSubscribe)
               }
+              onNewMemberChange={() => {
+                setNotificationNewMember(!notificationNewMember);
+              }}
               onMailChange={() => setNotificationMail(!notificationMail)}
             />
           </InputForm.General>
@@ -399,14 +424,23 @@ const SettingsGeneral: NextPage = () => {
               </>
             }
           >
+            <input
+              type="text"
+              className={styles['webhook-input']}
+              placeholder="URL (https://discord.com/api/webhooks/...)"
+              value={webhookUrl}
+              onChange={(e) => setWebhookUrl(e.target.value)}
+            />
             <NoticeSettings
               followed={webhookFollowed}
               replied={webhookReplied}
               subscribe={webhookSubscribe}
+              newMember={webhookNewMember}
               mail={webhookMail}
               onFollowedChange={() => setWebhookFollowed(!webhookFollowed)}
               onRepliedChange={() => setWebhookReplied(!webhookReplied)}
               onSubscribeChange={() => setWebhookSubscribe(!webhookSubscribe)}
+              onNewMemberChange={() => setWebhookNewMember(!webhookNewMember)}
               onMailChange={() => setWebhookMail(!webhookMail)}
             />
           </InputForm.General>

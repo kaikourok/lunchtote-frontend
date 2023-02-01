@@ -17,6 +17,11 @@ type CharacterInlineSearchResult = {
   text: string;
 };
 
+type RoomOverview = {
+  id: number;
+  title: string;
+};
+
 type RoomListItem = {
   id: number;
   master: {

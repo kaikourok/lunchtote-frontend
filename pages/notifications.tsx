@@ -1,33 +1,288 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useSWR from 'swr';
 
+import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
-import SectionWrapper from '@/components/template/SectionWrapper/SectionWrapper';
 import styles from '@/styles/pages/notification.module.scss';
 import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
+import characterIdText from 'lib/characterIdText';
 import { stringifyDate } from 'lib/stringifyDate';
 import { readNotifications } from 'store/actions/character';
 
-type Notification = {
-  type: 'FOLLOWED' | 'REPLIED';
-  icon: string | null;
-  message: string;
-  detail: string;
-  value: string;
+type NotificationBase = {
+  id: number;
   timestamp: string;
 };
+
+type FollowedNotification = NotificationBase & {
+  type: 'FOLLOWED';
+  character: CharacterOverview;
+};
+
+type RepliedNotification = NotificationBase & {
+  type: 'REPLIED';
+  character: CharacterOverview;
+  room: RoomOverview;
+  message: {
+    referRoot: number;
+    message: string;
+  };
+};
+
+type SubscribeNotification = NotificationBase & {
+  type: 'SUBSCRIBE';
+  character: CharacterOverview;
+  room: RoomOverview;
+  message: {
+    message: string;
+  };
+};
+
+type MailNotification = NotificationBase & {
+  type: 'MAIL';
+  character: {
+    id: number | null;
+    name: string;
+    mainicon: string | null;
+  };
+  mail: {
+    id: number;
+    title: string;
+  };
+};
+
+type MassMailNotification = NotificationBase & {
+  type: 'MASS_MAIL';
+  mail: {
+    id: number;
+    name: string;
+    title: string;
+  };
+};
+
+type Notification =
+  | FollowedNotification
+  | RepliedNotification
+  | SubscribeNotification
+  | MailNotification
+  | MassMailNotification;
 
 type Response = {
   notifications: Notification[];
   isContinue: boolean;
+};
+
+const NotificationTemplate = (props: {
+  notification: NotificationBase;
+  message: ReactNode;
+  detail?: ReactNode;
+}) => {
+  return (
+    <div className={styles['notification']}>
+      <div className={styles['notification-message']}>{props.message}</div>
+      {!!props.detail && (
+        <div className={styles['notification-detail']}>{props.detail}</div>
+      )}
+      <div className={styles['notification-date']}>
+        {stringifyDate(new Date(props.notification.timestamp))}
+      </div>
+    </div>
+  );
+};
+
+const FollowedNotificationView = (props: {
+  notification: FollowedNotification;
+}) => {
+  return (
+    <NotificationTemplate
+      notification={props.notification}
+      message={
+        <Link
+          href={{
+            pathname: '/characters/[id]',
+            query: { id: props.notification.character.id },
+          }}
+        >
+          <a className={styles['message-link']}>
+            <div className={styles['icon-wrapper']}>
+              <CharacterIcon url={props.notification.character.mainicon} mini />
+            </div>
+            <div className={styles['message-link-content']}>
+              <span className={styles['character-names']}>
+                <span className={styles['character-name']}>
+                  {props.notification.character.name}
+                </span>
+                <span className={styles['character-id']}>
+                  {characterIdText(props.notification.character.id)}
+                </span>
+              </span>
+              にフォローされました
+            </div>
+          </a>
+        </Link>
+      }
+    />
+  );
+};
+
+const RepliedNotificationView = (props: {
+  notification: RepliedNotification;
+}) => {
+  const detailText = props.notification.message.message.replaceAll(
+    /<.+?>/g,
+    ''
+  );
+
+  return (
+    <NotificationTemplate
+      notification={props.notification}
+      message={
+        <Link
+          href={{
+            pathname: '/rooms/messages',
+            query: {
+              category: 'conversation',
+              root: props.notification.message.referRoot,
+            },
+          }}
+        >
+          <a className={styles['message-link']}>
+            <div className={styles['icon-wrapper']}>
+              <CharacterIcon url={props.notification.character.mainicon} mini />
+            </div>
+            <div className={styles['message-link-content']}>
+              <span className={styles['room-title']}>
+                {props.notification.room.title}
+              </span>
+              にて
+              <span className={styles['character-names']}>
+                <span className={styles['character-name']}>
+                  {props.notification.character.name}
+                </span>
+                <span className={styles['character-id']}>
+                  {characterIdText(props.notification.character.id)}
+                </span>
+              </span>
+              からのリプライがあります
+            </div>
+          </a>
+        </Link>
+      }
+      detail={!detailText ? undefined : detailText}
+    />
+  );
+};
+
+const SubscribeNotificationView = (props: {
+  notification: SubscribeNotification;
+}) => {
+  const detailText = props.notification.message.message.replaceAll(
+    /<.+?>/g,
+    ''
+  );
+
+  return (
+    <NotificationTemplate
+      notification={props.notification}
+      message={
+        <Link
+          href={{
+            pathname: '/rooms/messages',
+            query: {
+              room: props.notification.room.id,
+            },
+          }}
+        >
+          <a className={styles['message-link']}>
+            <div className={styles['icon-wrapper']}>
+              <CharacterIcon url={props.notification.character.mainicon} mini />
+            </div>
+            <div className={styles['message-link-content']}>
+              <span className={styles['room-title']}>
+                {props.notification.room.title}
+              </span>
+              にて
+              <span className={styles['character-names']}>
+                <span className={styles['character-name']}>
+                  {props.notification.character.name}
+                </span>
+                <span className={styles['character-id']}>
+                  {characterIdText(props.notification.character.id)}
+                </span>
+              </span>
+              の新規メッセージがあります
+            </div>
+          </a>
+        </Link>
+      }
+      detail={!detailText ? undefined : detailText}
+    />
+  );
+};
+
+const MailNotificationView = (props: { notification: MailNotification }) => {
+  return (
+    <NotificationTemplate
+      notification={props.notification}
+      message={
+        <Link href="/mails">
+          <a className={styles['message-link']}>
+            <div className={styles['icon-wrapper']}>
+              <CharacterIcon url={props.notification.character.mainicon} mini />
+            </div>
+            <div className={styles['message-link-content']}>
+              <span className={styles['character-names']}>
+                <span className={styles['character-name']}>
+                  {props.notification.character.name}
+                </span>
+                {props.notification.character.id != null && (
+                  <span className={styles['character-id']}>
+                    {characterIdText(props.notification.character.id)}
+                  </span>
+                )}
+              </span>
+              からの新着メールがあります
+            </div>
+          </a>
+        </Link>
+      }
+      detail={props.notification.mail.title}
+    />
+  );
+};
+
+const MassMailNotificationView = (props: {
+  notification: MassMailNotification;
+}) => {
+  return (
+    <NotificationTemplate
+      notification={props.notification}
+      message={
+        <Link href="/mails">
+          <a className={styles['message-link']}>
+            <div className={styles['icon-wrapper']} />
+            <div className={styles['message-link-content']}>
+              <span className={styles['character-names']}>
+                <span className={styles['character-name']}>
+                  {props.notification.mail.name}
+                </span>
+              </span>
+              からの新着メールがあります
+            </div>
+          </a>
+        </Link>
+      }
+      detail={props.notification.mail.title}
+    />
+  );
 };
 
 const Notifications: NextPage = () => {
@@ -133,12 +388,12 @@ const Notifications: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="通知" />
-      <Heading>通知</Heading>
-      <SectionWrapper>
-        {!notificationsGroupedByDay.length ? (
-          <CommentarySection>通知はまだありません</CommentarySection>
-        ) : (
-          notificationsGroupedByDay.map((group) => {
+      {!notificationsGroupedByDay.length && (
+        <CommentarySection noMargin>通知はまだありません</CommentarySection>
+      )}
+      {!!notificationsGroupedByDay.length && (
+        <section>
+          {notificationsGroupedByDay.map((group) => {
             return (
               <div
                 key={`${group.year}/${group.month}/${group.date}`}
@@ -155,36 +410,55 @@ const Notifications: NextPage = () => {
                 </div>
                 <div className={styles['day-notifications']}>
                   {group.notifications.map((notification) => {
-                    return (
-                      <div
-                        key={notification.timestamp}
-                        className={styles['notification']}
-                      >
-                        <div className={styles['notification-message']}>
-                          {notification.message}
-                        </div>
-                        {notification.detail && (
-                          <div className={styles['notification-detail']}>
-                            {notification.detail}
-                          </div>
-                        )}
-                        <div className={styles['notification-date']}>
-                          {stringifyDate(new Date(notification.timestamp))}
-                        </div>
-                      </div>
-                    );
+                    switch (notification.type) {
+                      case 'FOLLOWED':
+                        return (
+                          <FollowedNotificationView
+                            key={notification.id}
+                            notification={notification}
+                          />
+                        );
+                      case 'REPLIED':
+                        return (
+                          <RepliedNotificationView
+                            key={notification.id}
+                            notification={notification}
+                          />
+                        );
+                      case 'SUBSCRIBE':
+                        return (
+                          <SubscribeNotificationView
+                            key={notification.id}
+                            notification={notification}
+                          />
+                        );
+                      case 'MAIL':
+                        return (
+                          <MailNotificationView
+                            key={notification.id}
+                            notification={notification}
+                          />
+                        );
+                      case 'MASS_MAIL':
+                        return (
+                          <MassMailNotificationView
+                            key={notification.id}
+                            notification={notification}
+                          />
+                        );
+                    }
                   })}
                 </div>
               </div>
             );
-          })
-        )}
-        {data.isContinue && (
-          <div className={styles['load-continue-button']} onClick={() => {}}>
-            続きを読み込む
-          </div>
-        )}
-      </SectionWrapper>
+          })}
+          {data.isContinue && (
+            <div className={styles['load-continue-button']} onClick={() => {}}>
+              続きを読み込む
+            </div>
+          )}
+        </section>
+      )}
     </DefaultPage>
   );
 };

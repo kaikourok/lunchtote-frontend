@@ -1,6 +1,6 @@
 import { UrlObject } from 'url';
 
-import { mdiAsterisk, mdiPound, mdiRhombusMedium } from '@mdi/js';
+import { mdiPound, mdiRhombusMedium, mdiTagOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import classnames from 'classnames';
 import Link from 'next/link';
@@ -171,7 +171,7 @@ const MessagesViewLeftColumn = (props: {
                 key={index}
                 label={config.name}
                 href={toQueryString(config)}
-                icon={mdiAsterisk}
+                icon={mdiTagOutline}
                 highlight={fetchConfigEqual(props.currentFetchConfig, config)}
               />
             );
