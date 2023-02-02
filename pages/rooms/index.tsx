@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -30,7 +30,7 @@ const Rooms: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="ルーム一覧" />
-      <SubHeading>ルーム一覧</SubHeading>
+      <Heading>ルーム一覧</Heading>
       <CommentarySection>参加しているルームの一覧です。</CommentarySection>
     </DefaultPage>
   );

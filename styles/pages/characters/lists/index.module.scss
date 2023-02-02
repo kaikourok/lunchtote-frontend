@@ -1,0 +1,85 @@
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+.action {
+  margin-left: 5px;
+}
+
+.items {
+  margin: 10px 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  touch-action: none;
+  background: #eee;
+  margin: 5px 0;
+
+  .item-drag-handle {
+    margin: 12px;
+    flex: none;
+    width: 24px;
+    height: 24px;
+    cursor: ns-resize;
+
+    &.invalid {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+  }
+
+  .item-name {
+    flex: auto;
+
+    .item-link {
+      font-weight: bold;
+      color: #444;
+    }
+  }
+
+  .item-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px;
+    padding: 4px;
+    width: 26px;
+    height: 26px;
+    background: #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    color: inherit;
+
+    &.invalid {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+
+    &:last-child {
+      margin-right: 12px;
+    }
+  }
+}
+
+.input-modal-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .input-modal-text {
+    margin: 4px;
+  }
+
+  .input-modal-input-wrapper {
+    margin: 4px;
+  }
+
+  .input-modal-input {
+    height: 24px;
+    padding: 4px;
+  }
+}

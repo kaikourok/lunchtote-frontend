@@ -171,10 +171,10 @@ const HeaderNavigation = () => {
           ],
         },
         {
-          text: 'Rulebook',
-          textLocalized: '遊び方',
-          prefix: '/rulebook',
-          href: '/rulebook',
+          text: 'Guide',
+          textLocalized: 'ガイド',
+          prefix: '/guide',
+          href: '/guide',
         },
         {
           text: 'Forum',
@@ -198,9 +198,11 @@ const HeaderNavigation = () => {
           href: '/rooms/messages',
           links: [
             { text: '交流', href: '/rooms/messages' },
+            { text: '参加ルーム', href: '/rooms/membered' },
             { text: 'ルーム検索', href: '/rooms/search' },
             { text: 'ルーム作成', href: '/rooms/create' },
             { text: 'ルーム管理', href: '/rooms/owned' },
+            { text: 'タブ管理', href: '/rooms/tabs' },
           ],
         },
         {
@@ -223,6 +225,7 @@ const HeaderNavigation = () => {
           links: [
             { text: 'キャラクター一覧', href: '/characters' },
             { text: 'キャラクター検索', href: '/characters/search' },
+            { text: 'リスト管理', href: '/characters/lists' },
           ],
         },
         {

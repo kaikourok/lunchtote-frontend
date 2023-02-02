@@ -2,8 +2,9 @@ import { NextPage } from 'next';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
+import PageData from '@/components/organisms/PageData/PageData';
 import RoomList from '@/components/organisms/RoomList/RoomList';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
@@ -16,7 +17,7 @@ const RoomsOwned: NextPage = () => {
   if (error) {
     return (
       <DefaultPage>
-        <SubHeading>管理ルーム一覧</SubHeading>
+        <Heading>管理ルーム一覧</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -25,7 +26,7 @@ const RoomsOwned: NextPage = () => {
   if (!data) {
     return (
       <DefaultPage>
-        <SubHeading>管理ルーム一覧</SubHeading>
+        <Heading>管理ルーム一覧</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -33,7 +34,8 @@ const RoomsOwned: NextPage = () => {
 
   return (
     <DefaultPage>
-      <SubHeading>管理ルーム一覧</SubHeading>
+      <PageData title="管理ルーム一覧" />
+      <Heading>管理ルーム一覧</Heading>
       <RoomList
         rooms={data.map((room) => {
           return {

@@ -53,11 +53,6 @@ export type RoomMessage = {
   recipients: RoomMessageRecipient[];
 };
 
-export type RoomOverview = {
-  id: number;
-  title: string;
-};
-
 export type RoomRelations = {
   parent: RoomOverview | null;
   siblings: RoomOverview[];
@@ -67,4 +62,9 @@ export type RoomRelations = {
 export type RoomOwnPermissions = {
   banned: boolean;
   permissions: RoomPermission;
+};
+
+export type RoomSubscribeStates = {
+  message: boolean;
+  newMember: boolean;
 };

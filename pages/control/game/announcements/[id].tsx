@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import LabeledToggleButton from '@/components/molecules/LabeledToggleButton/LabeledToggleButton';
 import AnnouncementDetail from '@/components/organisms/AnnouncementDetail/AnnouncementDetail';
 import AnnouncementOverview from '@/components/organisms/AnnouncementOverview/AnnouncementOverview';
@@ -19,7 +19,6 @@ import useRequireAdministratorAuthenticated from 'hooks/useRequireAdministratorA
 import { getAnnouncementRelatedData } from 'lib/stringifyAnnouncementType';
 import { stringifyDate } from 'lib/stringifyDate';
 import axios from 'plugins/axios';
-
 
 const ControlGameAnnouncement: NextPage = () => {
   const router = useRouter();
@@ -36,12 +35,13 @@ const ControlGameAnnouncement: NextPage = () => {
   const [title, setTitle] = useState('');
   const [overview, setOverview] = useState('');
   const [content, setContent] = useState('');
+  const [announcedAt, setAnnouncedAt] = useState('');
   const [silentUpdate, setSilentUpdate] = useState(false);
   const [fetched, setFetched] = useState(false);
   const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
-    if (!isAdministratorAuthenticated) return;
+    if (!router.isReady || !isAdministratorAuthenticated) return;
 
     (async () => {
       try {
@@ -50,19 +50,25 @@ const ControlGameAnnouncement: NextPage = () => {
           title: string;
           overview: string;
           content: string;
+          announcedAt: string;
         };
 
         const response = await axios.get<Response>(
-          `/control/announcements/${router.query.id}`
+          `/control/game/announcements/${router.query.id}`
         );
 
+        setAnnouncementType(response.data.type);
+        setTitle(response.data.title);
+        setOverview(response.data.overview);
+        setContent(response.data.content);
+        setAnnouncedAt(response.data.announcedAt);
         setFetched(true);
       } catch (e) {
         console.log(e);
         setFetchError(true);
       }
     })();
-  }, [isAdministratorAuthenticated]);
+  }, [router.isReady, isAdministratorAuthenticated]);
 
   const announcementTypeError = (() => {
     if (announcementType == null) {
@@ -95,7 +101,7 @@ const ControlGameAnnouncement: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="お知らせ編集" />
-        <SubHeading>お知らせ編集</SubHeading>
+        <Heading>お知らせ編集</Heading>
         <CommentarySection>読み込み中にエラーが発生しました</CommentarySection>
       </DefaultPage>
     );
@@ -105,7 +111,7 @@ const ControlGameAnnouncement: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="お知らせ編集" />
-        <SubHeading>お知らせ編集</SubHeading>
+        <Heading>お知らせ編集</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -117,7 +123,7 @@ const ControlGameAnnouncement: NextPage = () => {
     <DefaultPage>
       <PageData title="お知らせ編集" />
       <section>
-        <SubHeading>お知らせ編集</SubHeading>
+        <Heading>お知らせ編集</Heading>
         <InputForm
           onSubmit={async (e) => {
             e.preventDefault();
@@ -133,9 +139,19 @@ const ControlGameAnnouncement: NextPage = () => {
 
             try {
               await toast.promise(
-                axios.put(`/announcements/${router.query.id}`, null, {
-                  headers: csrfHeader,
-                }),
+                axios.post(
+                  `/control/game/announcements/${router.query.id}/update`,
+                  {
+                    type: announcementType,
+                    title,
+                    overview,
+                    content,
+                    silentUpdate,
+                  },
+                  {
+                    headers: csrfHeader,
+                  }
+                ),
                 {
                   error: 'お知らせ更新中にエラーが発生しました',
                   loading: 'お知らせ更新を行っています',
@@ -226,7 +242,7 @@ const ControlGameAnnouncement: NextPage = () => {
         </InputForm>
       </section>
       <section>
-        <SubHeading>お知らせ一覧画面プレビュー</SubHeading>
+        <Heading>お知らせ一覧画面プレビュー</Heading>
         <AnnouncementOverview
           id={0}
           type={announcementType || 'UPDATE'}
@@ -237,16 +253,19 @@ const ControlGameAnnouncement: NextPage = () => {
         />
       </section>
       <section>
-        <SubHeading>{`[${stringifyDate(now, {
-          withoutDayOfWeek: true,
-        })}] ${title}`}</SubHeading>
+        <Heading>{`[${stringifyDate(
+          silentUpdate ? new Date(announcedAt) : now,
+          {
+            withoutDayOfWeek: true,
+          }
+        )}] ${title}`}</Heading>
         <AnnouncementDetail
           id={0}
           type={announcementType || 'UPDATE'}
           title={title}
           content={content}
-          announcedAt={now}
-          updatedAt={now}
+          announcedAt={new Date(announcedAt)}
+          updatedAt={silentUpdate ? new Date(announcedAt) : now}
         />
       </section>
     </DefaultPage>

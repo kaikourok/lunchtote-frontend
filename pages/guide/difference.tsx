@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
+import Heading from '@/components/atoms/Heading/Heading';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 
@@ -10,7 +10,7 @@ const RulebookGuideBeginner: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="類似のゲームとの相違点" />
-      <SubHeading>類似のゲームとの相違点</SubHeading>
+      <Heading>類似のゲームとの相違点</Heading>
       <CommentarySection>
         このページではTRPGやPBWなど類似のゲームに参加していた経験があり、当ゲームに初めて参加される方向けに、交流文化や規約、マナーの違い等について解説を行っています。
         <InlineLink href="/rulebook/guide/beginner">ビギナーガイド</InlineLink>

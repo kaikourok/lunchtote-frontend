@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
@@ -19,7 +19,7 @@ const ControlGameInquiries: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="問い合わせ" />
-      <SubHeading>問い合わせ</SubHeading>
+      <Heading>問い合わせ</Heading>
       <CommentarySection>
         管理上の理由により、この機能の実装は秘匿されています。
       </CommentarySection>

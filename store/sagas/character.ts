@@ -1,14 +1,6 @@
 import router from 'next/router';
 import toast from 'react-hot-toast';
-import {
-  call,
-  CallEffect,
-  Effect,
-  fork,
-  put,
-  select,
-  takeEvery,
-} from 'redux-saga/effects';
+import { call, fork, put, select, takeEvery } from 'redux-saga/effects';
 
 import characterIdText from 'lib/characterIdText';
 import hashPassword from 'lib/hashPassword';
@@ -16,16 +8,11 @@ import axios from 'plugins/axios';
 import * as actions from 'store/actions/character';
 import { selectCsrfToken } from 'store/selector/character';
 import { InitialData } from 'store/types/character';
-
-type EffectRT<T extends Effect> = T extends CallEffect<infer R> ? R : never;
+import { EffectRT, Replace } from 'types/store';
 
 /*-------------------------------------------------------------------------------------------------
   FetchData
 -------------------------------------------------------------------------------------------------*/
-
-type Replace<T, U> = {
-  [P in keyof T]: P extends keyof U ? U[P] : T[P];
-};
 
 async function getInitialData() {
   try {
@@ -62,11 +49,13 @@ function* watchFetchDataRequest() {
 -------------------------------------------------------------------------------------------------*/
 
 async function postSignIn(action: ReturnType<typeof actions.signInRequest>) {
-  const payload = action.payload;
-  payload.password = hashPassword(action.payload.password);
+  const password = hashPassword(action.payload.password);
 
   try {
-    await axios.post('/signin', payload);
+    await axios.post('/signin', {
+      ...action.payload,
+      password,
+    });
   } catch {
     return false;
   }
@@ -98,11 +87,13 @@ function* watchSignInRequest() {
 -------------------------------------------------------------------------------------------------*/
 
 async function postSignUp(action: ReturnType<typeof actions.signUpRequest>) {
-  const payload = action.payload;
-  payload.password = hashPassword(action.payload.password);
+  const password = hashPassword(action.payload.password);
 
   try {
-    return await axios.post<{ id: number }>('/characters', payload);
+    return await axios.post<{ id: number }>('/characters', {
+      ...action.payload,
+      password,
+    });
   } catch {
     return null;
   }
@@ -113,9 +104,16 @@ function* signUp(action: ReturnType<typeof actions.signUpRequest>) {
   const result: EffectRT<typeof resultCall> = yield resultCall;
 
   if (result) {
+    yield call(postSignIn, {
+      type: 'character/sign_in_request',
+      payload: {
+        key: action.payload.username,
+        password: action.payload.password,
+      },
+    });
     yield call(fetchData);
     toast.success(`${characterIdText(result.data.id)}として登録しました`);
-    router.push('/introduction');
+    router.push('/home');
     yield;
   } else {
     toast.error('登録中にエラーが発生しました');
@@ -168,6 +166,26 @@ function* watchSignOutRequest() {
 }
 
 /*-------------------------------------------------------------------------------------------------
+  ReadNotification
+-------------------------------------------------------------------------------------------------*/
+
+function* readNotifications() {
+  const csrfToken: string | null = yield select(selectCsrfToken);
+
+  if (csrfToken != null) {
+    axios.post('/characters/main/notifications/checked', null, {
+      headers: { 'X-Auth-key': csrfToken },
+    });
+  }
+
+  yield;
+}
+
+function* watchReadNotification() {
+  yield takeEvery(actions.Types.READ_NOTIFICATIONS, readNotifications);
+}
+
+/*-------------------------------------------------------------------------------------------------
   Notify
 -------------------------------------------------------------------------------------------------*/
 
@@ -189,6 +207,7 @@ const characterSagas = [
   fork(watchSignUpRequest),
   fork(watchSignOutRequest),
   fork(watchFetchDataRequest),
+  fork(watchReadNotification),
   fork(watchNotify),
 ];
 

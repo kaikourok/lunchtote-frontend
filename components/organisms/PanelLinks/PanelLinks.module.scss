@@ -1,0 +1,46 @@
+.panel-links {
+  margin: 10px 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    grid-gap: 5px;
+  }
+}
+
+.panel-link {
+  background: #e8e8e8;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: inherit;
+  transition: all 0.16s;
+  min-height: 70px;
+
+  .panel-title {
+    color: #222;
+    font-weight: bold;
+    transition: all 0.16s;
+  }
+
+  .panel-summary {
+    margin-top: 4px;
+    color: #666;
+    transition: all 0.16s;
+  }
+
+  &:hover {
+    background: #333;
+
+    .panel-title {
+      color: #ddd;
+    }
+
+    .panel-summary {
+      color: #bbb;
+    }
+  }
+}

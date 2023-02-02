@@ -5,7 +5,7 @@ import { ReactNode, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -88,7 +88,7 @@ const SignIn: NextPage = () => {
     <DefaultPage>
       <PageData title="ログイン" />
       <section>
-        <SubHeading>ログイン</SubHeading>
+        <Heading>ログイン</Heading>
         <SectionWrapper>
           <div className={styles['reset-password-link-wrapper']}>
             <Link href="/reset-password">
@@ -131,7 +131,7 @@ const SignIn: NextPage = () => {
         </SectionWrapper>
       </section>
       <section>
-        <SubHeading>SNSログイン</SubHeading>
+        <Heading>SNSログイン</Heading>
         <section className={styles['oauth-buttons']}>
           <OAuthButton
             icon="/images/brand-icons/twitter.svg"

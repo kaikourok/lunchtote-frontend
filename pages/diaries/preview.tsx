@@ -2,8 +2,8 @@ import { NextPage } from 'next';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
+import Heading from '@/components/atoms/Heading/Heading';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -33,7 +33,7 @@ const DiariesPreview: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="日記プレビュー" />
-        <SubHeading>日記プレビュー</SubHeading>
+        <Heading>日記プレビュー</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -43,7 +43,7 @@ const DiariesPreview: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="日記プレビュー" />
-        <SubHeading>日記プレビュー</SubHeading>
+        <Heading>日記プレビュー</Heading>
         <CommentarySection>
           まだ日記の投稿予約が行われていません。日記の投稿予約は
           <InlineLink href="/diaries/write">こちら</InlineLink>から行えます。
@@ -51,7 +51,7 @@ const DiariesPreview: NextPage = () => {
       </DefaultPage>
     );
   }
-  
+
   return (
     <DiaryPage
       title={data.title}

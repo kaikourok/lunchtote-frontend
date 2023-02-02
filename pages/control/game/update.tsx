@@ -3,7 +3,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -11,7 +11,6 @@ import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import useRequireAdministratorAuthenticated from 'hooks/useRequireAdministratorAuthenticated';
 import axios from 'plugins/axios';
-
 
 const ControlGameUpdate: NextPage = () => {
   const csrfHeader = useCsrfHeader();
@@ -36,7 +35,7 @@ const ControlGameUpdate: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="更新" />
-      <SubHeading>更新</SubHeading>
+      <Heading>更新</Heading>
       <CommentarySection>
         半角大文字でUPDATEと入力し更新ボタンを押すことで更新が実行されます。
       </CommentarySection>

@@ -1,0 +1,141 @@
+.members {
+  margin: 10px 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 4px;
+}
+
+.member {
+  display: flex;
+  padding: 8px;
+  background: #eee;
+
+  .member-icon-wrapper {
+    flex: none;
+    margin-right: 8px;
+  }
+
+  .member-data {
+    flex: 1;
+
+    .member-heading {
+      display: flex;
+    }
+
+    .ban-button {
+      flex: none;
+      font-size: 0.9em;
+      font-weight: bold;
+      padding: 2px 8px;
+      cursor: pointer;
+      color: #222;
+      background: rgb(194, 194, 194);
+
+      &:hover {
+        color: #ddd;
+        background: #222;
+      }
+    }
+
+    .character-link {
+      display: block;
+      flex: 1;
+
+      .character-name {
+        font-weight: bold;
+        margin-right: 4px;
+        color: #333;
+      }
+
+      .character-id {
+        color: #888;
+        font-size: 0.9em;
+      }
+    }
+
+    .member-roles {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 4px;
+      margin-left: -4px;
+    }
+  }
+}
+
+.role {
+  display: flex;
+  align-items: center;
+  padding: 2px 8px 2px 8px;
+  margin-top: 4px;
+  margin-left: 4px;
+  background: #ddd;
+  cursor: pointer;
+  transition: all 0.1s linear;
+
+  &:hover {
+    color: #ddd;
+    background-color: #222;
+  }
+
+  .role-name {
+    font-size: 0.9em;
+    margin-right: 2px;
+  }
+
+  .action-icon-wrapper {
+    display: flex;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.add-role-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-top: 4px;
+  margin-left: 4px;
+  padding: 4px;
+  background: #ddd;
+  cursor: pointer;
+  transition: all 0.1s linear;
+
+  &:hover {
+    color: #ddd;
+    background-color: #222;
+  }
+}
+
+.edit-roles {
+}
+
+.edit-role {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: #ddd;
+  cursor: pointer;
+  transition: all 0.1s linear;
+  min-width: 240px;
+  margin: 4px 0;
+
+  &:hover {
+    color: #ddd;
+    background-color: #222;
+  }
+
+  .edit-role-icon {
+    display: flex;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+
+    &.applied {
+      color: rgb(27, 199, 27);
+    }
+  }
+}

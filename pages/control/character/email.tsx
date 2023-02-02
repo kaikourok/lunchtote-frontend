@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { useState } from 'react';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -39,7 +39,7 @@ const ControlCharacterDistributeAP: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="電子メール送信" />
-      <SubHeading>電子メール送信</SubHeading>
+      <Heading>電子メール送信</Heading>
       <InputForm
         onSubmit={(e) => {
           e.preventDefault();

@@ -30,9 +30,9 @@ import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/atoms/Button/Button';
 import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
 import FileInputButton from '@/components/atoms/FileInputButton/FileInputButton';
+import Heading from '@/components/atoms/Heading/Heading';
 import InlineLink from '@/components/atoms/InlineLink/InlineLink';
 import ItemAddButton from '@/components/atoms/ItemAddButton/ItemAddButton';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
 import Annotations from '@/components/organisms/Annotations/Annotations';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';
 import InputForm from '@/components/organisms/InputForm/InputForm';
@@ -190,7 +190,7 @@ const SettingsProfile: NextPage = () => {
   if (!fetched) {
     return (
       <DefaultPage>
-        <SubHeading>プロフィール設定</SubHeading>
+        <Heading>プロフィール設定</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -265,21 +265,32 @@ const SettingsProfile: NextPage = () => {
       currentProfile.mainicon = mainicon ? mainicon.url : '';
     }
 
-    await axios.post('/characters/main/settings/profile', currentProfile, {
-      headers: csrfHeader,
-    });
+    try {
+      await toast.promise(
+        axios.post('/characters/main/settings/profile', currentProfile, {
+          headers: csrfHeader,
+        }),
+        {
+          loading: 'プロフィールを更新しています',
+          success: 'プロフィールを更新しました',
+          error: 'プロフィールの更新中にエラーが発生しました',
+        }
+      );
 
-    if (uploadedPath) {
-      setMainicon({
-        uploaded: true,
-        url: uploadedPath,
-      });
+      if (uploadedPath) {
+        setMainicon({
+          uploaded: true,
+          url: uploadedPath,
+        });
+      }
+      setTags(
+        currentProfile.tags.map((tag) => {
+          return { uuid: uuidv4(), tag: tag };
+        })
+      );
+    } catch (e) {
+      console.log(e);
     }
-    setTags(
-      currentProfile.tags.map((tag) => {
-        return { uuid: uuidv4(), tag: tag };
-      })
-    );
   };
 
   const handleChangeTag = (
@@ -359,7 +370,7 @@ const SettingsProfile: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="プロフィール設定" />
-      <SubHeading>プロフィール設定</SubHeading>
+      <Heading>プロフィール設定</Heading>
       <SectionWrapper>
         <InputForm
           onSubmit={(e) => {

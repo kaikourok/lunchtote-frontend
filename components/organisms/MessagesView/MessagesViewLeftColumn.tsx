@@ -1,6 +1,6 @@
 import { UrlObject } from 'url';
 
-import { mdiAsterisk, mdiPound, mdiRhombusMedium } from '@mdi/js';
+import { mdiPound, mdiRhombusMedium, mdiTagOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import classnames from 'classnames';
 import Link from 'next/link';
@@ -162,27 +162,29 @@ const MessagesViewLeftColumn = (props: {
   savedFetchConfigs: NamedMessagesFetchConfig[];
 }) => {
   return (
-    <div className={roomClassName('left-column')}>
-      <div className={roomClassName('left-menu-link-group')}>
-        {props.savedFetchConfigs.map((config, index) => {
-          return (
-            <LeftMenuLink
-              key={index}
-              label={config.name}
-              href={toQueryString(config)}
-              icon={mdiAsterisk}
-              highlight={fetchConfigEqual(props.currentFetchConfig, config)}
-            />
-          );
-        })}
+    <div className={roomClassName('left-column-wrapper')}>
+      <div className={roomClassName('left-column')}>
+        <div className={roomClassName('left-menu-link-group')}>
+          {props.savedFetchConfigs.map((config, index) => {
+            return (
+              <LeftMenuLink
+                key={index}
+                label={config.name}
+                href={toQueryString(config)}
+                icon={mdiTagOutline}
+                highlight={fetchConfigEqual(props.currentFetchConfig, config)}
+              />
+            );
+          })}
+        </div>
+        {!!props.room && (
+          <RoomLinkGroups
+            currentRoomId={props.room.id}
+            relations={props.room.relations}
+            currentFetchConfig={props.currentFetchConfig}
+          />
+        )}
       </div>
-      {!!props.room && (
-        <RoomLinkGroups
-          currentRoomId={props.room.id}
-          relations={props.room.relations}
-          currentFetchConfig={props.currentFetchConfig}
-        />
-      )}
     </div>
   );
 };

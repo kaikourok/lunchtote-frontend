@@ -1,4 +1,5 @@
 import '@/styles/sanitize.css';
+import 'react-toggle/style.css';
 import '@/styles/global.scss';
 import '@/styles/room-message/index.scss';
 import { NextPage } from 'next';
@@ -13,6 +14,7 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import axios from 'plugins/axios';
 import store from 'store';
 import { fetchDataRequest, notify } from 'store/actions/character';
+import { loadRequest } from 'store/actions/draft';
 import { selectCharacter } from 'store/selector/character';
 
 type AppPropsWithLayout = AppProps & {
@@ -26,6 +28,7 @@ const AppInit = () => {
 
   useEffect(() => {
     dispatch(fetchDataRequest());
+    dispatch(loadRequest());
   }, []);
 
   return null;

@@ -1,35 +1,30 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
+import PanelLinks from '@/components/organisms/PanelLinks/PanelLinks';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 
-const Rulebook: NextPage = () => {
+const Guide: NextPage = () => {
   return (
     <DefaultPage>
-      <PageData title="遊び方" />
-      <div>
-        <Link href="/guide/beginner">
-          <a>ビギナーガイド</a>
-        </Link>
-      </div>
-      <div>
-        <Link href="/guide/difference">
-          <a>類似のゲームとの相違点</a>
-        </Link>
-      </div>
-      <div>
-        <Link href="/guide/manner">
-          <a>交流のマナー</a>
-        </Link>
-      </div>
-      <div>
-        <Link href="/guide/word">
-          <a>交流用語集</a>
-        </Link>
-      </div>
+      <PageData title="ガイド" />
+      <Heading>交流ガイド</Heading>
+      <PanelLinks>
+        <PanelLinks.Item
+          href="/guide/manner"
+          title="交流のマナー"
+          summary="交流において留意するべき事項"
+        />
+        <PanelLinks.Item
+          href="/guide/words"
+          title="交流用語集"
+          summary="このゲーム付近で用いられる用語"
+        />
+      </PanelLinks>
     </DefaultPage>
   );
 };
 
-export default Rulebook;
+export default Guide;

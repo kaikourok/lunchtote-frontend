@@ -3,7 +3,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -33,7 +33,7 @@ const ControlCharacterDistributeAP: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="情報確認" />
-      <SubHeading>情報確認</SubHeading>
+      <Heading>情報確認</Heading>
       <InputForm
         onSubmit={(e) => {
           e.preventDefault();
@@ -56,7 +56,7 @@ const ControlCharacterDistributeAP: NextPage = () => {
           取得
         </InputForm.Button>
       </InputForm>
-      <SubHeading>キャラクター情報</SubHeading>
+      <Heading>キャラクター情報</Heading>
       {character == null && (
         <CommentarySection>
           キャラクター情報を表示するには、まず対象キャラクターを選択し取得を行ってください。

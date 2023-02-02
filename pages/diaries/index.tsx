@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import PageSelector from '@/components/organisms/PageSelector/PageSelector';
@@ -88,7 +88,7 @@ const Diaries: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="日記一覧" />
-      <SubHeading>日記一覧</SubHeading>
+      <Heading>日記一覧</Heading>
       {pageSelector}
       {(() => {
         if (!pageSelectorItems.length) {

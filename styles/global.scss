@@ -134,3 +134,18 @@ a {
     margin: 0 1px;
   }
 }
+
+.cutin {
+  display: block;
+  margin: 0 auto;
+  max-height: 150px;
+  max-width: min(350px, 100%);
+
+  &.cutin-left {
+    margin: 0 auto 0 0;
+  }
+
+  &.cutin-right {
+    margin: 0 0 0 auto;
+  }
+}

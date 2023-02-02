@@ -10,7 +10,7 @@ import Twemoji from 'react-twemoji';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import ForumSender from '@/components/molecules/ForumSender/ForumSender';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -76,7 +76,7 @@ const ForumTopic: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="フォーラム" />
-        <SubHeading>フォーラム</SubHeading>
+        <Heading>フォーラム</Heading>
         <CommentarySection>取得中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -86,7 +86,7 @@ const ForumTopic: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="フォーラム" />
-        <SubHeading>フォーラム</SubHeading>
+        <Heading>フォーラム</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -234,7 +234,7 @@ const ForumTopic: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title={topic.title} />
-      <SubHeading>{topic.title}</SubHeading>
+      <Heading>{topic.title}</Heading>
       <section className={styles['posts']}>
         {posts.map((post) => {
           return (

@@ -1,9 +1,10 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import AnnouncementOverview from '@/components/organisms/AnnouncementOverview/AnnouncementOverview';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
@@ -13,8 +14,6 @@ import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import characterIdText from 'lib/characterIdText';
 import { selectCharacter } from 'store/selector/character';
-
-
 
 type Response = {
   nickname: string;
@@ -39,7 +38,7 @@ const Home: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="ホーム" />
-        <SubHeading>ホーム</SubHeading>
+        <Heading>ホーム</Heading>
         <CommentarySection>
           読み込み中にエラーが発生しました。
         </CommentarySection>
@@ -56,7 +55,7 @@ const Home: NextPage = () => {
     return (
       <DefaultPage>
         <PageData title="ホーム" />
-        <SubHeading>ホーム</SubHeading>
+        <Heading>ホーム</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -66,15 +65,15 @@ const Home: NextPage = () => {
     <DefaultPage>
       <PageData title="ホーム" />
       <section>
-        <SubHeading>ホーム</SubHeading>
+        <Heading>ホーム</Heading>
         <CommentarySection>
           {data.nickname}としてログインしています。あなたの登録番号は
           {characterIdText(character.id)}です。
         </CommentarySection>
       </section>
       {!!data.announcements.length && (
-        <section>
-          <SubHeading>お知らせ一覧</SubHeading>
+        <>
+          <Heading>お知らせ一覧</Heading>
           <section className={styles['announcements']}>
             {data.announcements.map((announcement) => (
               <AnnouncementOverview
@@ -87,7 +86,12 @@ const Home: NextPage = () => {
               />
             ))}
           </section>
-        </section>
+          <Link href="/announcements">
+            <a className={styles['announcements-link']}>
+              すべてのお知らせを確認する
+            </a>
+          </Link>
+        </>
       )}
     </DefaultPage>
   );

@@ -1,10 +1,15 @@
 @import 'styles/variables.scss';
 @import 'styles/room-message/variables.scss';
 
-.#{$prefix}__left-column {
+.#{$prefix}__left-column-wrapper {
   flex: none;
-  width: 260px;
-  margin: 10px + $headerHeight 10px 10px 10px;
+  width: 280px;
+}
+
+.#{$prefix}__left-column {
+  position: sticky;
+  top: $headerHeight + 10px;
+  padding: 10px 10px 10px 10px;
   height: calc(100vh - 20px - $headerHeight);
   height: calc(100dvh - 20px - $headerHeight);
   overflow-y: scroll;
@@ -32,6 +37,14 @@
 
 .#{$prefix}__left-menu-link-group {
   margin: 10px 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .#{$prefix}__left-menu-link {

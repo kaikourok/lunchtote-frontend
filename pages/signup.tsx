@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import LabeledCheckbox from '@/components/molecules/LabeledCheckbox/LabeledCheckbox';
 import ModalNotes from '@/components/molecules/ModalNotes/ModalNotes';
 import InputForm from '@/components/organisms/InputForm/InputForm';
@@ -153,7 +153,7 @@ const SignUp: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="キャラクター登録" />
-      <SubHeading>キャラクター登録</SubHeading>
+      <Heading>キャラクター登録</Heading>
       <SectionWrapper>
         <InputForm
           onSubmit={(e) => {
@@ -176,7 +176,7 @@ const SignUp: NextPage = () => {
               <>
                 ログインの際などに使用できるIDです。
                 {usernameMin}～{usernameMax != 0 ? usernameMax : ''}
-                文字入力でき、半角英数及びアンダースコアが利用可能です。
+                文字入力でき、半角英数及びアンダースコアが利用可能です。少なくとも1文字以上のアルファベットが含まれている必要があります。
                 <ModalNotes>
                   <ModalNotes.Note>
                     この項目は後から変更可能です。

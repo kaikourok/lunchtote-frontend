@@ -5,7 +5,7 @@ import { ReactNode, useEffect, useState } from 'react';
 
 import styles from './SubmenuPage.module.scss';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from 'components/template/DefaultPage/DefaultPage';
 import { SubmenuItem } from 'constants/submenu';
@@ -14,6 +14,7 @@ type SubmenuPageProps = {
   title?: string;
   menu: SubmenuItem[];
   children: ReactNode;
+  noHeading?: boolean;
 };
 
 const SubmenuPage = (props: SubmenuPageProps) => {
@@ -56,7 +57,7 @@ const SubmenuPage = (props: SubmenuPageProps) => {
           </nav>
         </div>
         <section className={styles['content']}>
-          <SubHeading>{props.title || title}</SubHeading>
+          {!props.noHeading && <Heading>{props.title || title}</Heading>}
           <div className={styles['content-body']}>{props.children}</div>
         </section>
       </div>

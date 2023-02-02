@@ -17,6 +17,11 @@ type CharacterInlineSearchResult = {
   text: string;
 };
 
+type RoomOverview = {
+  id: number;
+  title: string;
+};
+
 type RoomListItem = {
   id: number;
   master: {
@@ -30,6 +35,8 @@ type RoomListItem = {
   messagesCount: number;
   membersCount: number;
   lastUpdate: string;
+  postsPerDay: number;
+  followedMembers?: CharacterOverview[];
 };
 
 type RoleType = 'VISITOR' | 'INVITED' | 'DEFAULT' | 'MEMBER' | 'MASTER';
@@ -87,4 +94,19 @@ type RelationPermission =
 type ListOverview = {
   id: number;
   name: string;
+};
+
+type Role = {
+  id: number;
+  prioriry: number;
+  name: string;
+  write: boolean | null;
+  ban: boolean | null;
+  invite: boolean | null;
+  useReply: boolean | null;
+  useSecret: boolean | null;
+  deleteOtherMessage: boolean | null;
+  createChildrenRoom: boolean | null;
+  color: string | null;
+  type: RoleType;
 };

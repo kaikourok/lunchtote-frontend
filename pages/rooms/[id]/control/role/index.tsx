@@ -32,6 +32,7 @@ import toast from 'react-hot-toast';
 
 import Button from '@/components/atoms/Button/Button';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
+import NoItemsMessage from '@/components/atoms/NoItemsMessage/NoItemsMessage';
 import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Loading from '@/components/organisms/Loading/Loading';
 import SubmenuPage from '@/components/template/SubmenuPage/SubmenuPage';
@@ -40,35 +41,9 @@ import roomControlsSubmenu from 'constants/submenu/roomsControl';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import { findIndexFromUniqueKey } from 'lib/findIndexFromUniqueKey';
 import roleName from 'lib/roleName';
-import roomIdText from 'lib/roomIdText';
 import axios from 'plugins/axios';
 
-
-
-
-
-type Role = {
-  id: number;
-  prioriry: number;
-  name: string;
-  read: boolean | null;
-  write: boolean | null;
-  ban: boolean | null;
-  invite: boolean | null;
-  useReply: boolean | null;
-  useSecret: boolean | null;
-  deleteOtherMessage: boolean | null;
-  color: string | null;
-  type: RoleType;
-  members: {
-    id: number;
-    name: string;
-    mainicon: string;
-  }[];
-};
-
 type Response = {
-  title: string;
   roles: Role[];
 };
 
@@ -126,7 +101,6 @@ const RoomsControlRole: NextPage = () => {
   const csrfHeader = useCsrfHeader();
   const router = useRouter();
 
-  const [title, setTitle] = useState('');
   const [roles, setRoles] = useState<Role[]>([]);
 
   const [isFetched, setIsFetched] = useState(false);
@@ -165,7 +139,6 @@ const RoomsControlRole: NextPage = () => {
             `/rooms/${router.query.id}/control/role`
           );
 
-          setTitle(response.data.title);
           setRoles(response.data.roles);
         } catch (e) {
           console.log(e);
@@ -217,10 +190,10 @@ const RoomsControlRole: NextPage = () => {
 
   return (
     <SubmenuPage
-      title={`権限設定 | ${roomIdText(Number(router.query.id))} ${title}`}
+      title={'権限設定'}
       menu={roomControlsSubmenu(Number(router.query.id))}
     >
-      <CommentarySection noMargin>
+      <CommentarySection>
         複数の権限が設定されている場合、各設定に関してより上位（リスト上側）に設定されている権限のものが優先されます。
       </CommentarySection>
       <section className={styles['role-actions']}>
@@ -292,9 +265,7 @@ const RoomsControlRole: NextPage = () => {
           </section>
         )}
         {!memberRoles.length && (
-          <section className={styles['no-roles']}>
-            追加の権限設定がありません。
-          </section>
+          <NoItemsMessage>追加の権限設定がありません。</NoItemsMessage>
         )}
       </DndContext>
       <hr />
@@ -304,7 +275,7 @@ const RoomsControlRole: NextPage = () => {
       <section className={styles['roles']}>
         {roles
           .filter((role) => role.type != 'MEMBER' && role.type != 'MASTER')
-          .map((role, index) => {
+          .map((role) => {
             return (
               <section key={role.id} className={styles['role']}>
                 <div
@@ -378,16 +349,15 @@ const RoomsControlRole: NextPage = () => {
                   roles.reduce((a, b) => (a.prioriry > b.prioriry ? a : b))
                     .prioriry + 1,
                 name: createRoleName,
-                read: null,
                 write: null,
                 ban: null,
                 invite: null,
                 useReply: null,
                 useSecret: null,
                 deleteOtherMessage: null,
+                createChildrenRoom: null,
                 color: null,
                 type: 'MEMBER',
-                members: [],
               },
               ...roles,
             ]);

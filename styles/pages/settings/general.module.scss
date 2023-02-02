@@ -1,0 +1,95 @@
+.notice-settings {
+  .notice-setting {
+    display: flex;
+    margin: 10px 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .notice-description {
+      flex: 1;
+    }
+
+    .toggle-wrapper {
+      flex: none;
+      margin-left: 10px;
+    }
+  }
+}
+
+.email {
+  flex: 1;
+  font-weight: bold;
+}
+
+.email-inputs {
+  margin-top: 10px;
+  display: flex;
+
+  .email-input {
+    padding: 4px 7px;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+    margin-right: 5px;
+  }
+
+  .email-confirm-button {
+    width: 220px;
+  }
+}
+
+.email-register-requested-message {
+  margin-top: 10px;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.email-states {
+  align-items: center;
+  display: flex;
+
+  .email-unregister-button {
+    flex: none;
+    margin-left: 5px;
+  }
+}
+
+.webhook-input {
+  padding: 4px 7px;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+  margin-bottom: 20px;
+}
+
+.signin-links {
+  .signin-link {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .signin-link-target {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .signin-link-state {
+      flex: auto;
+      margin: 0 10px;
+    }
+  }
+}

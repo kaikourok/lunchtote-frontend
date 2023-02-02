@@ -1,20 +1,19 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
+import PanelLinks from '@/components/organisms/PanelLinks/PanelLinks';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import styles from '@/styles/pages/control/index.module.scss';
 import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useRequireAdministratorAuthenticated from 'hooks/useRequireAdministratorAuthenticated';
 
-
-
 type ControlLink = {
   title: string;
-  description: string;
-  link: string;
+  summary: string;
+  href: string;
 };
 
 type ControlLinkGroup = {
@@ -22,26 +21,15 @@ type ControlLinkGroup = {
   links: ControlLink[];
 };
 
-const Panel = (props: ControlLink) => {
-  return (
-    <Link href={props.link}>
-      <a className={styles['panel']}>
-        <div className={styles['panel-title']}>{props.title}</div>
-        <div className={styles['panel-description']}>{props.description}</div>
-      </a>
-    </Link>
-  );
-};
-
 const PanelGroup = (props: ControlLinkGroup) => {
   return (
     <section>
-      <SubHeading>{props.title}</SubHeading>
-      <div className={styles['panels']}>
+      <Heading>{props.title}</Heading>
+      <PanelLinks>
         {props.links.map((link, index) => {
-          return <Panel key={index} {...link} />;
+          return <PanelLinks.Item key={index} {...link} />;
         })}
-      </div>
+      </PanelLinks>
     </section>
   );
 };
@@ -65,24 +53,23 @@ const Control: NextPage = () => {
       links: [
         {
           title: '更新',
-          description: '更新処理を行います',
-          link: '/control/game/update',
+          summary: '更新処理を行います',
+          href: '/control/game/update',
         },
         {
           title: 'お知らせ',
-          description: 'お知らせを行います',
-          link: '/control/game/announcements',
+          summary: 'お知らせを行います',
+          href: '/control/game/announcements',
         },
         {
           title: '問い合わせ',
-          description: '問い合わせを確認します',
-          link: '/control/game/inquiries',
+          summary: '問い合わせを確認します',
+          href: '/control/game/inquiries',
         },
         {
           title: '違反疑惑ログ',
-          description:
-            '自動検出された、規約違反が疑わしい行動のログを確認します',
-          link: '/control/game/alerts',
+          summary: '自動検出された、規約違反が疑わしい行動のログを確認します',
+          href: '/control/game/alerts',
         },
       ],
     },
@@ -91,49 +78,48 @@ const Control: NextPage = () => {
       links: [
         {
           title: '通知',
-          description: 'キャラクターに通知を行います',
-          link: '/control/character/notice',
+          summary: 'キャラクターに通知を行います',
+          href: '/control/character/notice',
         },
         {
           title: '電子メール送信',
-          description:
-            'メールアドレスを登録しているユーザーにメール配信を行います',
-          link: '/control/character/email',
+          summary: 'メールアドレスを登録しているユーザーにメール配信を行います',
+          href: '/control/character/email',
         },
         {
           title: 'ゲーム内メール',
-          description: 'ゲーム内メールを送信します',
-          link: '/control/character/mail',
+          summary: 'ゲーム内メールを送信します',
+          href: '/control/character/mail',
         },
         {
           title: '情報確認',
-          description: '特定のユーザーの情報を確認します',
-          link: '/control/character/info',
+          summary: '特定のユーザーの情報を確認します',
+          href: '/control/character/info',
         },
         {
           title: '警告',
-          description: '特定のユーザーに対して警告を行います',
-          link: '/control/character/admonish',
+          summary: '特定のユーザーに対して警告を行います',
+          href: '/control/character/admonish',
         },
         {
           title: 'BAN',
-          description: '特定のユーザーのBANを行います',
-          link: '/control/character/ban',
+          summary: '特定のユーザーのBANを行います',
+          href: '/control/character/ban',
         },
         {
           title: 'BAN解除',
-          description: '特定のユーザーのBAN解除を行います',
-          link: '/control/character/unban',
+          summary: '特定のユーザーのBAN解除を行います',
+          href: '/control/character/unban',
         },
         {
           title: 'パスワード再発行',
-          description: '特定のキャラクターのパスワードを上書き変更します',
-          link: '/control/character/reset-password',
+          summary: '特定のキャラクターのパスワードを上書き変更します',
+          href: '/control/character/reset-password',
         },
         {
           title: '削除解除',
-          description: '削除状態を解除します',
-          link: '/control/character/undelete',
+          summary: '削除状態を解除します',
+          href: '/control/character/undelete',
         },
       ],
     },
@@ -142,8 +128,8 @@ const Control: NextPage = () => {
       links: [
         {
           title: 'ダミーキャラ作成',
-          description: 'ダミーキャラを作成します',
-          link: '/control/debug/dummy-character',
+          summary: 'ダミーキャラを作成します',
+          href: '/control/debug/dummy-character',
         },
       ],
     },

@@ -26,7 +26,7 @@ import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import Button from 'components/atoms/Button/Button';
@@ -219,7 +219,7 @@ const SettingsProfileImages: NextPage = () => {
   if (!fetched) {
     return (
       <DefaultPage>
-        <SubHeading>プロフィール画像設定</SubHeading>
+        <Heading>プロフィール画像設定</Heading>
         <Loading />
       </DefaultPage>
     );
@@ -396,7 +396,7 @@ const SettingsProfileImages: NextPage = () => {
   return (
     <DefaultPage>
       <PageData title="プロフィール画像設定" />
-      <SubHeading>プロフィール画像設定</SubHeading>
+      <Heading>プロフィール画像設定</Heading>
       <CommentarySection>
         <p>
           プロフィール画像はプロフィール表示時に設定されているものがランダムで表示されます。

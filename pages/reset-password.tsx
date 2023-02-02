@@ -4,7 +4,7 @@ import type { NextPage } from 'next';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-import SubHeading from '@/components/atoms/SubHeading/SubHeading';
+import Heading from '@/components/atoms/Heading/Heading';
 import InputForm from '@/components/organisms/InputForm/InputForm';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
@@ -75,7 +75,7 @@ const ResetPassword: NextPage = () => {
     <DefaultPage>
       <PageData title="パスワード再設定申請" />
       <section>
-        <SubHeading>パスワード再設定申請</SubHeading>
+        <Heading>パスワード再設定申請</Heading>
         <SectionWrapper>
           <p>
             メールアドレスを登録している場合、登録しているメールアドレスにパスワード再設定URLを送付できます。
