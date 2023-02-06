@@ -2,16 +2,18 @@
   width: 100%;
 }
 
-.editor {
-  width: 100%;
-  resize: none;
+.wrapper {
   height: 200px;
-  outline: none;
-  padding: 6px;
+  margin-bottom: 4px;
+}
 
-  &.thin {
-    height: 100px;
-  }
+.thin {
+  height: 100px;
+}
+
+.editor-tag {
+  color: #b8b8b8;
+  background: none;
 }
 
 .image-select-area {

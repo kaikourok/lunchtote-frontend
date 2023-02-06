@@ -15,6 +15,15 @@ import {
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import classnames from 'classnames';
+import {
+  CompositeDecorator,
+  ContentBlock,
+  ContentState,
+  Editor,
+  EditorState,
+  Modifier,
+  SelectionState,
+} from 'draft-js';
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 
 import styles from './DecorationEditor.module.scss';
@@ -59,18 +68,51 @@ const ControllerButton = (props: ControllerButtonProps) => {
   );
 };
 
+const insertTag = (state: EditorState, startTag: string, endTag?: string) => {
+  const currentSelection = state.getSelection();
+  const currentContent = state.getCurrentContent();
+  const startKey = currentSelection.getStartKey();
+  const endKey = currentSelection.getEndKey();
+  const startBlock = currentContent.getBlockForKey(startKey);
+  const endBlock = currentContent.getBlockForKey(endKey);
+  const startOffset = currentSelection.getStartOffset();
+  const endOffset = currentSelection.getEndOffset();
+
+  let endState: ContentState | null = null;
+  if (endTag != undefined) {
+    const selection = new SelectionState({
+      anchorKey: endKey,
+      anchorOffset: endOffset,
+      focusKey: endKey,
+      focusOffset: endOffset,
+    });
+    endState = Modifier.insertText(currentContent, selection, endTag);
+  }
+
+  const selection = new SelectionState({
+    anchorKey: startKey,
+    anchorOffset: startOffset,
+    focusKey: startKey,
+    focusOffset: startOffset,
+  });
+  const resultContent = Modifier.insertText(
+    endState ?? currentContent,
+    selection,
+    startTag
+  );
+
+  return EditorState.push(state, resultContent, 'insert-characters');
+};
+
 type InsertTagButtonProps =
   | {
       path: string;
       startTag: string;
+      endTag?: undefined;
       singleTag: true;
       style?: CSSProperties;
-      onClick?: (
-        s: string,
-        selectionStart: number,
-        selectionEnd: number
-      ) => void;
-      textareaRef: React.RefObject<HTMLTextAreaElement>;
+      onClick?: (state: EditorState) => void;
+      editorState: EditorState;
       label?: string;
     }
   | {
@@ -79,12 +121,8 @@ type InsertTagButtonProps =
       endTag: string;
       singleTag?: false;
       style?: CSSProperties;
-      onClick?: (
-        s: string,
-        selectionStart: number,
-        selectionEnd: number
-      ) => void;
-      textareaRef: React.RefObject<HTMLTextAreaElement>;
+      onClick?: (state: EditorState) => void;
+      editorState: EditorState;
       label?: string;
     };
 
@@ -95,44 +133,20 @@ const InsertTagButton = (props: InsertTagButtonProps) => {
       style={props.style}
       label={props.label}
       onClick={() => {
-        if (props.onClick == undefined || props.textareaRef.current == null) {
+        if (props.onClick == undefined) {
           return;
         }
 
-        const target = props.textareaRef.current;
-        const currentSelectionStart = target.selectionStart;
-        const currentSelectionEnd = target.selectionEnd;
-
-        if (props.singleTag) {
-          const s =
-            target.value.slice(0, currentSelectionEnd) +
-            props.startTag +
-            target.value.slice(currentSelectionEnd);
-          props.onClick(
-            s,
-            currentSelectionStart + props.startTag.length,
-            currentSelectionEnd + props.startTag.length
-          );
-        } else {
-          const s =
-            target.value.slice(0, target.selectionStart) +
-            props.startTag +
-            target.value.slice(target.selectionStart, target.selectionEnd) +
-            props.endTag +
-            target.value.slice(target.selectionEnd);
-          props.onClick(
-            s,
-            currentSelectionStart + props.startTag.length,
-            currentSelectionEnd + props.startTag.length
-          );
-        }
+        props.onClick(
+          insertTag(props.editorState, props.startTag, props.endTag)
+        );
       }}
     />
   );
 };
 
 type DecorationEditorProps = {
-  value?: string;
+  initialValue: string;
   onChange?: (s: string) => void;
   noDice?: boolean;
   noMessage?: boolean;
@@ -142,158 +156,214 @@ type DecorationEditorProps = {
   onSend?: React.MouseEventHandler<HTMLDivElement>;
 };
 
+const words = [
+  /\[\+\]/gi,
+  /\[\/\+\]/gi,
+  /\[\-\]/gi,
+  /\[\/\-\]/gi,
+  /\[b\]/gi,
+  /\[\/b\]/gi,
+  /\[i\]/gi,
+  /\[\/i\]/gi,
+  /\[u\]/gi,
+  /\[\/u\]/gi,
+  /\[s\]/gi,
+  /\[\/s\]/gi,
+  /\[rt\]/gi,
+  /\[\/rt\]/gi,
+  /\[rb\]/gi,
+  /\[\/rb\]/gi,
+  /\[d6\]/gi,
+  /\[d100\]/gi,
+  /\[hr\]/gi,
+  /\[img\]/gi,
+  /\[\/img\]/gi,
+  /\[img\-r\]/gi,
+  /\[\/img\-r\]/gi,
+  /\[img\-l\]/gi,
+  /\[\/img\-l\]/gi,
+];
+
+const Decorated = ({ children }: { children: ReactNode }) => {
+  return <span className={styles['editor-tag']}>{children}</span>;
+};
+
+function findWithRegex(
+  words: RegExp[],
+  contentBlock: ContentBlock,
+  callback: (start: number, end: number) => void
+) {
+  const text = contentBlock.getText();
+
+  words.forEach((word) => {
+    const matches = [...text.matchAll(word)];
+    matches.forEach((match) =>
+      callback(match.index!, match.index! + match[0].length)
+    );
+  });
+}
+
+function handleStrategy(
+  contentBlock: ContentBlock,
+  callback: (start: number, end: number) => void
+) {
+  findWithRegex(words, contentBlock, callback);
+}
+
+const createDecorator = () =>
+  new CompositeDecorator([
+    {
+      strategy: handleStrategy,
+      component: Decorated,
+    },
+  ]);
+
 const DecorationEditor = (props: DecorationEditorProps) => {
   const csrfHeader = useCsrfHeader();
-  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<Editor>(null);
 
-  const [selectionStart, setSelectionStart] = useState(-1);
-  const [selectionEnd, setSelectionEnd] = useState(-1);
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty(createDecorator())
+  );
+
+  useEffect(() => {
+    if (props.onChange) {
+      props.onChange(
+        editorState
+          .getCurrentContent()
+          .getBlocksAsArray()
+          .map((block) => block.getText())
+          .join('\n')
+      );
+    }
+  }, [editorState]);
+
+  useEffect(() => {
+    setEditorState(
+      EditorState.createWithContent(
+        ContentState.createFromText(props.initialValue),
+        createDecorator()
+      )
+    );
+  }, [props.initialValue]);
+
   const [isImageInsertModalOpen, setIsImageInsertModalOpen] = useState(false);
   const [insertImage, setInsertImage] = useState<File | null>(null);
   const [insertImagePosition, setInsertImagePosition] =
     useState<InsertImagePosition>('CENTER');
 
-  useEffect(() => {
-    if (selectionStart == -1 || selectionEnd == -1) return;
-    if (!editorRef || !editorRef.current) return;
-
-    editorRef.current.focus();
-    editorRef.current.selectionStart = selectionStart;
-    editorRef.current.selectionEnd = selectionEnd;
-  }, [props.value, selectionStart, selectionEnd]);
-
-  const onChange = (
-    s: string,
-    selectionStart: number,
-    selectionEnd: number
-  ) => {
-    if (props.onChange) {
-      props.onChange(s);
-      setSelectionStart(selectionStart);
-      setSelectionEnd(selectionEnd);
-    }
-  };
-
   const handleSelectInsertImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
-    console.log(files);
     if (!files) {
       setInsertImage(null);
       return;
     }
 
-    (async () => {
-      const file: File = files[0];
-      //const fileReader: FileReader = await readerOnLoadEnd(file);
-
-      //if (fileReader.result != null) {
-      setInsertImage(file);
-      //}
-    })();
-
+    const file: File = files[0];
+    setInsertImage(file);
     e.target.value = '';
   };
 
   return (
     <div className={styles['editor-wrapper']}>
-      <textarea
-        value={props.value}
-        ref={editorRef}
-        spellCheck={false}
-        className={classnames(styles['editor'], {
+      <div
+        className={classnames(styles['wrapper'], {
           [styles['thin']]: props.thin,
         })}
-        onChange={(e) => {
-          onChange(e.target.value, -1, -1);
-        }}
-      />
+      >
+        <Editor
+          ref={editorRef}
+          editorState={editorState}
+          onChange={setEditorState}
+        />
+      </div>
       <div className={styles['controller-buttons']}>
         <div className={styles['controller-buttons-left']}>
           <InsertTagButton
-            textareaRef={editorRef}
+            editorState={editorState}
             startTag="[+]"
             endTag="[/+]"
             path={mdiFormatAnnotationPlus}
-            onClick={onChange}
+            onClick={setEditorState}
             label="字を大きく"
           />
           <InsertTagButton
-            textareaRef={editorRef}
+            editorState={editorState}
             startTag="[-]"
             endTag="[/-]"
             path={mdiFormatAnnotationMinus}
-            onClick={onChange}
+            onClick={setEditorState}
             label="字を小さく"
           />
           <InsertTagButton
-            textareaRef={editorRef}
+            editorState={editorState}
             startTag="[b]"
             endTag="[/b]"
             path={mdiFormatBold}
-            onClick={onChange}
+            onClick={setEditorState}
             label="太字"
           />
           <InsertTagButton
-            textareaRef={editorRef}
+            editorState={editorState}
             startTag="[i]"
             endTag="[/i]"
             path={mdiFormatItalic}
-            onClick={onChange}
+            onClick={setEditorState}
             label="斜体"
           />
           <InsertTagButton
-            textareaRef={editorRef}
+            editorState={editorState}
             startTag="[u]"
             endTag="[/u]"
             path={mdiFormatUnderline}
-            onClick={onChange}
+            onClick={setEditorState}
             label="下線"
           />
           <InsertTagButton
-            textareaRef={editorRef}
+            editorState={editorState}
             startTag="[s]"
             endTag="[/s]"
             path={mdiFormatStrikethrough}
-            onClick={onChange}
+            onClick={setEditorState}
             label="取り消し線"
           />
           <InsertTagButton
-            textareaRef={editorRef}
+            editorState={editorState}
             startTag="[rt]"
             endTag="[/rt][rb][/rb]"
             path={mdiFuriganaHorizontal}
-            onClick={onChange}
+            onClick={setEditorState}
             label="ルビ"
           />
           <div className={styles['controller-separator']} />
           {!props.noDice && (
             <InsertTagButton
-              textareaRef={editorRef}
+              editorState={editorState}
               startTag="[d6]"
               singleTag
               path={mdiDice2}
-              onClick={onChange}
+              onClick={setEditorState}
               label="6面ダイス"
             />
           )}
           {!props.noDice && (
             <InsertTagButton
-              textareaRef={editorRef}
+              editorState={editorState}
               startTag="[d100]"
               singleTag
               path={mdiDiceMultiple}
-              onClick={onChange}
+              onClick={setEditorState}
               label="100面ダイス"
             />
           )}
           {!props.noHorizonLine && (
             <InsertTagButton
-              textareaRef={editorRef}
+              editorState={editorState}
               startTag="[hr]"
               singleTag
               path={mdiMinus}
-              onClick={onChange}
+              onClick={setEditorState}
               label="水平線"
             />
           )}
@@ -388,17 +458,7 @@ const DecorationEditor = (props: DecorationEditorProps) => {
                   break;
               }
 
-              const s =
-                editorRef.current.value.slice(0, selectionEnd) +
-                tag +
-                editorRef.current.value.slice(selectionEnd);
-
-              onChange(
-                s,
-                selectionStart + tag.length,
-                selectionEnd + tag.length
-              );
-
+              setEditorState(insertTag(editorState, tag));
               setInsertImage(null);
               setIsImageInsertModalOpen(false);
             }}
