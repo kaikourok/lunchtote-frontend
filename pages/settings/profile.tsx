@@ -51,6 +51,7 @@ import axios from 'plugins/axios';
 const nameMax = Number(process.env.NEXT_PUBLIC_CHARACTER_NAME_MAX!);
 const nicknameMax = Number(process.env.NEXT_PUBLIC_CHARACTER_NICKNAME_MAX!);
 const summaryMax = Number(process.env.NEXT_PUBLIC_CHARACTER_SUMMARY_MAX!);
+const uploaderPath = process.env.NEXT_PUBLIC_UPLOADER_PATH!;
 
 type Tag = {
   uuid: string;
@@ -128,6 +129,7 @@ const SettingsProfile: NextPage = () => {
   const [initialProfile, setInitialProfile] = useState('');
   const [profile, setProfile] = useState('');
   const [mainicon, setMainicon] = useState<ImageEditItem | null>(null);
+  const [listImage, setListImage] = useState<ImageEditItem | null>(null);
   const [selectableIcons, setSelectableIcons] = useState<string[]>([]);
   const [submitTried, setSubmitTried] = useState(false);
   const [fetched, setFetched] = useState(false);
@@ -138,19 +140,16 @@ const SettingsProfile: NextPage = () => {
 
     (async () => {
       try {
-        type Response = {
+        const response = await axios.get<{
           name: string;
           nickname: string;
           summary: string;
           profile: string;
           mainicon: string | null;
+          listImage: string | null;
           tags: string[];
           selectableIcons: string[];
-        };
-
-        const response = await axios.get<Response>(
-          '/characters/main/settings/profile'
-        );
+        }>('/characters/main/settings/profile');
         setName(response.data.name);
         setNickname(response.data.nickname);
         setSummary(response.data.summary);
@@ -165,6 +164,12 @@ const SettingsProfile: NextPage = () => {
           setMainicon({
             uploaded: true,
             url: response.data.mainicon,
+          });
+        }
+        if (response.data.listImage) {
+          setListImage({
+            uploaded: true,
+            url: response.data.listImage,
           });
         }
         setSelectableIcons(response.data.selectableIcons);
@@ -237,10 +242,11 @@ const SettingsProfile: NextPage = () => {
       summary: summary,
       profile: profile,
       mainicon: '',
+      listImage: '',
       tags: tags.map((tag) => tag.tag).filter((tag) => tag.length),
     };
 
-    let uploadedPath = '';
+    let uploadedMainiconPath = '';
     if (mainicon?.uploaded === false) {
       try {
         const submitData = new FormData();
@@ -258,13 +264,40 @@ const SettingsProfile: NextPage = () => {
             ),
           }
         );
-        uploadedPath = data.paths[0];
-        currentProfile.mainicon = uploadedPath;
+        uploadedMainiconPath = data.paths[0];
+        currentProfile.mainicon = uploadedMainiconPath;
       } catch {
         return toast.error(`アイコンのアップロード中にエラーが発生しました`);
       }
     } else {
       currentProfile.mainicon = mainicon ? mainicon.url : '';
+    }
+
+    let uploadedListImagePath = '';
+    if (listImage?.uploaded === false) {
+      try {
+        const submitData = new FormData();
+        submitData.append(`images[]`, listImage.file);
+
+        const { data } = await axios.post<{ paths: string[] }>(
+          '/characters/main/upload?type=list-image',
+          submitData,
+          {
+            headers: Object.assign(
+              {
+                'content-type': 'multipart/form-data',
+              },
+              csrfHeader
+            ),
+          }
+        );
+        uploadedListImagePath = data.paths[0];
+        currentProfile.listImage = uploadedListImagePath;
+      } catch {
+        return toast.error(`リスト画像のアップロード中にエラーが発生しました`);
+      }
+    } else {
+      currentProfile.listImage = listImage ? listImage.url : '';
     }
 
     try {
@@ -279,10 +312,16 @@ const SettingsProfile: NextPage = () => {
         }
       );
 
-      if (uploadedPath) {
+      if (uploadedMainiconPath) {
         setMainicon({
           uploaded: true,
-          url: uploadedPath,
+          url: uploadedMainiconPath,
+        });
+      }
+      if (uploadedListImagePath) {
+        setListImage({
+          uploaded: true,
+          url: uploadedListImagePath,
         });
       }
       setTags(
@@ -369,6 +408,30 @@ const SettingsProfile: NextPage = () => {
     e.target.value = '';
   };
 
+  const handleSelectListImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (!files) {
+      setListImage(null);
+      return;
+    }
+
+    (async () => {
+      const file: File = files[0];
+      const fileReader: FileReader = await readerOnLoadEnd(file);
+
+      if (fileReader.result != null) {
+        setListImage({
+          uploaded: false,
+          file: file,
+          url: fileReader.result.toString(),
+        });
+      }
+    })();
+
+    e.target.value = '';
+  };
+
   return (
     <DefaultPage>
       <PageData title="プロフィール設定" />
@@ -429,7 +492,11 @@ const SettingsProfile: NextPage = () => {
           />
           <InputForm.General
             label="メインアイコン"
-            help={<>キャラクターリストなどに表示されるアイコンです。</>}
+            help={
+              <>
+                通知など、様々な箇所にキャラクターとして表示されるアイコンです。
+              </>
+            }
           >
             <div className={styles['icon-controls']}>
               <CharacterIcon url={mainicon?.url} />
@@ -443,6 +510,38 @@ const SettingsProfile: NextPage = () => {
               <Button
                 className={styles['icon-control-button']}
                 onClick={() => setMainicon(null)}
+              >
+                解除
+              </Button>
+            </div>
+          </InputForm.General>
+          <InputForm.General
+            label="リスト画像"
+            help={<>キャラクターリストなどに表示される画像です。</>}
+          >
+            <div className={styles['icon-controls']}>
+              {listImage && (
+                <img
+                  className={styles['list-image']}
+                  src={
+                    !listImage.uploaded
+                      ? listImage.url
+                      : uploaderPath + listImage.url
+                  }
+                />
+              )}
+
+              {!listImage && <div className={styles['list-image']} />}
+              <FileInputButton
+                className={styles['icon-control-button']}
+                accept=".png,.jpg,.jpeg,.gif,image/png,image/jpeg,image/gif"
+                onChange={handleSelectListImage}
+              >
+                リスト画像選択
+              </FileInputButton>
+              <Button
+                className={styles['icon-control-button']}
+                onClick={() => setListImage(null)}
               >
                 解除
               </Button>
