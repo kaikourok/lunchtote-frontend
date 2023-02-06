@@ -134,6 +134,7 @@ const RoomsControl: NextPage = () => {
   })();
 
   const [tags, setTags] = useState<Tag[]>([]);
+  const [initialDescription, setInitialDescription] = useState('');
   const [description, setDescription] = useState('');
   const [searchable, setSearchable] = useState(true);
   const [allowRecommendation, setAllowRecommendation] = useState(true);
@@ -153,6 +154,7 @@ const RoomsControl: NextPage = () => {
 
           setTitle(response.data.title);
           setSummary(response.data.summary);
+          setInitialDescription(response.data.description);
           setDescription(response.data.description);
           setSearchable(response.data.searchable);
           setAllowRecommendation(response.data.allowRecommendation);
@@ -370,7 +372,7 @@ const RoomsControl: NextPage = () => {
             help={<>ルーム内で確認することのできるルームの説明文です。</>}
           >
             <DecorationEditor
-              value={description}
+              initialValue={initialDescription}
               onChange={(s) => {
                 setDescription(s);
               }}

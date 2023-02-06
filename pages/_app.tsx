@@ -1,6 +1,7 @@
 import '@/styles/sanitize.css';
 import 'react-toggle/style.css';
 import '@/styles/global.scss';
+import '@/styles/DraftEditor.scss';
 import '@/styles/room-message/index.scss';
 import { NextPage } from 'next';
 import type { AppProps } from 'next/app';

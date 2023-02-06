@@ -125,6 +125,7 @@ const SettingsProfile: NextPage = () => {
   const [nickname, setNickname] = useState('');
   const [summary, setSummary] = useState('');
   const [tags, setTags] = useState<Tag[]>([]);
+  const [initialProfile, setInitialProfile] = useState('');
   const [profile, setProfile] = useState('');
   const [mainicon, setMainicon] = useState<ImageEditItem | null>(null);
   const [selectableIcons, setSelectableIcons] = useState<string[]>([]);
@@ -153,6 +154,7 @@ const SettingsProfile: NextPage = () => {
         setName(response.data.name);
         setNickname(response.data.nickname);
         setSummary(response.data.summary);
+        setInitialProfile(response.data.profile);
         setProfile(response.data.profile);
         setTags(
           response.data.tags.map((tag) => {
@@ -528,7 +530,7 @@ const SettingsProfile: NextPage = () => {
             }
           >
             <DecorationEditor
-              value={profile}
+              initialValue={initialProfile}
               onChange={(s) => {
                 setProfile(s);
               }}
