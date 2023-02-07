@@ -64,8 +64,13 @@
     height: $listIconHeight;
     flex: none;
 
-    .character-icon-wrapper {
+    .character-list-image-wrapper {
       position: absolute;
+    }
+
+    .character-list-image {
+      width: 90px;
+      height: 120px;
     }
 
     .character-list-view-bottom {

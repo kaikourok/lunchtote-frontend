@@ -1,4 +1,4 @@
-import { mdiViewGrid, mdiViewList, mdiViewModule } from '@mdi/js';
+import { mdiViewList, mdiViewModule } from '@mdi/js';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { CSSProperties, useEffect, useRef, useState } from 'react';
@@ -6,8 +6,9 @@ import { CSSProperties, useEffect, useRef, useState } from 'react';
 import styles from './CharacterList.module.scss';
 
 import Button from '@/components/atoms/Button/Button';
-import CharacterListIcon from '@/components/atoms/CharacterListIcon/CharacterListIcon';
 import characterIdText from 'lib/characterIdText';
+
+const uploaderPath = process.env.NEXT_PUBLIC_UPLOADER_PATH!;
 
 type ViewMode = 'DETAIL' | 'OVERVIEW';
 
@@ -45,7 +46,7 @@ type CharacterListItemProps = {
   name: string;
   nickname: string;
   summary: string;
-  mainicon: string;
+  listImage: string;
   tags: string[];
   isFollowing?: boolean;
   isFollowed?: boolean;
@@ -86,22 +87,19 @@ const CharacterListItem = (
     >
       <div className={styles['character-list-view']}>
         <div className={styles['character-list-view-background']} />
-        <div className={styles['character-icon-wrapper']}>
-          <CharacterListIcon url={props.mainicon} />
+        <div className={styles['character-list-image-wrapper']}>
+          {!!props.listImage && (
+            <img
+              className={styles['character-list-image']}
+              src={uploaderPath + props.listImage}
+            />
+          )}
         </div>
         <div className={styles['character-list-id']}>
           <span className={styles['first-letter']}>
             {characterIdText(props.id).slice(0, 1)}
           </span>
           {characterIdText(props.id).slice(1)}
-        </div>
-        <div className={styles['character-list-view-background2']} />
-        <div className={styles['character-list-view-bottom']} />
-
-        <div className={styles['character-list-view-name-wrapper']}>
-          <div className={styles['character-list-view-name']}>
-            {props.nickname}
-          </div>
         </div>
       </div>
       <div className={styles['character-details']}>
