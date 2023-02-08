@@ -24,7 +24,7 @@ type Character = {
   name: string;
   nickname: string;
   summary: string;
-  mainicon: string;
+  listImage: string;
   tags: string[];
   isFollowing?: boolean;
   isFollowed?: boolean;
