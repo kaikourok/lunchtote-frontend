@@ -1,0 +1,45 @@
+.diary-overviews {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 3px;
+}
+
+.diary-overview {
+  padding: 0 10px 8px 10px;
+  background: #e8e8e8;
+}
+
+.diary-title {
+  display: block;
+  font-size: 1.15em;
+  padding: 10px 6px;
+  color: #333;
+  font-weight: bold;
+  border-bottom: 1px dotted #8d8d8d;
+}
+
+.diary-attributes {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.diary-link {
+  display: flex;
+  align-items: center;
+}
+
+.diary-author-names {
+  margin-right: 4px;
+
+  .diary-author-name {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .diary-author-id {
+    margin-left: 4px;
+    font-size: 0.9em;
+    color: #888;
+  }
+}

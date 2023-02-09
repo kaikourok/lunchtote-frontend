@@ -110,3 +110,8 @@ type Role = {
   color: string | null;
   type: RoleType;
 };
+
+type DiaryOverview = {
+  author: CharacterOverview;
+  title: string;
+};

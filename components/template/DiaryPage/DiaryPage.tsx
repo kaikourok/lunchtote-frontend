@@ -12,7 +12,7 @@ import characterIdText from 'lib/characterIdText';
 const DiaryPage = (props: {
   title: string;
   diary: string;
-  character: CharacterOverview;
+  author: CharacterOverview;
   diaryExistings: number[];
   preview?: boolean;
 }) => {
@@ -23,7 +23,7 @@ const DiaryPage = (props: {
       <div className={styles['columns']}>
         <div className={styles['sub-column']}>
           {props.preview ? (
-            <div className={styles['diary-nth-link']}>第N回</div>
+            <div className={styles['diary-nth-link']}>第N更新</div>
           ) : (
             props.diaryExistings
               .sort((a, b) => b - a)
@@ -34,12 +34,12 @@ const DiaryPage = (props: {
                     href={{
                       pathname: '/diaries/[character]/[nth]',
                       query: {
-                        character: props.character.id,
+                        character: props.author.id,
                         nth: nth,
                       },
                     }}
                   >
-                    <a className={styles['diary-nth-link']}>第{nth}回</a>
+                    <a className={styles['diary-nth-link']}>第{nth + 1}更新</a>
                   </Link>
                 );
               })
@@ -55,19 +55,19 @@ const DiaryPage = (props: {
             <Link
               href={{
                 pathname: '/characters/[id]',
-                query: { id: props.character.id },
+                query: { id: props.author.id },
               }}
             >
               <a className={styles['character-link']}>
                 <span className={styles['character-name']}>
-                  {props.character.name}
+                  {props.author.name}
                 </span>
                 <span className={styles['character-id']}>
-                  {characterIdText(props.character.id)}
+                  {characterIdText(props.author.id)}
                 </span>
               </a>
             </Link>
-            <CharacterIcon url={props.character.mainicon} mini />
+            <CharacterIcon url={props.author.mainicon} mini />
           </section>
           <section
             className={styles['diary']}

@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
@@ -8,28 +9,35 @@ import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import DefaultPage from '@/components/template/DefaultPage/DefaultPage';
 import DiaryPage from '@/components/template/DiaryPage/DiaryPage';
+import SectionWrapper from '@/components/template/SectionWrapper/SectionWrapper';
 import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 
 type Response = {
   author: CharacterOverview;
+  existingDiaries: number[];
   title: string;
   diary: string;
+  nth: number;
 };
 
-const DiariesPreview: NextPage = () => {
+const Diary: NextPage = () => {
+  const router = useRouter();
+
   const { isAuthenticated } = useAuthenticationStatus();
   useRequireAuthenticated();
 
   const { data, error } = useSWR<Response>(
-    !isAuthenticated ? null : `/diaries/write/preview`
+    !isAuthenticated || !router.isReady
+      ? null
+      : `/diaries/${router.query.nth}/${router.query.character}`
   );
 
   if (error) {
     return (
       <DefaultPage>
-        <PageData title="日記プレビュー" />
-        <Heading>日記プレビュー</Heading>
+        <PageData title="日記" />
+        <Heading>日記</Heading>
         <CommentarySection>表示中にエラーが発生しました。</CommentarySection>
       </DefaultPage>
     );
@@ -38,12 +46,11 @@ const DiariesPreview: NextPage = () => {
   if (!data) {
     return (
       <DefaultPage>
-        <PageData title="日記プレビュー" />
-        <Heading>日記プレビュー</Heading>
-        <CommentarySection>
-          まだ日記の投稿予約が行われていません。日記の投稿予約は
-          <InlineLink href="/diaries/write">こちら</InlineLink>から行えます。
-        </CommentarySection>
+        <PageData title="日記" />
+        <Heading>日記</Heading>
+        <SectionWrapper>
+          <Loading />
+        </SectionWrapper>
       </DefaultPage>
     );
   }
@@ -53,9 +60,9 @@ const DiariesPreview: NextPage = () => {
       title={data.title}
       diary={data.diary}
       author={data.author}
-      diaryExistings={[]}
+      diaryExistings={data.existingDiaries}
     />
   );
 };
 
-export default DiariesPreview;
+export default Diary;
