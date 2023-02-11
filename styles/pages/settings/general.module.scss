@@ -60,12 +60,18 @@
   }
 }
 
+.webhook-input-wrapper {
+  display: flex;
+  margin-bottom: 20px;
+}
+
 .webhook-input {
+  flex: 1;
+  margin-right: 10px;
   padding: 4px 7px;
   font-size: 1rem;
   width: 100%;
   outline: none;
-  margin-bottom: 20px;
 }
 
 .signin-links {
