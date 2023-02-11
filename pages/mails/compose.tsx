@@ -12,7 +12,6 @@ import useCsrfHeader from 'hooks/useCsrfHeader';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import axios from 'plugins/axios';
 
-
 const MailsCompose: NextPage = () => {
   const csrfHeader = useCsrfHeader();
 
@@ -62,9 +61,9 @@ const MailsCompose: NextPage = () => {
               }
             );
 
-            //setTargetCharacter(null);
-            //setTitle('');
-            //setMessage('');
+            setTargetCharacter(null);
+            setTitle('');
+            setMessage('');
           } catch (e) {
             console.log(e);
           }

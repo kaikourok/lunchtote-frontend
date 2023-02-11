@@ -5,6 +5,7 @@ import useSWR from 'swr';
 
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
 import Heading from '@/components/atoms/Heading/Heading';
+import DiaryOverviewList from '@/components/organisms/DiaryOverviewList/DiaryOverviewList';
 import Loading from '@/components/organisms/Loading/Loading';
 import PageData from '@/components/organisms/PageData/PageData';
 import PageSelector from '@/components/organisms/PageSelector/PageSelector';
@@ -15,13 +16,8 @@ import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useRequireAuthenticated from 'hooks/useRequireAuthenticated';
 import buildQueryString from 'lib/buildQueryString';
 
-type DiaryDetail = {
-  character: CharacterOverview;
-  title: string;
-};
-
 type Response = {
-  diaries: DiaryDetail[];
+  diaries: DiaryOverview[];
   currentNth: number;
   lastNth: number;
 };
@@ -39,7 +35,7 @@ const Diaries: NextPage = () => {
       if (typeof router.query.nth == 'string') {
         setSelectedNth(Number(router.query.nth));
       } else {
-        setSelectedNth(0);
+        setSelectedNth(null);
       }
     }
   }, [router.isReady, router.query.nth]);
@@ -66,15 +62,15 @@ const Diaries: NextPage = () => {
 
   const pageSelectorItems: ReactNode[] = [];
   let i = 0;
-  while (i < data.lastNth) {
-    const targetNth = ++i;
+  while (i <= data.lastNth) {
+    const targetNth = i++;
     pageSelectorItems.push(
       <PageSelector.Item
         key={targetNth}
         href={{ pathname: '/diaries', query: { nth: targetNth } }}
         current={targetNth == data.currentNth}
       >
-        {targetNth}
+        {targetNth + 1}
       </PageSelector.Item>
     );
   }
@@ -104,7 +100,9 @@ const Diaries: NextPage = () => {
             </CommentarySection>
           );
         } else {
-          return <></>;
+          return (
+            <DiaryOverviewList nth={data.currentNth} diaries={data.diaries} />
+          );
         }
       })()}
       {pageSelector}

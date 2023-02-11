@@ -80,6 +80,7 @@ const MessageEditor = (props: {
 }) => {
   const csrfHeader = useCsrfHeader();
 
+  const [initialMessage, setInitialMessage] = useState(props.message);
   const [isIconSelectModalOpen, setIsIconSelectModalOpen] = useState(false);
   const [isDirectReplyModalOpen, setIsDirectReplyModalOpen] = useState(false);
 
@@ -273,7 +274,7 @@ const MessageEditor = (props: {
                 </div>
               )}
               <DecorationEditor
-                value={props.message}
+                initialValue={initialMessage}
                 onSend={props.onSend}
                 onChange={props.onMessageChange}
                 noMessage

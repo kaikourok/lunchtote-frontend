@@ -424,13 +424,45 @@ const SettingsGeneral: NextPage = () => {
               </>
             }
           >
-            <input
-              type="text"
-              className={styles['webhook-input']}
-              placeholder="URL (https://discord.com/api/webhooks/...)"
-              value={webhookUrl}
-              onChange={(e) => setWebhookUrl(e.target.value)}
-            />
+            <div className={styles['webhook-input-wrapper']}>
+              <input
+                type="text"
+                className={styles['webhook-input']}
+                placeholder="URL (https://discord.com/api/webhooks/...)"
+                value={webhookUrl}
+                onChange={(e) => setWebhookUrl(e.target.value)}
+              />
+              <Button
+                disabled={webhookUrl.indexOf('https://') != 0}
+                onDisabledClick={() =>
+                  toast.error('正しいURLを入力してください')
+                }
+                onClick={async () => {
+                  if (!csrfHeader) return;
+
+                  try {
+                    await toast.promise(
+                      axios.post(
+                        '/characters/main/settings/webhook-test',
+                        { url: webhookUrl },
+                        {
+                          headers: csrfHeader,
+                        }
+                      ),
+                      {
+                        loading: 'テストメッセージを送信しています',
+                        success: 'テストメッセージを送信しました',
+                        error: 'テストメッセージの送信中にエラーが発生しました',
+                      }
+                    );
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }}
+              >
+                テスト
+              </Button>
+            </div>
             <NoticeSettings
               followed={webhookFollowed}
               replied={webhookReplied}

@@ -247,7 +247,7 @@ const ForumNew: NextPage = () => {
         )}
         <InputForm.General label="投稿内容">
           <DecorationEditor
-            value={content}
+            initialValue=""
             onChange={(val) => setContent(val)}
             noDice
             noMessage
