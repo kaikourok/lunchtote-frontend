@@ -1,0 +1,163 @@
+@use 'sass:math';
+@import '@/styles/variables.scss';
+
+.hero-view-wrapper {
+  display: flex;
+  align-items: center;
+  height: calc(100vh - $headerHeight);
+  background: radial-gradient(
+    rgb(89, 89, 94),
+    rgb(89, 89, 94),
+    rgb(52, 52, 54)
+  );
+}
+
+.hero-view {
+  position: relative;
+  width: 100%;
+  height: min($profileImageHeight, calc(100vh - $headerHeight));
+  background: radial-gradient(
+    rgb(238, 238, 238),
+    rgb(230, 230, 236),
+    rgb(192, 192, 199)
+  );
+  box-shadow: 0px 0px 5px #303138cb;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-view-internal {
+  width: min(100vw, 1300px);
+  display: flex;
+  justify-content: center;
+}
+
+.profile-image-wrapper {
+  flex: none;
+}
+
+.character-data {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+.character-names {
+  flex: none;
+  margin: 10px 0;
+
+  .character-id {
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 1;
+    color: #858585;
+  }
+
+  .character-name {
+    margin-top: 10px;
+    font-size: 2.5em;
+    font-weight: bold;
+    line-height: 1;
+    color: #4d4d4d;
+  }
+}
+
+.character-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 8px 0 10px -10px;
+
+  .character-tag {
+    margin: 2px 0 0 10px;
+    display: flex;
+    align-items: center;
+
+    .character-tag-icon-wrapper {
+      color: #888;
+      display: flex;
+      width: 1em;
+      height: 1em;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .character-tag-text {
+      margin-left: 2px;
+    }
+  }
+}
+
+.character-follows {
+  margin: 10px 0;
+  display: flex;
+  flex: 1;
+
+  .character-follow-info {
+    display: flex;
+    margin-right: 20px;
+
+    .character-follow-info-label {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #888;
+    }
+
+    .character-follow-info-value {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #666;
+      margin-left: 10px;
+    }
+  }
+}
+
+.character-summary {
+  margin: 20px 0;
+  color: #646464;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.body {
+  margin: 20px auto;
+  max-width: 1000px;
+}
+
+.relation-buttons {
+  margin: 10px 0;
+  display: grid;
+
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 4px;
+
+  @media screen and (max-width: 800px) {
+    margin: 10px 4px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.profile-wrapper {
+  padding: 20px;
+  margin: 20px 0;
+  background: #ddd;
+}
+
+.diaries {
+  margin: 10px 0;
+
+  .diary-link {
+    margin: 4px 0;
+    display: block;
+    padding: 20px;
+    font-weight: bold;
+    color: #333;
+    background: #e8e8e8;
+    transition: 0.16s linear all;
+
+    &:hover {
+      color: #e8e8e8;
+      background: #333;
+    }
+  }
+}
