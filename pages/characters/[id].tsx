@@ -1,3 +1,5 @@
+import { mdiTag } from '@mdi/js';
+import Icon from '@mdi/react';
 import type { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -42,7 +44,7 @@ type Response = {
     profileImage: string;
     profileImages: string[];
     tags: string[];
-    followNumber: number;
+    followingNumber: number;
     followedNumber: number;
     follow: boolean;
     followed: boolean;
@@ -90,9 +92,7 @@ const Characters: NextPage<Response> = (data: Response) => {
   const [followed, setFollowed] = useState(data.character.followed);
   const [mute, setMute] = useState(data.character.mute);
   const [block, setBlock] = useState(data.character.block);
-  const [isImageLoadEnd, setIsImageLoadEnd] = useState(false);
-  const [layoutLevel, setLayoutLevel] = useState(1);
-  const [heroViewHeight, setHeroViewHeight] = useState(0);
+  const [layoutLevel, setLayoutLevel] = useState<1 | 2>(1);
   const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
   const [isMuteModalOpen, setIsMuteModalOpen] = useState(false);
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
@@ -105,23 +105,18 @@ const Characters: NextPage<Response> = (data: Response) => {
   useEffect(() => {
     const handleResize = () => {
       const imageWidth = image.width;
-      const imageHeight = image.height;
       const clientWidth = document.body.clientWidth;
 
-      if (clientWidth < imageWidth) {
-        setLayoutLevel(0);
-        setHeroViewHeight(imageHeight * (clientWidth / imageWidth));
-      } else if (imageWidth + 430 < clientWidth * 0.9) {
-        setLayoutLevel(2);
-      } else {
+      if (imageWidth + 400 < clientWidth) {
         setLayoutLevel(1);
+      } else {
+        setLayoutLevel(2);
       }
     };
 
     const image = new Image();
     image.onload = () => {
       handleResize();
-      setIsImageLoadEnd(true);
     };
     image.src = data.character.profileImage;
 
@@ -201,75 +196,77 @@ const Characters: NextPage<Response> = (data: Response) => {
           {characterIdText(data.character.id)} {data.character.name}
         </Heading>
       </div>
-      <section
-        className={styles['hero-view-wrapper']}
-        style={layoutLevel != 0 ? undefined : { height: heroViewHeight }}
-      >
+      <section className={styles['hero-view-wrapper']}>
         <div className={styles['hero-view']}>
-          {layoutLevel == 2 && (
-            <section className={styles['profile-summary']}>
-              <div className={styles['profile-summary-nickname']}>
-                <div className={styles['profile-summary-nickname-inner']}>
-                  {data.character.nickname}{' '}
-                  <span className={styles['profile-summary-id']}>
+          <div className={styles['hero-view-internal']}>
+            {layoutLevel == 1 && (
+              <div className={styles['character-data']}>
+                <div className={styles['character-names']}>
+                  <div className={styles['character-id']}>
                     {characterIdText(data.character.id)}
-                  </span>
-                </div>
-              </div>
-              <div className={styles['profile-summary-tags']}>
-                {data.character.tags.map((tag, index) => {
-                  return (
-                    <Link
-                      key={index}
-                      href={{
-                        pathname: '/characters/search',
-                        query: { tags: tag },
-                      }}
-                    >
-                      <a className={styles['profile-summary-tag']}>{tag}</a>
-                    </Link>
-                  );
-                })}
-              </div>
-              <div className={styles['profile-summary-summary']}>
-                {data.character.summary}
-              </div>
-              <div className={styles['profile-summary-details']}>
-                <div className={styles['profile-summary-detail']}>
-                  <div className={styles['profile-summary-detail-label']}>
-                    フォロー
                   </div>
-                  <div className={styles['profile-summary-detail-value']}>
-                    {data.character.followNumber}
+                  <div className={styles['character-name']}>
+                    {data.character.name}
                   </div>
                 </div>
-                <div className={styles['profile-summary-detail']}>
-                  <div className={styles['profile-summary-detail-label']}>
-                    フォロワー
+                {!!data.character.tags.length && (
+                  <div className={styles['character-tags']}>
+                    {data.character.tags.map((tag, index) => {
+                      return (
+                        <div className={styles['character-tag']} key={index}>
+                          <div className={styles['character-tag-icon-wrapper']}>
+                            <Icon path={mdiTag} />
+                          </div>
+                          <div className={styles['character-tag-text']}>
+                            {tag}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className={styles['profile-summary-detail-value']}>
-                    {data.character.followedNumber}
+                )}
+                <div className={styles['character-follows']}>
+                  <div className={styles['character-follow-info']}>
+                    <div className={styles['character-follow-info-label']}>
+                      Follows
+                    </div>
+                    <div className={styles['character-follow-info-value']}>
+                      {data.character.followingNumber}
+                    </div>
+                  </div>
+                  <div className={styles['character-follow-info']}>
+                    <div className={styles['character-follow-info-label']}>
+                      Followed
+                    </div>
+                    <div className={styles['character-follow-info-value']}>
+                      {data.character.followedNumber}
+                    </div>
                   </div>
                 </div>
+                <div className={styles['character-summary']}>
+                  {data.character.summary}
+                </div>
               </div>
+            )}
+            <section className={styles['profile-image-wrapper']}>
+              <img
+                className={styles['profile-image']}
+                src={data.character.profileImage}
+              />
             </section>
-          )}
-          <section className={styles['profile-image-wrapper']}>
-            <img
-              className={styles['profile-image']}
-              src={data.character.profileImage}
-              style={layoutLevel != 0 ? undefined : { height: heroViewHeight }}
-            />
-          </section>
+          </div>
         </div>
       </section>
       <section className={styles['body']}>
+        <Heading>
+          {characterIdText(data.character.id)} {data.character.name}
+        </Heading>
         <section className={styles['relation-buttons']}>
           {userId != null && (
             <Button
               onClick={() =>
                 router.push(
-                  `/messages?c=character&cid=${data.character.id}&w=t`
+                  `/rooms/messages?category=character&character=${data.character.id}&relates=false`
                 )
               }
             >
@@ -280,7 +277,7 @@ const Characters: NextPage<Response> = (data: Response) => {
             <Button
               onClick={() =>
                 router.push(
-                  `/messages?c=character-replied&cid=${data.character.id}&w=t`
+                  `/rooms/messages?category=character-replied&character=${data.character.id}&relates=false`
                 )
               }
             >
@@ -312,95 +309,50 @@ const Characters: NextPage<Response> = (data: Response) => {
             </Button>
           )}
         </section>
-        {layoutLevel != 2 && (
-          <section>
-            <div className={styles['body-heading']}>
-              <img
-                className={styles['body-heading-image']}
-                src={'/images/profile/information_Heading.png'}
-              />
-            </div>
-            <section className={styles['information']}>
-              <div className={styles['information-main']}>
-                <div className={styles['information-nickname']}>
-                  <div className={styles['information-nickname-inner']}>
-                    {data.character.nickname}{' '}
-                    <span className={styles['information-id']}>
-                      {characterIdText(data.character.id)}
-                    </span>
-                  </div>
-                </div>
-                <div className={styles['information-tags']}>
-                  {data.character.tags.map((tag, index) => {
-                    return (
-                      <Link
-                        key={index}
-                        href={{
-                          pathname: '/characters/search',
-                          query: { tags: tag },
-                        }}
-                      >
-                        <a className={styles['information-tag']}>{tag}</a>
-                      </Link>
-                    );
-                  })}
-                </div>
-                <div className={styles['information-summary']}>
-                  {data.character.summary}
-                </div>
-              </div>
-              <div className={styles['information-details']}>
-                <div className={styles['information-detail']}>
-                  <div className={styles['information-detail-label']}>
-                    フォロー
-                  </div>
-                  <div className={styles['information-detail-value']}>
-                    {data.character.followNumber}
-                  </div>
-                </div>
-                <div className={styles['information-detail']}>
-                  <div className={styles['information-detail-label']}>
-                    フォロワー
-                  </div>
-                  <div className={styles['information-detail-value']}>
-                    {data.character.followedNumber}
-                  </div>
-                </div>
-              </div>
+        <section className={styles['profile-wrapper']}>
+          <div
+            className={styles['profile']}
+            dangerouslySetInnerHTML={{ __html: data.character.profile }}
+          />
+        </section>
+        {!!data.character.existingDiaries.length && (
+          <>
+            <Heading>日記</Heading>
+            <section className={styles['diaries']}>
+              {data.character.existingDiaries.map((diary) => {
+                return (
+                  <Link
+                    href={{
+                      pathname: '/diaries/[nth]/[character]',
+                      query: { nth: diary.nth, character: data.character.id },
+                    }}
+                    key={diary.nth}
+                  >
+                    <a className={styles['diary-link']}>
+                      第{diary.nth + 1}更新 {diary.title}
+                    </a>
+                  </Link>
+                );
+              })}
             </section>
-          </section>
+          </>
         )}
-        <section>
-          <div className={styles['body-heading']}>
-            <img
-              className={styles['body-heading-image']}
-              src={'/images/profile/profile_Heading.png'}
-            />
-          </div>
-          <section className={styles['profile-wrapper']}>
-            <div
-              className={styles['profile']}
-              dangerouslySetInnerHTML={{ __html: data.character.profile }}
-            ></div>
-          </section>
-        </section>
-        <section>
-          <div className={styles['body-heading']}>
-            <img
-              className={styles['body-heading-image']}
-              src={'/images/profile/icons_Heading.png'}
-            />
-          </div>
-          <section className={styles['icons']}>
-            {data.character.icons.map((icon, index) => {
-              return (
-                <div key={index} className={styles['icon-wrapper']}>
-                  <CharacterIcon url={icon.url} />
-                </div>
-              );
-            })}
-          </section>
-        </section>
+        {!!data.character.icons.length && (
+          <>
+            <Heading>アイコン</Heading>
+            <section>
+              <section className={styles['icons']}>
+                {data.character.icons.map((icon, index) => {
+                  return (
+                    <div key={index} className={styles['icon-wrapper']}>
+                      <CharacterIcon url={icon.url} />
+                    </div>
+                  );
+                })}
+              </section>
+            </section>
+          </>
+        )}
       </section>
       <ConfirmModal
         isOpen={isFollowModalOpen}
