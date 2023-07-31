@@ -14,6 +14,7 @@ import Button from 'components/atoms/Button/Button';
 import CharacterIcon from 'components/atoms/CharacterIcon/CharacterIcon';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import characterIdText from 'lib/characterIdText';
+import { stylizeTextEntry } from 'lib/stylize';
 import axios from 'plugins/axios';
 import { selectCharacter } from 'store/selector/character';
 import styles from 'styles/pages/characters/[id].module.scss';
@@ -46,11 +47,11 @@ type Response = {
     tags: string[];
     followingNumber: number;
     followedNumber: number;
-    follow: boolean;
-    followed: boolean;
-    mute: boolean;
-    block: boolean;
-    blocked: boolean;
+    isFollowing: boolean;
+    isFollowed: boolean;
+    isMuting: boolean;
+    isBlocking: boolean;
+    isBlocked: boolean;
     exhibit: string | null;
     existingDiaries: {
       nth: number;
@@ -88,10 +89,10 @@ const Characters: NextPage<Response> = (data: Response) => {
   const csrfHeader = useCsrfHeader();
   const router = useRouter();
 
-  const [follow, setFollow] = useState(data.character.follow);
-  const [followed, setFollowed] = useState(data.character.followed);
-  const [mute, setMute] = useState(data.character.mute);
-  const [block, setBlock] = useState(data.character.block);
+  const [follow, setFollow] = useState(data.character.isFollowing);
+  const [followed, setFollowed] = useState(data.character.isFollowed);
+  const [mute, setMute] = useState(data.character.isMuting);
+  const [block, setBlock] = useState(data.character.isBlocking);
   const [layoutLevel, setLayoutLevel] = useState<1 | 2>(1);
   const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
   const [isMuteModalOpen, setIsMuteModalOpen] = useState(false);
@@ -100,7 +101,7 @@ const Characters: NextPage<Response> = (data: Response) => {
   const [isUnmuteModalOpen, setIsUnmuteModalOpen] = useState(false);
   const [isUnblockModalOpen, setIsUnblockModalOpen] = useState(false);
 
-  const blocked = data.character.blocked;
+  const blocked = data.character.isBlocked;
 
   useEffect(() => {
     const handleResize = () => {
@@ -312,7 +313,9 @@ const Characters: NextPage<Response> = (data: Response) => {
         <section className={styles['profile-wrapper']}>
           <div
             className={styles['profile']}
-            dangerouslySetInnerHTML={{ __html: data.character.profile }}
+            dangerouslySetInnerHTML={{
+              __html: stylizeTextEntry(data.character.profile),
+            }}
           />
         </section>
         {!!data.character.existingDiaries.length && (

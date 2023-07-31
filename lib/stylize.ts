@@ -227,6 +227,34 @@ const replaceImageRightTag = (
   return replaceImageTag(target, '[img-r]', '[/img-r]', 'cutin cutin-right');
 };
 
+const replaceBigImageCenterTag = (
+  target: string
+): { result: string; found: boolean } => {
+  return replaceImageTag(target, '[img-b]', '[/img-b]', 'full-image');
+};
+
+const replaceBigImageLeftTag = (
+  target: string
+): { result: string; found: boolean } => {
+  return replaceImageTag(
+    target,
+    '[img-lb]',
+    '[/img-lb]',
+    'full-image full-image-left'
+  );
+};
+
+const replaceBigImageRightTag = (
+  target: string
+): { result: string; found: boolean } => {
+  return replaceImageTag(
+    target,
+    '[img-rb]',
+    '[/img-rb]',
+    'full-image full-image-right'
+  );
+};
+
 const replaceImageTagAll = (target: string): string => {
   let result = target;
   let found = false;
@@ -252,11 +280,164 @@ const replaceImageTagAll = (target: string): string => {
   return result;
 };
 
+const replaceBigImageTagAll = (target: string): string => {
+  let result = target;
+  let found = false;
+
+  do {
+    const replaced = replaceBigImageCenterTag(result);
+    result = replaced.result;
+    found = replaced.found;
+  } while (found);
+
+  do {
+    const replaced = replaceBigImageLeftTag(result);
+    result = replaced.result;
+    found = replaced.found;
+  } while (found);
+
+  do {
+    const replaced = replaceBigImageRightTag(result);
+    result = replaced.result;
+    found = replaced.found;
+  } while (found);
+
+  return result;
+};
+
 /*-------------------------------------------------------------------------------------------------
 	MessageTag
 -------------------------------------------------------------------------------------------------*/
 
-// not implemented because unused
+const replaceMessageTag = (
+  target: string
+): { result: string; found: boolean } => {
+  const nameStartTag = '[name]';
+  const nameEndTag = '[/name]';
+  const iconStartTag = '[icon]';
+  const iconEndTag = '[/icon]';
+
+  let sp = target.length;
+
+  while (true) {
+    const { before, inner, after, index } = splitTagSections(
+      target.slice(0, sp),
+      '[message]',
+      '[/message]'
+    );
+    if (index == -1) {
+      break;
+    }
+    sp = index;
+
+    const lines = inner.split('<br>');
+    let startEmptyLineCount: number = 0,
+      endEmptyLineCount: number = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i] == '') {
+        startEmptyLineCount++;
+      } else {
+        break;
+      }
+    }
+
+    for (let i = lines.length - 1; 0 <= i; i--) {
+      if (lines[i] == '') {
+        endEmptyLineCount++;
+      } else {
+        break;
+      }
+    }
+
+    if (lines.length < startEmptyLineCount + endEmptyLineCount) {
+      continue;
+    }
+
+    let b = '';
+
+    let name = '';
+    let icon = '';
+    let added = false;
+
+    for (
+      let i = startEmptyLineCount;
+      i < lines.length - endEmptyLineCount;
+      i++
+    ) {
+      const line = lines[i];
+
+      if (added) {
+        b += '<br>';
+      }
+
+      if (line.startsWith(nameStartTag) && line.endsWith(nameEndTag)) {
+        name =
+          `<div class="message-name">` +
+          line.slice(nameStartTag.length, line.length - nameEndTag.length) +
+          `</div>`;
+        continue;
+      }
+
+      if (line.startsWith(iconStartTag) && line.endsWith(iconEndTag)) {
+        const parsed = line
+          .slice(iconStartTag.length, line.length - iconEndTag.length)
+          .trim();
+
+        if (isImagePath(parsed)) {
+          icon =
+            `<div class="message-icon-wrapper"><img class="message-icon" src="` +
+            uploaderPath +
+            parsed +
+            `"></div>`;
+          continue;
+        }
+      }
+
+      b += line;
+      added = true;
+    }
+
+    let resultBuilder = '';
+
+    resultBuilder += before.endsWith('<br>')
+      ? before.slice(undefined, before.length - '<br>'.length)
+      : before;
+    resultBuilder += `<section class="message">`;
+    if (icon != '') {
+      resultBuilder += icon;
+    } else {
+      resultBuilder += `<div class="message-icon-wrapper"><div class="message-icon-noimage"></div></div>`;
+    }
+    resultBuilder += `<div class="message-content">`;
+    resultBuilder += name;
+    resultBuilder += `<div class="message-body">`;
+    resultBuilder += b;
+    resultBuilder += `</div>`;
+    resultBuilder += `</div>`;
+    resultBuilder += `</section>`;
+    resultBuilder += after.startsWith('<br>')
+      ? after.slice('<br>'.length)
+      : after;
+
+    return { result: resultBuilder, found: true };
+  }
+
+  return { result: target, found: false };
+};
+
+const replaceMessageTagAll = (target: string): string => {
+  let result = target;
+  let found = false;
+
+  do {
+    const replaced = replaceMessageTag(result);
+    result = replaced.result;
+    found = replaced.found;
+  } while (found);
+
+  return result;
+};
 
 /*-------------------------------------------------------------------------------------------------
 	RubyTag
@@ -319,8 +500,6 @@ const replaceRubyTagAll = (target: string): string => {
     const replaced = replaceRubyTag(result);
     result = replaced.result;
     found = replaced.found;
-
-    break;
   } while (found);
 
   return result;
@@ -394,7 +573,7 @@ const replaceColorTagAll = (target: string): string => {
 	Publics
 -------------------------------------------------------------------------------------------------*/
 
-const stylizeBasic = (message: string) => {
+export const stylizeBasic = (message: string) => {
   let s = message;
   s = escapeHtml(s);
   s = s.replaceAll('\n', '<br>');
@@ -446,6 +625,14 @@ export const stylizeMessagePreview = (message: string): string => {
   s = stylizeBasic(s);
   s = s.replaceAll(/\[d6\]/g, `<span class="dice d6">0</span>`);
   s = s.replaceAll(/\[d100\]/g, `<span class="dice d100">00</span>`);
+  return s;
+};
 
+export const stylizeTextEntry = (profile: string): string => {
+  let s = profile;
+  s = stylizeBasic(profile);
+  s = s.replaceAll(/\[hr\]/g, `<hr class="message-hr">`);
+  s = replaceBigImageTagAll(s);
+  s = replaceMessageTagAll(s);
   return s;
 };

@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import Twemoji from 'react-twemoji';
 import useSWR, { useSWRConfig } from 'swr';
@@ -22,6 +22,7 @@ import useAuthenticationStatus from 'hooks/useAuthenticationStatus';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import postTypeToText from 'lib/postTypeToText';
 import { stringifyDate } from 'lib/stringifyDate';
+import { stylizeMessagePreview, stylizeTextEntry } from 'lib/stylize';
 import axios from 'plugins/axios';
 
 const EmojiPicker = dynamic(
@@ -237,6 +238,8 @@ const ForumTopic: NextPage = () => {
           false
         );
       }
+
+      setContent('');
     } catch (e) {
       toast.error('リアクションの追加中にエラーが発生しました');
     }
@@ -308,7 +311,11 @@ const ForumTopic: NextPage = () => {
               </div>
               <div className={styles['post-content']}>
                 <div className={styles['post-content-body']}>
-                  {post.content}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: stylizeTextEntry(post.content),
+                    }}
+                  />
                   {!!post.revisions.length && (
                     <span className={styles['post-content-update']}>
                       (編集済み)
@@ -481,7 +488,7 @@ const ForumTopic: NextPage = () => {
           )}
           <InputForm.General label="投稿内容">
             <DecorationEditor
-              initialValue=""
+              value={content}
               onChange={(val) => setContent(val)}
               noDice
               noMessage

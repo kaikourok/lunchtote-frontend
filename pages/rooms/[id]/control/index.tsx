@@ -134,7 +134,6 @@ const RoomsControl: NextPage = () => {
   })();
 
   const [tags, setTags] = useState<Tag[]>([]);
-  const [initialDescription, setInitialDescription] = useState('');
   const [description, setDescription] = useState('');
   const [searchable, setSearchable] = useState(true);
   const [allowRecommendation, setAllowRecommendation] = useState(true);
@@ -154,7 +153,6 @@ const RoomsControl: NextPage = () => {
 
           setTitle(response.data.title);
           setSummary(response.data.summary);
-          setInitialDescription(response.data.description);
           setDescription(response.data.description);
           setSearchable(response.data.searchable);
           setAllowRecommendation(response.data.allowRecommendation);
@@ -205,6 +203,31 @@ const RoomsControl: NextPage = () => {
 
     try {
       setSubmitTried(true);
+
+      await toast.promise(
+        axios.post(
+          `/rooms/${router.query.id}/control/general`,
+          {
+            title,
+            summary,
+            description,
+            tags: tags.map((tag) => tag.tag).filter((tag) => tag != ''),
+            searchable,
+            allowRecommendation,
+            childrenReferable,
+          },
+          {
+            headers: csrfHeader,
+          }
+        ),
+        {
+          loading: 'トークルーム設定を更新しています',
+          success: 'トークルーム設定を更新しました',
+          error: 'トークルーム設定の更新中にエラーが発生しました',
+        }
+      );
+
+      setTags(tags.filter((tag) => tag.tag != ''));
     } catch (e) {
       console.log(e);
     } finally {
@@ -372,7 +395,7 @@ const RoomsControl: NextPage = () => {
             help={<>ルーム内で確認することのできるルームの説明文です。</>}
           >
             <DecorationEditor
-              initialValue={initialDescription}
+              value={description}
               onChange={(s) => {
                 setDescription(s);
               }}

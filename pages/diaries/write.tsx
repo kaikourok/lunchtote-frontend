@@ -44,7 +44,6 @@ const DiariesWrite: NextPage = () => {
     }
   })();
 
-  const [initialDiary, setInitialDiary] = useState('');
   const [diary, setDiary] = useState('');
   const diaryError = (() => {
     if (!diary) {
@@ -69,7 +68,6 @@ const DiariesWrite: NextPage = () => {
       try {
         const response = await axios.get<Response>('/diaries/write');
         setTitle(response.data.title);
-        setInitialDiary(response.data.diary);
         setDiary(response.data.diary);
         setSelectableIcons(response.data.selectableIcons);
         setFetched(true);
@@ -167,7 +165,7 @@ const DiariesWrite: NextPage = () => {
           />
           <InputForm.General label="本文" help={<>日記の本文です。</>}>
             <DecorationEditor
-              initialValue={initialDiary}
+              value={diary}
               onChange={(s) => {
                 setDiary(s);
               }}
