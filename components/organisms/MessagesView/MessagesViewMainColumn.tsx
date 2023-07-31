@@ -2,6 +2,8 @@ import {
   mdiAccountPlus,
   mdiAccountRemove,
   mdiChevronDoubleRight,
+  mdiDelete,
+  mdiDeleteOutline,
   mdiMessageOutline,
 } from '@mdi/js';
 import Icon from '@mdi/react';
@@ -17,6 +19,7 @@ import { MessagesFetchConfig, RoomMessage, RoomOwnPermissions } from './types';
 
 import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
 import CommentarySection from '@/components/atoms/CommentarySection/CommentarySection';
+import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Modal from '@/components/molecules/Modal/Modal';
 import DecorationEditor from '@/components/organisms/DecorationEditor/DecorationEditor';
 import useCsrfHeader from 'hooks/useCsrfHeader';
@@ -26,6 +29,7 @@ import { stringifyDate } from 'lib/stringifyDate';
 import { stylizeMessagePreview } from 'lib/stylize';
 import axios from 'plugins/axios';
 import { messageAutoSaveRequest } from 'store/actions/draft';
+import { selectCharacter } from 'store/selector/character';
 import { selectAutoSavedMessage } from 'store/selector/draft';
 
 type EditorMode = 'UNOPENED' | 'MESSAGE';
@@ -427,6 +431,18 @@ const Message = (props: {
             {props.message.repliedCount}
           </div>
         </div>
+        {props.messageDeletable && (
+          <div
+            className={roomClassName('message-aside-comments')}
+            onClick={props.onMessageDeleteRequest}
+          >
+            <Icon
+              path={mdiDeleteOutline}
+              className={roomClassName('message-aside-comments-icon')}
+              style={{ position: 'relative', top: 2 }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -450,11 +466,14 @@ const MessagesViewMainColumn = (props: {
   isContinueFollowing: boolean;
   isContinuePrevious: boolean;
   onRefreshRequired: () => void;
+  onMessageDeleted: (message: number) => void;
 }) => {
   const csrfHeader = useCsrfHeader();
   const dispatch = useDispatch();
 
   const autoSavedMessage = useSelector(selectAutoSavedMessage);
+
+  const userId = useSelector(selectCharacter).id;
 
   const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
   const [editorMode, setEditorMode] = useState<EditorMode>('UNOPENED');
@@ -464,6 +483,10 @@ const MessagesViewMainColumn = (props: {
   const [secret, setSecret] = useState(false);
   const [replyPermission, setReplyPermission] =
     useState<RelationPermission>('ALL');
+
+  const [messageDeleteTarget, setMessageDeleteTarget] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     if (message != null) {
@@ -700,6 +723,13 @@ const MessagesViewMainColumn = (props: {
                         );
                       }
                     }}
+                    messageDeletable={
+                      message.character == userId ||
+                      props.room?.permissions.deleteOtherMessage === true
+                    }
+                    onMessageDeleteRequest={() =>
+                      setMessageDeleteTarget(message.id)
+                    }
                   />
                 );
               })}
@@ -707,7 +737,42 @@ const MessagesViewMainColumn = (props: {
           )}
         </>
       )}
-      <></>
+      <ConfirmModal
+        isOpen={messageDeleteTarget != null}
+        onCancel={() => setMessageDeleteTarget(null)}
+        onClose={() => setMessageDeleteTarget(null)}
+        onOk={async () => {
+          if (!csrfHeader || !messageDeleteTarget) return;
+
+          try {
+            const target = messageDeleteTarget;
+            setMessageDeleteTarget(null);
+
+            await toast.promise(
+              axios.post(
+                '/rooms/messages/delete',
+                {
+                  target: messageDeleteTarget,
+                },
+                {
+                  headers: csrfHeader,
+                }
+              ),
+              {
+                loading: 'メッセージを削除しています',
+                success: 'メッセージを削除しました',
+                error: 'メッセージの削除中にエラーが発生しました',
+              }
+            );
+
+            props.onMessageDeleted(target);
+          } catch (e) {
+            console.log(e);
+          }
+        }}
+      >
+        本当にメッセージを削除しますか？
+      </ConfirmModal>
     </div>
   );
 };

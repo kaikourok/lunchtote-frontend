@@ -186,6 +186,11 @@ const MessagesView = () => {
             toast.success(`${response.data.messages.length}件の新着があります`);
           }
         }}
+        onMessageDeleted={(messageId) => {
+          if (messages) {
+            setMessages(messages.filter((message) => message.id != messageId));
+          }
+        }}
       />
       <MessagesViewRightColumn
         currentFetchConfig={currentFetchConfig}

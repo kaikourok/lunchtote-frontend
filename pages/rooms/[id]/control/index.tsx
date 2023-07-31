@@ -153,7 +153,6 @@ const RoomsControl: NextPage = () => {
 
           setTitle(response.data.title);
           setSummary(response.data.summary);
-          setInitialDescription(response.data.description);
           setDescription(response.data.description);
           setSearchable(response.data.searchable);
           setAllowRecommendation(response.data.allowRecommendation);
