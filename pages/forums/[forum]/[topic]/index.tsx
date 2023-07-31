@@ -237,6 +237,8 @@ const ForumTopic: NextPage = () => {
           false
         );
       }
+
+      setContent('');
     } catch (e) {
       toast.error('リアクションの追加中にエラーが発生しました');
     }
