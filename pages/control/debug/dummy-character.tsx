@@ -201,7 +201,7 @@ const ControlDummyCharacter: NextPage = () => {
             }
           >
             <DecorationEditor
-              initialValue="吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。"
+              value={profile}
               onChange={(s) => {
                 setProfile(s);
               }}

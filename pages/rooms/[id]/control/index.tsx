@@ -134,7 +134,6 @@ const RoomsControl: NextPage = () => {
   })();
 
   const [tags, setTags] = useState<Tag[]>([]);
-  const [initialDescription, setInitialDescription] = useState('');
   const [description, setDescription] = useState('');
   const [searchable, setSearchable] = useState(true);
   const [allowRecommendation, setAllowRecommendation] = useState(true);
@@ -397,7 +396,7 @@ const RoomsControl: NextPage = () => {
             help={<>ルーム内で確認することのできるルームの説明文です。</>}
           >
             <DecorationEditor
-              initialValue={initialDescription}
+              value={description}
               onChange={(s) => {
                 setDescription(s);
               }}

@@ -79,8 +79,6 @@ const MessageEditor = (props: {
   onCancelReply: () => void;
 }) => {
   const csrfHeader = useCsrfHeader();
-
-  const [initialMessage, setInitialMessage] = useState(props.message);
   const [isIconSelectModalOpen, setIsIconSelectModalOpen] = useState(false);
   const [isDirectReplyModalOpen, setIsDirectReplyModalOpen] = useState(false);
 
@@ -274,7 +272,7 @@ const MessageEditor = (props: {
                 </div>
               )}
               <DecorationEditor
-                initialValue={initialMessage}
+                value={props.message}
                 onSend={props.onSend}
                 onChange={props.onMessageChange}
                 noMessage
@@ -324,6 +322,8 @@ const Message = (props: {
   currentFetchConfig: MessagesFetchConfig;
   onClickReply?: () => void;
   preview?: boolean;
+  messageDeletable?: boolean;
+  onMessageDeleteRequest?: () => void;
 }) => {
   const referRootHref = {
     pathname: '/rooms/messages',
