@@ -374,7 +374,7 @@ const SettingsProfile: NextPage = () => {
             help={<>ルーム内で確認することのできるルームの説明文です。</>}
           >
             <DecorationEditor
-              initialValue=""
+              value={description}
               onChange={(s) => {
                 setDescription(s);
               }}
