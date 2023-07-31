@@ -14,6 +14,7 @@ import Button from 'components/atoms/Button/Button';
 import CharacterIcon from 'components/atoms/CharacterIcon/CharacterIcon';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import characterIdText from 'lib/characterIdText';
+import { stylizeTextEntry } from 'lib/stylize';
 import axios from 'plugins/axios';
 import { selectCharacter } from 'store/selector/character';
 import styles from 'styles/pages/characters/[id].module.scss';
@@ -312,7 +313,9 @@ const Characters: NextPage<Response> = (data: Response) => {
         <section className={styles['profile-wrapper']}>
           <div
             className={styles['profile']}
-            dangerouslySetInnerHTML={{ __html: data.character.profile }}
+            dangerouslySetInnerHTML={{
+              __html: stylizeTextEntry(data.character.profile),
+            }}
           />
         </section>
         {!!data.character.existingDiaries.length && (

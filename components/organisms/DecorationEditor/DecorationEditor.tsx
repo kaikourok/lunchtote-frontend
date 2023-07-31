@@ -14,27 +14,30 @@ import {
   mdiSend,
 } from '@mdi/js';
 import Icon from '@mdi/react';
-import classnames from 'classnames';
+import { CSSProperties, useRef, useState } from 'react';
 import {
-  CompositeDecorator,
-  ContentBlock,
-  ContentState,
-  Editor,
-  EditorState,
-  Modifier,
-  SelectionState,
-} from 'draft-js';
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
+  RichTextarea,
+  createRegexRenderer,
+  RichTextareaHandle,
+} from 'rich-textarea';
 
 import styles from './DecorationEditor.module.scss';
 
 import Button from '@/components/atoms/Button/Button';
+import CharacterIcon from '@/components/atoms/CharacterIcon/CharacterIcon';
 import FileInputButton from '@/components/atoms/FileInputButton/FileInputButton';
+import ConfirmModal from '@/components/molecules/ConfirmModal/ConfirmModal';
 import Modal from '@/components/molecules/Modal/Modal';
 import useCsrfHeader from 'hooks/useCsrfHeader';
 import axios from 'plugins/axios';
 
-type InsertImagePosition = 'CENTER' | 'LEFT' | 'RIGHT';
+type InsertImagePosition =
+  | 'CENTER'
+  | 'LEFT'
+  | 'RIGHT'
+  | 'CENTER-B'
+  | 'LEFT-B'
+  | 'RIGHT-B';
 
 type ControllerButtonTooltipProps = {
   label?: string;
@@ -68,51 +71,18 @@ const ControllerButton = (props: ControllerButtonProps) => {
   );
 };
 
-const insertTag = (state: EditorState, startTag: string, endTag?: string) => {
-  const currentSelection = state.getSelection();
-  const currentContent = state.getCurrentContent();
-  const startKey = currentSelection.getStartKey();
-  const endKey = currentSelection.getEndKey();
-  const startBlock = currentContent.getBlockForKey(startKey);
-  const endBlock = currentContent.getBlockForKey(endKey);
-  const startOffset = currentSelection.getStartOffset();
-  const endOffset = currentSelection.getEndOffset();
-
-  let endState: ContentState | null = null;
-  if (endTag != undefined) {
-    const selection = new SelectionState({
-      anchorKey: endKey,
-      anchorOffset: endOffset,
-      focusKey: endKey,
-      focusOffset: endOffset,
-    });
-    endState = Modifier.insertText(currentContent, selection, endTag);
-  }
-
-  const selection = new SelectionState({
-    anchorKey: startKey,
-    anchorOffset: startOffset,
-    focusKey: startKey,
-    focusOffset: startOffset,
-  });
-  const resultContent = Modifier.insertText(
-    endState ?? currentContent,
-    selection,
-    startTag
-  );
-
-  return EditorState.push(state, resultContent, 'insert-characters');
-};
-
 type InsertTagButtonProps =
   | {
       path: string;
       startTag: string;
-      endTag?: undefined;
       singleTag: true;
       style?: CSSProperties;
-      onClick?: (state: EditorState) => void;
-      editorState: EditorState;
+      onClick?: (
+        s: string,
+        selectionStart: number,
+        selectionEnd: number
+      ) => void;
+      textareaRef: React.RefObject<RichTextareaHandle>;
       label?: string;
     }
   | {
@@ -121,8 +91,12 @@ type InsertTagButtonProps =
       endTag: string;
       singleTag?: false;
       style?: CSSProperties;
-      onClick?: (state: EditorState) => void;
-      editorState: EditorState;
+      onClick?: (
+        s: string,
+        selectionStart: number,
+        selectionEnd: number
+      ) => void;
+      textareaRef: React.RefObject<RichTextareaHandle>;
       label?: string;
     };
 
@@ -133,27 +107,53 @@ const InsertTagButton = (props: InsertTagButtonProps) => {
       style={props.style}
       label={props.label}
       onClick={() => {
-        if (props.onClick == undefined) {
+        if (props.onClick == undefined || props.textareaRef.current == null) {
           return;
         }
 
-        props.onClick(
-          insertTag(props.editorState, props.startTag, props.endTag)
-        );
+        const target = props.textareaRef.current;
+        const currentSelectionStart = target.selectionStart;
+        const currentSelectionEnd = target.selectionEnd;
+
+        if (props.singleTag) {
+          const s =
+            target.value.slice(0, currentSelectionEnd) +
+            props.startTag +
+            target.value.slice(currentSelectionEnd);
+          props.onClick(
+            s,
+            currentSelectionStart + props.startTag.length,
+            currentSelectionEnd + props.startTag.length
+          );
+        } else {
+          const s =
+            target.value.slice(0, target.selectionStart) +
+            props.startTag +
+            target.value.slice(target.selectionStart, target.selectionEnd) +
+            props.endTag +
+            target.value.slice(target.selectionEnd);
+          props.onClick(
+            s,
+            currentSelectionStart + props.startTag.length,
+            currentSelectionEnd + props.startTag.length
+          );
+        }
       }}
     />
   );
 };
 
 type DecorationEditorProps = {
-  initialValue: string;
-  onChange?: (s: string) => void;
+  value: string;
+  onChange: (s: string) => void;
   noDice?: boolean;
   noMessage?: boolean;
   noHorizonLine?: boolean;
+  enableBigImage?: boolean;
   selectableIcons?: string[];
   thin?: boolean;
-  onSend?: React.MouseEventHandler<HTMLDivElement>;
+  onSend?: () => void;
+  postConfirm?: boolean;
 };
 
 const words = [
@@ -182,75 +182,41 @@ const words = [
   /\[\/img\-r\]/gi,
   /\[img\-l\]/gi,
   /\[\/img\-l\]/gi,
+  /\[img\-b\]/gi,
+  /\[\/img\-b\]/gi,
+  /\[img\-rb\]/gi,
+  /\[\/img\-rb\]/gi,
+  /\[img\-lb\]/gi,
+  /\[\/img\-lb\]/gi,
+  /\[message\]/gi,
+  /\[\/message\]/gi,
+  /\[name\]/gi,
+  /\[\/name\]/gi,
+  /\[icon\]/gi,
+  /\[\/icon\]/gi,
 ];
 
-const Decorated = ({ children }: { children: ReactNode }) => {
-  return <span className={styles['editor-tag']}>{children}</span>;
-};
-
-function findWithRegex(
-  words: RegExp[],
-  contentBlock: ContentBlock,
-  callback: (start: number, end: number) => void
-) {
-  const text = contentBlock.getText();
-
-  words.forEach((word) => {
-    const matches = [...text.matchAll(word)];
-    matches.forEach((match) =>
-      callback(match.index!, match.index! + match[0].length)
-    );
-  });
-}
-
-function handleStrategy(
-  contentBlock: ContentBlock,
-  callback: (start: number, end: number) => void
-) {
-  findWithRegex(words, contentBlock, callback);
-}
-
-const createDecorator = () =>
-  new CompositeDecorator([
-    {
-      strategy: handleStrategy,
-      component: Decorated,
-    },
-  ]);
+const renderer = createRegexRenderer(
+  words.map((word) => {
+    return [word, { color: '#777881' }];
+  })
+);
 
 const DecorationEditor = (props: DecorationEditorProps) => {
   const csrfHeader = useCsrfHeader();
-  const editorRef = useRef<Editor>(null);
-
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(createDecorator())
-  );
-
-  useEffect(() => {
-    if (props.onChange) {
-      props.onChange(
-        editorState
-          .getCurrentContent()
-          .getBlocksAsArray()
-          .map((block) => block.getText())
-          .join('\n')
-      );
-    }
-  }, [editorState]);
-
-  useEffect(() => {
-    setEditorState(
-      EditorState.createWithContent(
-        ContentState.createFromText(props.initialValue),
-        createDecorator()
-      )
-    );
-  }, [props.initialValue]);
-
+  const editorRef = useRef<RichTextareaHandle>(null);
   const [isImageInsertModalOpen, setIsImageInsertModalOpen] = useState(false);
+  const [isIconSelectModalOpen, setIsIconSelectModalOpen] = useState(false);
   const [insertImage, setInsertImage] = useState<File | null>(null);
   const [insertImagePosition, setInsertImagePosition] =
     useState<InsertImagePosition>('CENTER');
+  const [isPostConfirmModalOpen, setIsPostConfirmModalOpen] = useState(false);
+
+  const onChange = (s: string) => {
+    if (props.onChange) {
+      props.onChange(s);
+    }
+  };
 
   const handleSelectInsertImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -265,105 +231,118 @@ const DecorationEditor = (props: DecorationEditorProps) => {
     e.target.value = '';
   };
 
+  const selectableIcons = props.selectableIcons || [];
+
   return (
     <div className={styles['editor-wrapper']}>
-      <div
-        className={classnames(styles['wrapper'], {
-          [styles['thin']]: props.thin,
-        })}
+      <RichTextarea
+        value={props.value}
+        ref={editorRef}
+        style={{
+          width: '100%',
+          height: 'auto',
+          minHeight: props.thin ? 100 : 200,
+          border: '1px solid gray',
+          borderRadius: 2,
+          resize: 'vertical',
+          fontSize: '14px',
+          wordBreak: 'break-all',
+          outline: 'none',
+          padding: '4px 6px',
+          margin: 0,
+        }}
+        spellCheck={false}
+        onChange={(e) => props.onChange(e.target.value)}
+        //onSelectionChange={(pos, value) => setSelection({ pos, value })}
       >
-        <Editor
-          ref={editorRef}
-          editorState={editorState}
-          onChange={setEditorState}
-        />
-      </div>
+        {renderer}
+      </RichTextarea>
       <div className={styles['controller-buttons']}>
         <div className={styles['controller-buttons-left']}>
           <InsertTagButton
-            editorState={editorState}
+            textareaRef={editorRef}
             startTag="[+]"
             endTag="[/+]"
             path={mdiFormatAnnotationPlus}
-            onClick={setEditorState}
+            onClick={onChange}
             label="字を大きく"
           />
           <InsertTagButton
-            editorState={editorState}
+            textareaRef={editorRef}
             startTag="[-]"
             endTag="[/-]"
             path={mdiFormatAnnotationMinus}
-            onClick={setEditorState}
+            onClick={onChange}
             label="字を小さく"
           />
           <InsertTagButton
-            editorState={editorState}
+            textareaRef={editorRef}
             startTag="[b]"
             endTag="[/b]"
             path={mdiFormatBold}
-            onClick={setEditorState}
+            onClick={onChange}
             label="太字"
           />
           <InsertTagButton
-            editorState={editorState}
+            textareaRef={editorRef}
             startTag="[i]"
             endTag="[/i]"
             path={mdiFormatItalic}
-            onClick={setEditorState}
+            onClick={onChange}
             label="斜体"
           />
           <InsertTagButton
-            editorState={editorState}
+            textareaRef={editorRef}
             startTag="[u]"
             endTag="[/u]"
             path={mdiFormatUnderline}
-            onClick={setEditorState}
+            onClick={onChange}
             label="下線"
           />
           <InsertTagButton
-            editorState={editorState}
+            textareaRef={editorRef}
             startTag="[s]"
             endTag="[/s]"
             path={mdiFormatStrikethrough}
-            onClick={setEditorState}
+            onClick={onChange}
             label="取り消し線"
           />
           <InsertTagButton
-            editorState={editorState}
+            textareaRef={editorRef}
             startTag="[rt]"
             endTag="[/rt][rb][/rb]"
             path={mdiFuriganaHorizontal}
-            onClick={setEditorState}
+            onClick={onChange}
             label="ルビ"
           />
           <div className={styles['controller-separator']} />
           {!props.noDice && (
             <InsertTagButton
-              editorState={editorState}
+              textareaRef={editorRef}
               startTag="[d6]"
               singleTag
               path={mdiDice2}
-              onClick={setEditorState}
+              onClick={onChange}
               label="6面ダイス"
             />
           )}
           {!props.noDice && (
             <InsertTagButton
-              editorState={editorState}
+              textareaRef={editorRef}
               startTag="[d100]"
               singleTag
               path={mdiDiceMultiple}
-              onClick={setEditorState}
+              onClick={onChange}
               label="100面ダイス"
             />
           )}
           {!props.noHorizonLine && (
             <InsertTagButton
-              editorState={editorState}
+              textareaRef={editorRef}
               startTag="[hr]"
               singleTag
               path={mdiMinus}
-              onClick={setEditorState}
+              onClick={onChange}
               label="水平線"
             />
           )}
@@ -375,16 +354,20 @@ const DecorationEditor = (props: DecorationEditorProps) => {
           {!props.noMessage && (
             <ControllerButton
               path={mdiMessageOutline}
-              onClick={undefined}
+              onClick={() => setIsIconSelectModalOpen(true)}
               label="メッセージ挿入"
             />
           )}
         </div>
-        <div className={styles['controller-buttons-left']}>
+        <div className={styles['controller-buttons-right']}>
           {!!props.onSend && (
             <ControllerButton
               path={mdiSend}
-              onClick={props.onSend}
+              onClick={
+                props.postConfirm
+                  ? () => setIsPostConfirmModalOpen(true)
+                  : props.onSend
+              }
               label="送信"
             />
           )}
@@ -408,6 +391,13 @@ const DecorationEditor = (props: DecorationEditorProps) => {
             <option value="CENTER">中央寄せ</option>
             <option value="LEFT">左寄せ</option>
             <option value="RIGHT">右寄せ</option>
+            {props.enableBigImage && (
+              <>
+                <option value="CENTER-B">中央寄せ(大)</option>
+                <option value="LEFT-B">左寄せ(大)</option>
+                <option value="RIGHT-B">右寄せ(大)</option>
+              </>
+            )}
           </select>
         </div>
         <div className={styles['insert-image-buttons']}>
@@ -456,9 +446,27 @@ const DecorationEditor = (props: DecorationEditorProps) => {
                 case 'RIGHT':
                   tag = '[img-r]' + imagePath + '[/img-r]';
                   break;
+                case 'CENTER-B':
+                  tag = '[img-b]' + imagePath + '[/img-b]';
+                  break;
+                case 'LEFT-B':
+                  tag = '[img-lb]' + imagePath + '[/img-lb]';
+                  break;
+                case 'RIGHT-B':
+                  tag = '[img-rb]' + imagePath + '[/img-rb]';
+                  break;
               }
 
-              setEditorState(insertTag(editorState, tag));
+              if (editorRef.current?.selectionStart != null) {
+                onChange(
+                  props.value.slice(0, editorRef.current.selectionStart) +
+                    tag +
+                    props.value.slice(editorRef.current.selectionStart)
+                );
+              } else {
+                onChange(props.value + tag);
+              }
+
               setInsertImage(null);
               setIsImageInsertModalOpen(false);
             }}
@@ -467,6 +475,74 @@ const DecorationEditor = (props: DecorationEditorProps) => {
           </Button>
         </div>
       </Modal>
+      <Modal
+        heading="アイコン選択"
+        isOpen={isIconSelectModalOpen}
+        onClose={() => setIsIconSelectModalOpen(false)}
+      >
+        <div className={styles['modal-selectable-icons']}>
+          <CharacterIcon
+            className={styles['modal-selectable-icon']}
+            onClick={() => {
+              if (editorRef.current?.selectionStart != null) {
+                onChange(
+                  props.value.slice(0, editorRef.current.selectionStart) +
+                    '[message]\n[name][/name]\n\n[/message]' +
+                    props.value.slice(editorRef.current.selectionStart)
+                );
+              } else {
+                onChange(
+                  props.value + '[message]\n[name][/name]\n\n[/message]'
+                );
+              }
+              setIsIconSelectModalOpen(false);
+            }}
+          />
+          <>
+            {selectableIcons.map((icon, index) => {
+              return (
+                <CharacterIcon
+                  key={index}
+                  url={icon}
+                  className={styles['modal-selectable-icon']}
+                  onClick={() => {
+                    if (editorRef.current?.selectionStart != null) {
+                      onChange(
+                        props.value.slice(0, editorRef.current.selectionStart) +
+                          '[message]\n[icon]' +
+                          icon +
+                          '[/icon]\n[name][/name]\n\n[/message]' +
+                          props.value.slice(editorRef.current.selectionStart)
+                      );
+                    } else {
+                      onChange(
+                        props.value +
+                          '[message]\n[icon]' +
+                          icon +
+                          '[/icon]\n[name][/name]\n\n[/message]'
+                      );
+                    }
+                    setIsIconSelectModalOpen(false);
+                  }}
+                />
+              );
+            })}
+          </>
+        </div>
+      </Modal>
+      <ConfirmModal
+        isOpen={isPostConfirmModalOpen}
+        onCancel={() => setIsPostConfirmModalOpen(false)}
+        onClose={() => setIsPostConfirmModalOpen(false)}
+        onOk={() => {
+          if (props.onSend) {
+            props.onSend();
+          }
+          setIsPostConfirmModalOpen(false);
+        }}
+      >
+        本当に送信しますか？
+      </ConfirmModal>
     </div>
   );
 };
